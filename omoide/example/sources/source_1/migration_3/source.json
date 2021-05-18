@@ -1,0 +1,59 @@
+{
+    "metas": [
+        {
+            "theme_uuid": "$theme_gerbils",
+            "group_uuid": "$group_gerbils_no_group",
+            "author": "ErikTjernlund",
+            "author_url": "https://www.deviantart.com/eriktjernlund",
+            "origin_url": "https://www.deviantart.com/eriktjernlund/art/What-s-happening-to-me-268150219",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "gerbils,no_group",
+            "tags": [
+                "epilepsy",
+                "studio",
+                "white background"
+            ],
+            "filenames": [
+                "what_s_happening_to_me_by_eriktjernlund_d4fne17.jpg"
+            ]
+        },
+        {
+            "theme_uuid": "$theme_gerbils",
+            "group_uuid": "$group_gerbils_no_group",
+            "author": "Sabrina Blechinger",
+            "author_url": "https://www.flickr.com/photos/bulletgirl/",
+            "origin_url": "https://www.flickr.com/photos/bulletgirl/6917711433/in/pool-44424503@N00",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "gerbils,no_group",
+            "tags": [
+                "whiskers",
+                "white"
+            ],
+            "filenames": [
+                "6917711433_65ebed5e8f_o.jpg"
+            ]
+        },
+        {
+            "theme_uuid": "$theme_gerbils",
+            "group_uuid": "$group_gerbils_no_group",
+            "author": "Mitchell Tuffill",
+            "author_url": "https://www.flickr.com/photos/97772644@N07/",
+            "origin_url": "https://www.flickr.com/photos/97772644@N07/47229809861/in/pool-44424503@N00/",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "gerbils,no_group",
+            "tags": [
+                "blue background",
+                "seeds",
+                "sunflower seeds",
+                "chunky",
+                "snack"
+            ],
+            "filenames": [
+                "47229809861_e54730642f_o.jpg"
+            ]
+        }
+    ]
+}

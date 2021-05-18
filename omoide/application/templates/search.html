@@ -1,0 +1,46 @@
+{% extends "base_search.html" %}
+{% from "macros.html" import pagination %}
+
+{% block upper_body %}
+    {% if search_report %}
+        <div id="explain" class="explain-container">
+            <span></span>
+            <div class="small-text">
+
+                <div class="explain-query">
+                    {% for keyword, word in  search_query.sequence %}
+                        <span class="explain-query-keyword">{{ keyword }}</span>
+                        <span class="explain-query-word">{{ word }}</span>
+                    {% endfor %}
+                </div>
+
+                {% for line in search_report %}
+                    {{ line }}<br>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {{ pagination(paginator, web_query) }}
+
+    <div class="envelope-container">
+        {% for meta in paginator %}
+            <div>
+                <div class="envelope">
+                    <a href="{{ url_for('preview', uuid=meta.uuid) + web_query|string }}">
+                        <img src="/content{{ meta.path_to_thumbnail }}"
+                             alt=""/>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {{ pagination(paginator, web_query) }}
+
+    <br>
+
+{% endblock %}

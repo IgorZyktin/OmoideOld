@@ -1,0 +1,35 @@
+name: Omoide
+on: [ push ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v1
+            -   name: Set up Python 3.8
+                uses: actions/setup-python@v1
+                with:
+                    python-version: 3.8
+
+            -   name: Install dependencies
+                run: |
+                    pip install -U pip
+                    pip install poetry
+                    poetry install
+                env:
+                  POETRY_VIRTUALENVS_CREATE: false
+
+            -   name: Lint with pylint
+                run: |
+                    pip install pylint
+                    pylint ./omoide
+
+            -   name: Test with pytest
+                run: |
+                    pip install pytest
+                    pytest
+
+            -   name: Test with mypy
+                run: |
+                    pip install mypy
+                    mypy ./omoide

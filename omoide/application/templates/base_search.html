@@ -1,0 +1,79 @@
+{% from "macros.html" import pagination %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+    <link type="text/css"
+          href="{{ url_for('static', filename='base.css') }}"
+          rel="stylesheet">
+    <link type="text/css"
+          href="{{ url_for('static', filename='search.css') }}"
+          rel="stylesheet">
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='code.js') }}"></script>
+    {% block head %}{% endblock %}
+    <title>{{ title }}</title>
+</head>
+
+<body>
+<div>
+    <form method="post"
+          onsubmit="goSearch(this);">
+        <div class="query-container">
+
+            <a href="{{ url_for('search') }}"
+               title="Use it to clear search query"
+               class="button">Home</a>
+
+            <label for="query">
+                <input id="query_element"
+                       name="query"
+                       type="search"
+                       value="{{ user_query }}"
+                       class="query_input"
+                       placeholder="{{ placeholder }}" autofocus/>
+            </label>
+
+            <input id="searchButton"
+                   type="submit"
+                   class="button"
+                   name="search"
+                   value="Search" autofocus/>
+
+            <a id="tagsButton"
+               href="{{ url_for('tags') + web_query|string|safe }}"
+               class="button">Tags</a>
+
+            <a href="{{ url_for('navigation') + web_query|string|safe }}"
+               class="button">Navigation</a>
+
+            <a href="{{ url_for('feedback') + web_query|string|safe }}"
+               class="button" title="Send feedback">@</a>
+
+            <span></span>
+
+            <span class="note small-text">{{ note }}</span>
+
+            {% if search_report %}
+                <a class="small-button small-text"
+                   onclick="explainSearchResults()">Explain</a>
+            {% endif %}
+
+        </div>
+    </form>
+
+    {% block upper_body %}{% endblock %}
+
+</div>
+
+<hr>
+
+{% block body %}{% endblock %}
+
+{{ injection|safe }}
+
+</body>
+</html>

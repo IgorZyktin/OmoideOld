@@ -1,0 +1,32 @@
+{% extends "base_search.html" %}
+
+{% block body %}
+
+    {% if greet %}
+        <div class="limited-width active-page">
+            <h3>Thank you for your feedback!</h3>
+        </div>
+    {% endif %}
+
+    <div class="limited-width">
+        <form method="post" class="feedback-block">
+            <label for="name">You name or nickname (optional)<br>
+                <input name="name"
+                       type="text"
+                       class="feedback"/>
+            </label>
+            <br>
+            <label for="feedback">Your opinion, bug report, or list of things
+                you want to be added<br>
+                <textarea name="feedback"
+                          class="feedback"
+                          rows="20"
+                          maxlength="4096"
+                          required></textarea>
+            </label>
+            <br>
+            <input type="submit" class="button feedback">
+        </form>
+    </div>
+
+{% endblock %}

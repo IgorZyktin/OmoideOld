@@ -1,0 +1,117 @@
+{% extends "base_search.html" %}
+{% from "macros.html" import if_not_empty %}
+{% from "macros.html" import preview_pagination %}
+
+{% block head %}
+    <link type="text/css"
+          href="{{ url_for('static', filename='preview.css') }}"
+          rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+    <div class="pages">
+        <a class="active-page"
+           href="{{ url_for('search') + web_query.replace(q=meta.group.uuid)|string }}">Go
+            to group</a>
+    </div>
+
+    {{ preview_pagination(paginator, web_query, next, previous) }}
+
+    <div class="preview-content limited-width">
+
+        {% if previous %}
+            <a href="/preview/{{ previous }}"
+               class="button preview-swipe">Previous</a>
+        {% else %}
+            <a class="preview-swipe">&nbsp;</a>
+        {% endif %}
+
+        <div>
+            <a href="{{ meta.path_to_content }}">
+                <img src="{{ meta.path_to_preview }}"
+                     alt="Click here for full resolution"/>
+            </a>
+        </div>
+
+        {% if next %}
+            <a href="/preview/{{ next }}"
+               class="button preview-swipe">Next</a>
+        {% else %}
+            <a class="preview-swipe">&nbsp;</a>
+        {% endif %}
+    </div>
+
+    {{ preview_pagination(paginator, web_query, next, previous) }}
+
+    <div class="preview-content limited-width">
+        <table class="preview-table">
+            {% if meta.author or meta.origin_url %}
+                <tr>
+                    <th colspan="2">Origin</th>
+                </tr>
+                {% if meta.origin_url %}
+                    <tr>
+                        <td>Url</td>
+                        <td>
+                            <a href="{{ meta.origin_url }}">Link</a>
+                        </td>
+                    </tr>
+                {% endif %}
+
+                {% if meta.author %}
+                    <tr>
+                        <td>Author</td>
+                        <td>
+                            {{ meta.author }}
+                        </td>
+                    </tr>
+                {% endif %}
+
+                {% if meta.author_url %}
+                    <tr>
+                        <td>Profile</td>
+                        <td>
+                            <a href="{{ meta.author_url }}">Link</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+
+            <tr>
+                <th colspan="2">Information</th>
+            </tr>
+
+            <td>Size</td>
+            <td>{{ byte_count_to_text(meta.size) }}</td>
+
+            {{ if_not_empty('Width', meta.width, ' px') }}
+            {{ if_not_empty('Height', meta.height, ' px') }}
+            {{ if_not_empty('Resolution', meta.resolution, ' Mpx') }}
+            {{ if_not_empty('Media type', meta.type) }}
+            {{ if_not_empty('Registered on', meta.registered_on) }}
+            {{ if_not_empty('Registered by', meta.registered_by) }}
+
+            {%- if tags %}
+                <tr>
+                    <th colspan="2">Tags</th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <ol>
+                            {%- for tag in tags %}
+                                <li>
+                                    <a href="{{ url_for('search') + web_query.replace(q=tag)|string }}">{{ tag }}</a>
+                                </li>
+                            {% endfor -%}
+                        </ol>
+                    </td>
+                </tr>
+            {% endif -%}
+
+        </table>
+    </div>
+
+    <br>
+
+{% endblock %}

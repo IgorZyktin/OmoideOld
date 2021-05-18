@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+    <link type="text/css"
+          href="{{ url_for('static', filename='base.css') }}"
+          rel="stylesheet">
+    <link type="text/css"
+          href="{{ url_for('static', filename='index.css') }}"
+          rel="stylesheet">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+<div class="welcoming_div">
+    <span class="welcoming_title">&lt;Omoide&gt;</span>
+    <form method="post" action="{{ url_for('search') }}">
+        <div class="welcoming_grid">
+            <label for="query">
+                <input name="query" type="search" autofocus>
+            </label>
+
+            <input type="submit" class="button" name="search"
+                   value="Search" autofocus/>
+
+            <span class="note">{{ note }}</span>
+        </div>
+    </form>
+    <br>
+    <span class="welcoming_span">
+        You can search through database of media using
+        queries with tags.<br>
+        For example <b>fat cats | small dogs + frogs -
+        snakes</b> (anything with tag "fat cats" or with tag "small dogs",
+        obligatory with tag "frogs" and definitely without tag "snakes").
+    </span>
+
+</div>
+
+{{ injection|safe }}
+
+</body>
+</html>

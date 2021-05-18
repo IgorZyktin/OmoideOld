@@ -1,0 +1,104 @@
+{
+    "themes": [
+        {
+            "uuid": "var('t', 'theme_mice')",
+            "route": "mice",
+            "label": "Mice theme",
+            "tags": [
+                "mouse",
+                "mice"
+            ]
+        }
+    ],
+    "groups": [
+        {
+            "uuid": "var('g', 'group_mice_no_group')",
+            "theme_uuid": "$theme_mice",
+            "route": "no_group",
+            "label": "No specific group"
+        }
+    ],
+    "metas": [
+        {
+            "theme_uuid": "$theme_mice",
+            "group_uuid": "$group_mice_no_group",
+            "author": "owls_flight",
+            "author_url": "https://owls-flight.livejournal.com/",
+            "origin_url": "https://prophotos-ru.livejournal.com/1399425.html",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "mice",
+            "filenames": [
+                "514173.jpg"
+            ],
+            "tags": [
+                "catch",
+                "insect",
+                "acrobat",
+                "climb"
+            ]
+        },
+        {
+            "theme_uuid": "$theme_mice",
+            "group_uuid": "$group_mice_no_group",
+            "author": "owls_flight",
+            "author_url": "https://owls-flight.livejournal.com/",
+            "origin_url": "https://prophotos-ru.livejournal.com/1399425.html",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "mice",
+            "filenames": [
+                "514169.jpg"
+            ],
+            "tags": [
+                "cozy",
+                "nest",
+                "adorable"
+            ]
+        },
+        {
+            "theme_uuid": "$theme_mice",
+            "group_uuid": "$group_mice_no_group",
+            "author": "owls_flight",
+            "author_url": "https://owls-flight.livejournal.com/",
+            "origin_url": "https://prophotos-ru.livejournal.com/1399425.html",
+            "comment": "",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "mice",
+            "filenames": [
+                "514181.jpg"
+            ],
+            "tags": [
+                "climb",
+                "acrobat"
+            ]
+        },
+        {
+            "theme_uuid": "$theme_mice",
+            "group_uuid": "$group_mice_no_group",
+            "author": "Caroline Cottrell",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "mice",
+            "filenames": [
+                "E7FcYUEXMAIDpNv.jpg"
+            ],
+            "tags": [
+                "berries",
+                "feast",
+                "group"
+            ]
+        }
+    ],
+    "synonyms": [
+        {
+            "uuid": "var('s', 'synonym_mice')",
+            "label": "Mice",
+            "values": [
+                "mouse",
+                "mice"
+            ]
+        }
+    ]
+}

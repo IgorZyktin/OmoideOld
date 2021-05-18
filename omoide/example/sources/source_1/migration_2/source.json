@@ -1,0 +1,35 @@
+{
+    "themes": [
+        {
+            "uuid": "var('t', 'theme_farm')",
+            "route": "farm",
+            "label": "Farm theme",
+            "tags": [
+                "farm"
+            ]
+        }
+    ],
+    "groups": [
+        {
+            "uuid": "var('g', 'group_farm')",
+            "theme_uuid": "$theme_farm",
+            "route": "farm",
+            "label": "Farm",
+            "registered_on": "2021-08-14",
+            "registered_by": "Igor",
+            "hierarchy": "farm",
+            "extended": [
+                {
+                    "filenames": [
+                        "barn-216372.jpg",
+                        "barn-1081686.jpg"
+                    ],
+                    "tags": [
+                        "house",
+                        "building"
+                    ]
+                }
+            ]
+        }
+    ]
+}

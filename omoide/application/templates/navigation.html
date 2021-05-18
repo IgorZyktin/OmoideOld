@@ -1,0 +1,83 @@
+{% extends "base_search.html" %}
+
+{% block head %}
+    <link type="text/css"
+          href="{{ url_for('static', filename='navigation.css') }}"
+          rel="stylesheet">
+    <script>
+        let visibility = JSON.parse('{{ visibility_json|safe }}')
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="limited-width">
+
+        <div class="textual-header">
+            <h3>Narrow search to selected categories</h3>
+        </div>
+
+        <div class="nav-button-block">
+            <a class="nav-button"
+               onclick="toggleAllThemes(true)">Select all</a>
+
+            <a class="nav-button"
+               onclick="toggleAllThemes(false)">Ignore all</a>
+        </div>
+
+        <hr>
+
+        {% for theme_uuid, theme in graph.items() %}
+            {% set active = not visibility or visibility.get(theme_uuid) %}
+            {% if active %}
+                {% set visibility_suffix = ' nav-chosen-theme' %}
+            {% else %}
+                {% set visibility_suffix = '' %}
+            {% endif %}
+
+            <table class="nav-table">
+                <tr>
+                    <td>
+                        <label class="checkbox-container">
+                            <input id="toggle_{{ theme_uuid }}"
+                                    type="checkbox"
+                                   class="custom-checkbox"
+                                   {{ 'checked' if active else '' }}>
+                            <span class="checkmark"
+                                  id="checkmark_{{ theme_uuid }}"
+                                  onclick="toggleTheme('{{ theme_uuid }}')"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <div id="theme_{{ theme_uuid }}"
+                             class="nav-theme{{ visibility_suffix }}">
+
+                            <a href="{{ url_for('search') + web_query.replace(q=theme_uuid)|string }}">{{ theme.label }}</a>
+
+                            <img src="{{ url_for('static', filename='expand-arrow.svg') }}"
+                                 id="fold_{{ theme_uuid }}"
+                                 class="nav-icon"
+                                 onclick="switchThemeFolding('{{ theme_uuid }}')"
+                                 alt="Hide or show groups of this theme"/>
+                        </div>
+                    </td>
+                </tr>
+                {% if theme.groups %}
+                    <tr>
+                        <td></td>
+                        <td>
+                            <ol id="groups_{{ theme_uuid }}"
+                                class="nav-groups nav-hidden">
+                                {% for group_uuid, group in theme.groups.items() %}
+                                    <li>
+                                        <a href="{{ url_for('search') + web_query.replace(q=group_uuid)|string }}">{{ group.label }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+
+        {% endfor %}
+    </div>
+{% endblock %}

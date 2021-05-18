@@ -1,0 +1,11 @@
+[Unit]
+Description=Omoide web server
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/Omoide/omoide
+ExecStart=/home/pi/Omoide/run_server.sh
+
+[Install]
+WantedBy=multi-user.target

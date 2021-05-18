@@ -1,0 +1,19 @@
+{
+    "variables": {
+        "themes": {
+            "theme_farm": "t_7ae9f8b8-80f8-4044-9751-37a5f9b91c98"
+        },
+        "synonyms": {},
+        "groups": {
+            "group_farm": "g_bce2058c-0a09-446b-a2be-fdadbb033e95"
+        },
+        "metas": {}
+    },
+    "uuids": [
+        "7ae9f8b8-80f8-4044-9751-37a5f9b91c98",
+        "bce2058c-0a09-446b-a2be-fdadbb033e95",
+        "5f4c16eb-d244-4fdb-9a97-004161ff6410",
+        "908d2176-0c2a-4b71-a177-3f367fef126b",
+        "74117f6b-836b-43aa-922a-ad210f16b1db"
+    ]
+}

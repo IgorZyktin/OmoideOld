@@ -1,0 +1,45 @@
+.preview-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.preview-table {
+    border-collapse: collapse;
+}
+
+.preview-table, td, th {
+    border: 1px solid #707070;
+}
+
+.preview-buttons-block {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: stretch;
+    margin: 10px;
+}
+
+.preview-buttons-block a {
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.preview-swipe {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+td, th {
+    padding: 10px;
+    min-width: 250px;
+}
+
+th {
+    padding: 10px;
+    color: var(--almost_white);
+    background-color: #3F3F3F;
+}

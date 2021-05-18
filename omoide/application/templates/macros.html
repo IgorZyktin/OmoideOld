@@ -1,0 +1,85 @@
+{% macro pagination(paginator, web_query) %}
+    {% if paginator.num_pages > 1 %}
+        <div class="pages">
+            {% if not paginator.is_fitting %}
+                {% if paginator.has_previous %}
+                    <a class="active-page" href="{{ web_query.replace(page=1) }}">First</a>
+                    <a class="active-page" href="{{ web_query.replace(page=paginator.previous_page_number) }}">Previous</a>
+                {% else %}
+                    <a>First</a>
+                    <a>Previous</a>
+                {% endif %}
+            {% endif %}
+
+            {% for page in paginator.iterate_over_pages() %}
+                {% if page.is_dummy %}
+                    <a class="inactive-page">...</a>
+                {% elif page.is_current %}
+                    <a href="{{ web_query.replace(page=page.number) }}"
+                       class="active-page">{{ page.number }}</a>
+                {% else %}
+                    <a href="{{ web_query.replace(page=page.number) }}">{{ page.number }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if not paginator.is_fitting %}
+                {% if paginator.has_next %}
+                    <a class="active-page" href="{{ web_query.replace(page=paginator.next_page_number) }}">Next</a>
+                    <a class="active-page" href="{{ web_query.replace(page=paginator.num_pages) }}">Last</a>
+                {% else %}
+                    <a>Next</a>
+                    <a>Last</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro preview_pagination(paginator, web_query, next, previous) %}
+    {% if paginator.num_pages > 1 %}
+        <div class="pages">
+            {% if not paginator.is_fitting %}
+                {% if paginator.has_previous %}
+                    <a class="active-page" href="{{ url_for('preview', uuid=paginator.first_value) + web_query|string }}">First</a>
+                    <a class="active-page" href="{{ url_for('preview', uuid=previous) + web_query|string }}">Previous</a>
+                {% else %}
+                    <a>First</a>
+                    <a>Previous</a>
+                {% endif %}
+            {% endif %}
+
+            {% for page in paginator.iterate_over_pages() %}
+                {% if page.is_dummy %}
+                    <a class="inactive-page">...</a>
+                {% elif page.is_current %}
+                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string }}"
+                       class="active-page">{{ page.number }}</a>
+                {% else %}
+                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string }}">
+                        {{ page.number }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if not paginator.is_fitting %}
+                {% if paginator.has_next %}
+                    <a class="active-page" href="{{ url_for('preview', uuid=next) + web_query|string }}">Next</a>
+                    <a class="active-page" href="{{ url_for('preview', uuid=paginator.last_value) + web_query|string }}">Last</a>
+                {% else %}
+                    <a>Next</a>
+                    <a>Last</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro if_not_empty(label, value, suffix='') %}
+    {% if value %}
+        <tr>
+            <td>{{ label }}</td>
+            <td>{{ value }}{{ suffix }}</td>
+        </tr>
+    {% endif %}
+{% endmacro %}
