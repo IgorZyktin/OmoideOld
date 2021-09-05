@@ -30,14 +30,6 @@ BRANCH_DB_FILE_NAME = 'branch.db'
 LEAF_DB_FILE_NAME = 'migration.db'
 STATIC_DB_FILE_NAME = 'database.db'
 
-# media parameters
-PREVIEW_SIZE = (1024, 1024)
-THUMBNAIL_SIZE = (384, 384)
-COMPRESS_TO = [
-    PREVIEW_SIZE,
-    THUMBNAIL_SIZE,
-]
-
 # database constants
 MAX_LEN = 255
 UUID_LEN = 38

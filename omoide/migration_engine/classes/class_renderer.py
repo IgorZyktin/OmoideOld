@@ -4,16 +4,18 @@
 """
 import os
 from typing import Optional, Callable
-# from typing import TypedDict, Optional, Callable
+# from typing import TypedDict, Optional, Callable # FIXME
 
 from PIL import Image
+from omoide import constants
 
 __all__ = [
     'Renderer',
-    # 'MediaInfo',
+    # 'MediaInfo', # FIXME
 ]
 
 
+# FIXME
 # class MediaInfo(TypedDict):
 #     """Container for media information."""
 #     width: int
@@ -94,7 +96,17 @@ class Renderer:
     @staticmethod
     def resize(path_from: str, path_to: str, width: int, height: int) -> None:
         """Resize image."""
+        if path_to.endswith('jpg'):
+            kwargs = constants.SAVE_PARAMETERS['jpg']
+        else:
+            kwargs = {}
+
         image = Image.open(path_from)
+
+        if not path_from.lower().endswith('jpg') and path_to.endswith('jpg'):
+            # non jpg downscale produces terrible quality
+            image = image.convert('RGB')
+
         image.thumbnail((width, height))
-        image.save(path_to)
+        image.save(path_to, **kwargs)
         image.close()

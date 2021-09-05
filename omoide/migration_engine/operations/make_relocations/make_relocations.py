@@ -4,6 +4,7 @@
 """
 from typing import List
 
+import omoide.constants.media
 from omoide import commands
 from omoide import constants
 from omoide import infra
@@ -78,16 +79,16 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
             operation_type='copy',
         ),
         classes.Operation(
-            width=constants.PREVIEW_SIZE[0],
-            height=constants.PREVIEW_SIZE[1],
+            width=omoide.constants.media.PREVIEW_SIZE[0],
+            height=omoide.constants.media.PREVIEW_SIZE[1],
             folder_to=filesystem.join(command.content_folder,
                                       constants.MEDIA_PREVIEW_FOLDER_NAME,
                                       theme, group),
             operation_type='scale',
         ),
         classes.Operation(
-            width=constants.THUMBNAIL_SIZE[0],
-            height=constants.THUMBNAIL_SIZE[1],
+            width=omoide.constants.media.THUMBNAIL_SIZE[0],
+            height=omoide.constants.media.THUMBNAIL_SIZE[1],
             folder_to=filesystem.join(command.content_folder,
                                       constants.MEDIA_THUMBNAILS_FOLDER_NAME,
                                       theme, group),

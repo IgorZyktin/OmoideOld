@@ -209,17 +209,19 @@ def preprocess_group_meta_pack(unit: entities.Unit,
         file_path = filesystem.join(full_path, f'{name}.{ext}')
         media_info = renderer.analyze(file_path, ext)
 
-        meta_filename = f'{uuid}.{ext}'
-        common = f'{theme_route}/{group.route}/{meta_filename}'
-
         path_to_content = (
-            f'/{constants.MEDIA_CONTENT_FOLDER_NAME}/{common}'
+            f'/{constants.MEDIA_CONTENT_FOLDER_NAME}'
+            f'/{theme_route}/{group.route}/{uuid}.{ext}'
         )
+
         path_to_preview = (
-            f'/{constants.MEDIA_PREVIEW_FOLDER_NAME}/{common}'
+            f'/{constants.MEDIA_PREVIEW_FOLDER_NAME}'
+            f'/{theme_route}/{group.route}/{uuid}.{ext}'
         )
+
         path_to_thumbnail = (
-            f'/{constants.MEDIA_THUMBNAILS_FOLDER_NAME}/{common}'
+            f'/{constants.MEDIA_THUMBNAILS_FOLDER_NAME}'
+            f'/{theme_route}/{group.route}/{uuid}.jpg'
         )
 
         tr_meta = entities.Meta(
@@ -273,13 +275,19 @@ def preprocess_no_group_meta_pack(unit: entities.Unit,
         file_path = filesystem.join(full_path, filename)
         media_info = renderer.analyze(file_path, ext)
 
-        meta_filename = f'{uuid}.{ext}'
-        common = f'{theme_route}/{group_route}/{meta_filename}'
+        path_to_content = (
+            f'/{constants.MEDIA_CONTENT_FOLDER_NAME}'
+            f'/{theme_route}/{group_route}/{uuid}.{ext}'
+        )
 
-        path_to_content = f'/{constants.MEDIA_CONTENT_FOLDER_NAME}/{common}'
-        path_to_preview = f'/{constants.MEDIA_PREVIEW_FOLDER_NAME}/{common}'
+        path_to_preview = (
+            f'/{constants.MEDIA_PREVIEW_FOLDER_NAME}'
+            f'/{theme_route}/{group_route}/{uuid}.{ext}'
+        )
+
         path_to_thumbnail = (
-            f'/{constants.MEDIA_THUMBNAILS_FOLDER_NAME}/{common}'
+            f'/{constants.MEDIA_THUMBNAILS_FOLDER_NAME}'
+            f'/{theme_route}/{group_route}/{uuid}.jpg'
         )
 
         tr_meta = entities.Meta(
