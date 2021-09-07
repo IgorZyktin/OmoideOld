@@ -12,8 +12,7 @@
 
     <div class="pages">
         <a class="active-page"
-           href="{{ url_for('search') + web_query.replace(q=meta.group.uuid)|string }}">Go
-            to group</a>
+           href="{{ url_for('search') + web_query.replace(q=meta.group.uuid)|string }}">{{ meta.group.theme.label }}: {{ meta.group.label }}</a>
     </div>
 
     {{ preview_pagination(paginator, web_query, next, previous) }}
