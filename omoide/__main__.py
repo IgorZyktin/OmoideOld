@@ -4,6 +4,9 @@
 
 Possible call variants:
 
+    To launch example:
+        python -m omoide example
+
     To analyze source files and create unit files:
         python -m omoide unite --branch=all --leaf=all
 
@@ -134,6 +137,31 @@ def cli():
 def cmd_runserver(**kwargs) -> None:
     """Command that starts web server."""
     command = commands.RunserverCommand(**kwargs)
+    run(command)
+
+
+@cli.command(name='example',
+             help='Run example app')
+def cmd_example() -> None:
+    """Command that starts demo server."""
+    import os
+    content_folder = os.path.join('omoide', 'example',
+                                  constants.CONTENT_FOLDER_NAME)
+    db_path = os.path.join('omoide', 'example',
+                           constants.DATABASE_FOLDER_NAME)
+    templates_folder = os.path.join('omoide', 'application', 'templates')
+    static_folder = os.path.join('omoide', 'application', 'static')
+
+    command = commands.RunserverCommand(
+        host=constants.DEFAULT_SERVER_HOST,
+        port=constants.DEFAULT_SERVER_PORT,
+        reload=True,
+        static=True,
+        content_folder=content_folder,
+        database_folder=db_path,
+        templates_folder=templates_folder,
+        static_folder=static_folder,
+    )
     run(command)
 
 
