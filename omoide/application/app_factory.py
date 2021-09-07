@@ -30,11 +30,6 @@ def create_app(command: commands.RunserverCommand,
 
     version = f'Version: {constants.VERSION}'
 
-    @app.route('/')
-    def index():
-        """Entry page."""
-        return flask.render_template('index.html')
-
     @app.context_processor
     def common_names():
         """Populate context with common names."""
@@ -64,6 +59,7 @@ def create_app(command: commands.RunserverCommand,
         context = logic.make_navigation_response(Session, web_query)
         return flask.render_template('navigation.html', **context)
 
+    @app.route('/')
     @app.route('/search', methods=['GET', 'POST'])
     def search():
         """Main page of the application."""
