@@ -4,7 +4,7 @@
 """
 import json
 import sys
-from typing import Optional, NoReturn, List
+from typing import Optional, NoReturn, List, Dict
 
 import pydantic
 
@@ -87,7 +87,7 @@ def make_unit_in_leaf(command: commands.UniteCommand, branch: str, leaf: str,
                       stdout: infra.STDOut) -> Optional[str]:
     """Create single unit file."""
     uuids = load_cached_uuids(filesystem, command.storage_folder, branch, leaf)
-    uuid_master.insert_queue(uuids)
+    identity_master.add_files_cache(uuids)
 
     unit = make_unit(branch=branch,
                      leaf=leaf,
@@ -99,8 +99,10 @@ def make_unit_in_leaf(command: commands.UniteCommand, branch: str, leaf: str,
                      renderer=renderer,
                      stdout=stdout)
 
-    cache = {'variables': identity_master.extract_variables(branch, leaf),
-             'uuids': uuid_master.extract_used_uuids()}
+    cache = {
+        'variables': identity_master.extract_variables(branch, leaf),
+        'uuids': identity_master.extract_files_cache(),
+    }
 
     unit_folder = filesystem.join(command.storage_folder, branch, leaf)
     unit_path = filesystem.join(unit_folder, constants.UNIT_FILE_NAME)
@@ -144,12 +146,12 @@ def make_unit(branch: str,
 
     unit = entities.Unit()
     preprocessing.do_themes(source, unit, router)
-    preprocessing.do_groups(source, unit, router,
-                            uuid_master, filesystem,
-                            leaf_folder, renderer)
+    preprocessing.do_groups(source, unit, router, identity_master,
+                            uuid_master, filesystem, leaf_folder, renderer)
     preprocessing.do_synonyms(source, unit)
-    preprocessing.do_no_group_metas(source, unit, router, uuid_master,
-                                    filesystem, leaf_folder, renderer)
+    preprocessing.do_no_group_metas(source, unit, router, identity_master,
+                                    uuid_master, filesystem, leaf_folder,
+                                    renderer)
 
     return unit
 
@@ -203,14 +205,14 @@ def assert_no_variables(unit_text: str,
 
 
 def load_cached_uuids(filesystem: infra.Filesystem, storage_folder: str,
-                      branch: str, leaf: str) -> List[str]:
+                      branch: str, leaf: str) -> Dict[str, Dict[str, str]]:
     """Load uuids cache for current target."""
     path = filesystem.join(storage_folder, branch, leaf,
                            constants.CACHE_FILE_NAME)
 
     if filesystem.exists(path):
-        uuids = filesystem.read_json(path).get('uuids', [])
+        uuids = filesystem.read_json(path).get('uuids', {})
     else:
-        uuids = []
+        uuids = {}
 
     return uuids

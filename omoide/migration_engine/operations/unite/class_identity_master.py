@@ -20,7 +20,8 @@ class IdentityMaster:
 
     def __init__(self) -> None:
         """Initialize instance."""
-        self._cache: Dict[str, str] = {}
+        self._variables_cache: Dict[str, str] = {}
+        self._files_cache: Dict[str, Dict[str, str]] = {}
 
         self._prefix_to_method = {
             constants.PREFIX_THEME: 'generate_uuid_theme',
@@ -36,7 +37,7 @@ class IdentityMaster:
                        uuid_type: str, variable: str,
                        uuid_master: UUIDMaster) -> str:
         """Create and store new uuid."""
-        previous_value = self._cache.get(variable)
+        previous_value = self._variables_cache.get(variable)
 
         if previous_value is not None:
             return previous_value
@@ -55,7 +56,7 @@ class IdentityMaster:
 
     def get_value(self, variable_name: str) -> str:
         """Get value by given name."""
-        return self._cache[variable_name]
+        return self._variables_cache[variable_name]
 
     def extract_variables(self, branch: str,
                           leaf: str) -> Dict[str, Dict[str, str]]:
@@ -103,5 +104,19 @@ class IdentityMaster:
     def _store(self, branch: str, leaf: str,
                uuid_type: str, name: str, value: str) -> None:
         """Add value to inner storages."""
-        self._cache[name] = value
+        self._variables_cache[name] = value
         self._by_namespace[(branch, leaf, uuid_type, name)] = value
+
+    def add_files_cache(self, new_uuids: Dict[str, Dict[str, str]]) -> None:
+        """Add existing UUIDs for specific filenames."""
+        for group_uuid, elements in new_uuids.items():
+            if group_uuid not in self._files_cache:
+                self._files_cache[group_uuid] = {}
+
+            self._files_cache[group_uuid].update(elements)
+
+    def extract_files_cache(self) -> Dict[str, Dict[str, str]]:
+        """Get all UUIDs from files cache."""
+        uuids = self._files_cache.copy()
+        self._files_cache.clear()
+        return uuids

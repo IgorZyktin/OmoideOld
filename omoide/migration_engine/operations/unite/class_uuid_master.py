@@ -3,8 +3,7 @@
 """Special class that handles UUID generation.
 """
 import uuid as uuid_module
-from collections import defaultdict
-from typing import Collection, Optional, List, Sequence, NoReturn
+from typing import Collection, Optional, NoReturn
 
 from omoide import constants
 
@@ -19,18 +18,10 @@ class UUIDMaster:
     def __init__(self, all_uuids: Optional[Collection[str]] = None) -> None:
         """Initialize instance."""
         self._all_uuids = set(all_uuids) if all_uuids is not None else set()
-        self._given_queue: List[str] = []
-        self._used_uuids: List[str] = []
 
     def __contains__(self, uuid: str) -> bool:
         """Return True if this UUID is already used."""
         return uuid in self._all_uuids
-
-    def extract_used_uuids(self) -> List[str]:
-        """Return copy of used uuids."""
-        result = self._used_uuids.copy()
-        self._used_uuids.clear()
-        return result
 
     def ensure_that_uuid_is_unique(self, uuid: str) -> Optional[NoReturn]:
         """Raise it this UUID is duplicated."""
@@ -38,16 +29,6 @@ class UUIDMaster:
             raise ValueError(
                 f'Seems like same UUID was generated twice: {uuid}'
             )
-
-    def ensure_that_queue_is_unique(self) -> Optional[NoReturn]:
-        """Check our queue for uniqueness."""
-        all_uuids = defaultdict(int)
-
-        for original in self._given_queue:
-            all_uuids[original] += 1
-            if all_uuids[original] > 1:
-                raise ValueError('Seems like same UUID was added '
-                                 f'to the queue twice: {original}')
 
     @staticmethod
     def _generate_uuid4() -> str:
@@ -63,14 +44,9 @@ class UUIDMaster:
 
     def generate_and_add_uuid(self, prefix: str) -> str:
         """Create and add new UUID."""
-        if self._given_queue:
-            uuid = self._given_queue.pop()
-        else:
-            uuid = self.generate_uuid()
-
+        uuid = self.generate_uuid()
         self.ensure_that_uuid_is_unique(uuid)
         self._all_uuids.add(uuid)
-        self._used_uuids.append(uuid)
         full_uuid = f'{prefix}_{uuid}'
         return full_uuid
 
@@ -90,11 +66,6 @@ class UUIDMaster:
     def generate_uuid_synonym(self) -> str:
         """Create and add new UUID for synonym."""
         return self.generate_and_add_uuid(prefix=constants.PREFIX_SYNONYM)
-
-    def insert_queue(self, uuids: Sequence[str]) -> None:
-        """Add uuids queue."""
-        self._given_queue = list(reversed(uuids))
-        self.ensure_that_queue_is_unique()
 
     @staticmethod
     def get_prefix(string: str) -> str:
