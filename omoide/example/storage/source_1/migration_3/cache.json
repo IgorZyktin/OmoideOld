@@ -5,9 +5,9 @@
         "groups": {},
         "metas": {}
     },
-    "uuids": [
-        "18fe3a9f-caf2-4266-97ea-a320e6d81f2d",
-        "12b9e096-ac5d-4c54-9ec6-1f874a6aa3d3",
-        "2c46a227-a7ed-4ed9-875f-28f25b30d079"
-    ]
+    "uuids": {
+        "what_s_happening_to_me_by_eriktjernlund_d4fne17.jpg": "m_18fe3a9f-caf2-4266-97ea-a320e6d81f2d",
+        "6917711433_65ebed5e8f_o.jpg": "m_12b9e096-ac5d-4c54-9ec6-1f874a6aa3d3",
+        "47229809861_e54730642f_o.jpg": "m_2c46a227-a7ed-4ed9-875f-28f25b30d079"
+    }
 }
