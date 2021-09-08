@@ -24,10 +24,13 @@ After this script has been applied:
 """
 import json
 import os
+from collections import defaultdict
+from typing import Tuple
 
 import sqlalchemy
 
-DATABASE_PATH = '/omoide/example/database\\database.db'
+DATABASE_PATH = 'D:\\PycharmProjects\\Omoide' \
+                '\\omoide\\example\\database\\database.db'
 STORAGE_PATH = 'D:\\PycharmProjects\\Omoide\\omoide\\example\\storage'
 
 
@@ -48,21 +51,21 @@ def write(path: str, content: dict) -> None:
         json.dump(content, file, indent=4, ensure_ascii=False)
 
 
-def get_filename_for_uuid(conn, uuid: str) -> str:
+def get_group_filename_for_uuid(conn, uuid: str) -> Tuple[str, str]:
     stmt = sqlalchemy.text("""
-    SELECT original_filename, original_extension FROM metas WHERE uuid = :uuid
+    SELECT group_uuid, original_filename, original_extension 
+    FROM metas WHERE uuid = :uuid
     """)
-    filename, ext = conn.execute(stmt, {'uuid': uuid}).one()
-    return f'{filename}.{ext}'
+    group_uuid, filename, ext = conn.execute(stmt, {'uuid': uuid}).one()
+    return group_uuid, f'{filename}.{ext}'
 
 
 def handle_content(content: dict, conn):
-    uuids = content.pop('uuids', [])
-    files = {}
-    for uuid in uuids:
-        meta_uuid = f'm_{uuid}'
-        filename = get_filename_for_uuid(conn, meta_uuid)
-        files[filename] = meta_uuid
+    uuids = content.pop('uuids', {})
+    files = defaultdict(dict)
+    for filename, meta_uuid in uuids.items():
+        group, filename = get_group_filename_for_uuid(conn, meta_uuid)
+        files[group][filename] = meta_uuid
 
     content['uuids'] = files
 
@@ -74,7 +77,7 @@ def main(storage: str, db_path: str):
             for source_path in iterate_on_sources(storage):
                 content = read(source_path)
                 handle_content(content, conn)
-                # write(source_path, content)
+                write(source_path, content)
                 print(f'Complete', source_path)
 
     finally:
