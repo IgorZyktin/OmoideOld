@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Common app_database related things.
+"""Common database related things.
 """
 import sqlalchemy as sa
 from sqlalchemy.orm import declarative_base

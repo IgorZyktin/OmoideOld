@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Basic app_database operations.
+"""Basic database operations.
 """
 from contextlib import contextmanager
 
@@ -22,7 +22,7 @@ __all__ = [
 
 def drop_database(sources_folder: str, filename: str,
                   filesystem: infra.Filesystem) -> bool:
-    """Remove app_database file from folder."""
+    """Remove database file from folder."""
     path = filesystem.absolute(filesystem.join(sources_folder, filename))
     dropped = False
 
@@ -39,7 +39,7 @@ def drop_database(sources_folder: str, filename: str,
 def create_database(folder: str, filename: str,
                     filesystem: infra.Filesystem,
                     echo: bool) -> Engine:
-    """Create app_database file."""
+    """Create database file."""
     path = filesystem.absolute(filesystem.join(folder, filename))
     engine = create_engine(f'sqlite+pysqlite:///{path}',
                            echo=echo,
@@ -50,7 +50,7 @@ def create_database(folder: str, filename: str,
 def create_read_only_database(folder: str, filename: str,
                               filesystem: infra.Filesystem,
                               echo: bool) -> Engine:
-    """Create app_database file."""
+    """Create database file."""
     path = filesystem.absolute(filesystem.join(folder, filename))
     engine = create_engine(f'sqlite+pysqlite:///{path}?uri=true',
                            connect_args={'check_same_thread': False},
@@ -68,7 +68,7 @@ def restore_database_from_scratch(folder: str,
                                   filename: str,
                                   filesystem: infra.Filesystem,
                                   echo: bool = True) -> Engine:
-    """Drop existing leaf app_database and create a new one.
+    """Drop existing leaf database and create a new one.
     """
     drop_database(sources_folder=folder,
                   filename=filename,
@@ -85,7 +85,7 @@ def restore_database_from_scratch(folder: str,
 
 
 def synchronize(session_from: Session, session_to: Session) -> None:
-    """Synchronize objects from one app_database to another."""
+    """Synchronize objects from one database to another."""
     sync_model(session_from, session_to, models.Theme)
     sync_model(session_from, session_to, models.TagTheme)
 
@@ -100,7 +100,7 @@ def synchronize(session_from: Session, session_to: Session) -> None:
 
 
 def sync_model(session_from: Session, session_to: Session, model) -> None:
-    """Synchronize single model from one app_database to another."""
+    """Synchronize single model from one database to another."""
     for each in session_from.query(model).all():
         each = session_to.merge(each)
         session_to.add(each)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Create static app_database.
+"""Create static database.
 """
 import sys
 
@@ -17,12 +17,12 @@ from omoide.migration_engine.operations.freeze import helpers
 def act(command: commands.FreezeCommand,
         filesystem: infra.Filesystem,
         stdout: infra.STDOut) -> None:
-    """Create static app_database."""
+    """Create static database."""
     root_db_path = filesystem.join(filesystem.absolute(command.storage_folder),
                                    constants.ROOT_DB_FILE_NAME)
 
     if filesystem.not_exists(root_db_path):
-        stdout.red(f'Source app_database does not exist: {root_db_path}')
+        stdout.red(f'Source database does not exist: {root_db_path}')
         sys.exit(1)
 
     root_db = operations.create_database(
@@ -39,7 +39,7 @@ def act(command: commands.FreezeCommand,
         filesystem.create_directory(db_folder)
 
     if filesystem.exists(db_path):
-        stdout.yellow(f'Deleting old target app_database: {db_path}')
+        stdout.yellow(f'Deleting old target database: {db_path}')
         filesystem.delete_file(db_path)
 
     needs_schema = filesystem.not_exists(db_path)

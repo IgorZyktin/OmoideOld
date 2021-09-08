@@ -4,7 +4,7 @@
 
 This module describes actual requirements that imposed on source files.
 We're using intentionally simplified syntax there, so these entities
-are not like actual app_database models.
+are not like actual database models.
 """
 from typing import List, Collection, NoReturn, Optional
 

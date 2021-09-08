@@ -27,8 +27,7 @@ import os
 
 import sqlalchemy
 
-DATABASE_PATH = 'D:\\PycharmProjects\\Omoide' \
-                '\\omoide\\example\\app_database\\database.db'
+DATABASE_PATH = '/omoide/example/database\\database.db'
 STORAGE_PATH = 'D:\\PycharmProjects\\Omoide\\omoide\\example\\storage'
 
 

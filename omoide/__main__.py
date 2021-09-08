@@ -25,7 +25,7 @@ Possible call variants:
     To synchronize databases:
         python -m omoide sync --branch=all --leaf=all
 
-    To create final static app_database:
+    To create final static database:
         python -m omoide freeze
 
     To launch development server:

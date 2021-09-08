@@ -8,7 +8,7 @@ import os as _os
 SOURCES_FOLDER_NAME = 'sources'
 STORAGE_FOLDER_NAME = 'storage'
 CONTENT_FOLDER_NAME = 'content'
-DATABASE_FOLDER_NAME = 'app_database'
+DATABASE_FOLDER_NAME = 'database'
 
 MEDIA_CONTENT_FOLDER_NAME = 'content'
 MEDIA_PREVIEW_FOLDER_NAME = 'preview'

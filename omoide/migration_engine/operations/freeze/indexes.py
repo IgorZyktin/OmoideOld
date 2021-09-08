@@ -2,7 +2,7 @@
 """Fast lookup tables.
 
 Gets loaded on start of the application and
-helps limiting amount of app_database requests.
+helps limiting amount of database requests.
 """
 from typing import List
 
@@ -25,7 +25,7 @@ def build_indexes(session: Session, stdout: infra.STDOut) -> int:
 
 
 def lazy_get_theme(meta: models.Meta) -> models.Theme:
-    """Lazy return Theme or go to app_database for it."""
+    """Lazy return Theme or go to database for it."""
     value = _META_THEMES_CACHE.get(meta.uuid)
 
     if value is None:
@@ -36,7 +36,7 @@ def lazy_get_theme(meta: models.Meta) -> models.Theme:
 
 
 def lazy_get_group(meta: models.Meta) -> models.Group:
-    """Lazy return Group or go to app_database for it."""
+    """Lazy return Group or go to database for it."""
     value = _META_GROUPS_CACHE.get(meta.uuid)
 
     if value is None:
@@ -47,7 +47,7 @@ def lazy_get_group(meta: models.Meta) -> models.Group:
 
 
 def lazy_get_synonyms(session) -> List[models.Synonym]:
-    """Lazy return Group or go to app_database for it."""
+    """Lazy return Group or go to database for it."""
     global _SYNONYMS
 
     if _SYNONYMS is None:

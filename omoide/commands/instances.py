@@ -77,7 +77,7 @@ class SyncCommand(FilesRelatedCommand):
 
 @dataclass
 class FreezeCommand(FilesRelatedCommand):
-    """Create static app_database."""
+    """Create static database."""
     name: str = 'freeze'
 
 

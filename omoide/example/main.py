@@ -50,7 +50,7 @@ def main():
     #                                       constants.DATABASE_FOLDER_NAME)
     #     omoide_(['runserver',
     #              f'--static',
-    #              f'--app_database-folder={database_folder}',
+    #              f'--database-folder={database_folder}',
     #              f'--templates-folder={templates_folder}',
     #              f'--static-folder={static_folder}'])
 

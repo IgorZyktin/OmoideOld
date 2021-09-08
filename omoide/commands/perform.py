@@ -89,13 +89,13 @@ def perform_freeze(command: commands.FreezeCommand,
                    filesystem: infra.Filesystem,
                    stdout: infra.STDOut) -> None:
     """Perform freeze command."""
-    stdout.magenta('[FREEZE] Making static app_database')
+    stdout.magenta('[FREEZE] Making static database')
     migration_operations.freeze.act(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
     )
-    stdout.magenta('Successfully created static app_database')
+    stdout.magenta('Successfully created static database')
 
 
 def perform_runserver(command: commands.RunserverCommand,
