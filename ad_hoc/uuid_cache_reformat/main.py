@@ -1,26 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """Script that changes cache files.
-
-Initial variant of cache:
-{
-    "variables": {
-    },
-    "uuids": [
-        "e5d4448a-8ea9-464d-93d8-83551665e389",
-        "8bae358c-29cc-464c-bd2b-b524f40fa059"
-    ]
-}
-
-After this script has been applied:
-{
-    "variables": {
-    },
-    "uuids": {
-        "file1.jpg": "m_e5d4448a-8ea9-464d-93d8-83551665e389",
-        "file2.jpg": "m_8bae358c-29cc-464c-bd2b-b524f40fa059"
-    }
-}
 """
 import json
 import os
@@ -60,12 +40,23 @@ def get_group_filename_for_uuid(conn, uuid: str) -> Tuple[str, str]:
     return group_uuid, f'{filename}.{ext}'
 
 
+def get_uuid_for_filename(conn, filename: str) -> Tuple[str, str]:
+    stmt = sqlalchemy.text("""
+    SELECT uuid, group_uuid 
+    FROM metas WHERE original_filename = :filename
+    """)
+    uuid, group_uuid = conn.execute(stmt, {'filename': filename}).one()
+    return uuid, group_uuid
+
+
 def handle_content(content: dict, conn):
     uuids = content.pop('uuids', {})
     files = defaultdict(dict)
-    for filename, meta_uuid in uuids.items():
-        group, filename = get_group_filename_for_uuid(conn, meta_uuid)
-        files[group][filename] = meta_uuid
+    for group_uuid, elements in uuids.items():
+        for filename, _ in elements.items():
+            name = filename.split('.')[0]
+            uuid, _group_uuid = get_uuid_for_filename(conn, name)
+            files[group_uuid][filename] = uuid
 
     content['uuids'] = files
 

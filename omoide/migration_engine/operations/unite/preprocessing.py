@@ -2,9 +2,8 @@
 
 """Textual preprocessing components.
 """
-import operator
 import re
-from typing import Union, List, Type, Tuple, Dict, Callable, Optional
+from typing import Union, List, Type, Tuple, Dict, cast
 
 from omoide import constants
 from omoide import infra
@@ -16,6 +15,7 @@ from omoide.migration_engine.operations.unite \
     .class_router import Router
 from omoide.migration_engine.operations.unite \
     .class_uuid_master import UUIDMaster
+from omoide.migration_engine.operations.unite import uuid_filling
 
 CastTypes = Union[
     entities.TagTheme,
@@ -280,21 +280,15 @@ def preprocess_no_group_meta_pack(unit: entities.Unit,
                                 theme_route,
                                 group_route)
 
-    filenames = list(ep_meta.filenames)
-    existing_uuids = identity_master.extract_files_cache()
-    if ep_meta.group_uuid not in existing_uuids:
-        existing_uuids[ep_meta.group_uuid] = {}
-    local_uuids = existing_uuids[ep_meta.group_uuid]
-    uuids = generate_group_of_uuids_from_scratch(filenames, local_uuids,
-                                                 uuid_master)
-    existing_uuids[ep_meta.group_uuid].update(uuids)
-    identity_master.add_files_cache(existing_uuids)
+    uuids = generate_group_of_uuids(ep_meta.group_uuid,
+                                    list(ep_meta.filenames),
+                                    identity_master, uuid_master)
 
     for filename in ep_meta.filenames:
         name, ext = filesystem.split_extension(filename)
         file_path = filesystem.join(full_path, filename)
         media_info = renderer.analyze(file_path, ext)
-        uuid = existing_uuids[ep_meta.group_uuid][filename]
+        uuid = uuids[ep_meta.group_uuid][filename]
 
         path_to_content = (
             f'/{constants.MEDIA_CONTENT_FOLDER_NAME}'
@@ -353,101 +347,24 @@ def generate_group_of_uuids(group_uuid: str,
     existing_uuids = identity_master.extract_files_cache()
     local_uuids = existing_uuids.get(group_uuid, {})
 
-    if local_uuids:
-        uuids = generate_group_of_uuids_with_insertion(filenames,
-                                                       local_uuids,
-                                                       uuid_master)
-    else:
-        uuids = generate_group_of_uuids_from_scratch(filenames,
-                                                     local_uuids,
-                                                     uuid_master)
-    existing_uuids[group_uuid] = {**local_uuids, **uuids}
-    identity_master.add_files_cache(existing_uuids)
-    return existing_uuids
-
-
-def generate_group_of_uuids_from_scratch(filenames: List[str],
-                                         local_uuids: Dict[str, str],
-                                         uuid_master: UUIDMaster
-                                         ) -> Dict[str, str]:
-    """Generate random UUIDs and sort."""
-    uuids = []
-    for filename in filenames:
-        uuid = local_uuids.get(filename)
-        if uuid is None:
-            uuid = uuid_master.generate_uuid_meta()
-            uuids.append(uuid)
-
-    uuids.sort()
-    return dict(zip(filenames, uuids))
-
-
-def generate_group_of_uuids_with_insertion(filenames: List[str],
-                                           local_uuids: Dict[str, str],
-                                           uuid_master: UUIDMaster
-                                           ) -> Dict[str, str]:
-    """Generate UUIDs in a way the will follow existing order."""
     uuids_list = [None] * len(filenames)
-
     for i, filename in enumerate(filenames):
         uuids_list[i] = local_uuids.get(filename)
 
-    if None not in uuids_list:
-        return local_uuids
+    def generator() -> uuid_filling.T:
+        """Create new UUID value."""
+        return f'{constants.PREFIX_META}_{uuid_master.generate_uuid()}'
 
-    def scan(go_left: bool, index: int) -> Optional[str]:
-        """Return first non empty element or None."""
-        if index == 0:
-            return uuids_list[0]
-
-        if index == len(uuids_list) - 1:
-            return uuids_list[index - 1]
-
-        return scan(go_left, index + (-1 if go_left else 1))
-
-    for i, uuid in enumerate(uuids_list):
-        if uuid is not None:
-            continue
-
-        if i == 0:
-            new_uuid = _generate_uuid_relatively(operator.lt,
-                                                 min(local_uuids.values()),
-                                                 uuid_master)
-        elif i == len(filenames) - 1:
-            new_uuid = _generate_uuid_relatively(operator.gt,
-                                                 max(local_uuids.values()),
-                                                 uuid_master)
-        else:
-            left = scan(True, i)
-            right = scan(False, i)
-            assert left is not None
-
-            if right is None:
-                new_uuid = _generate_uuid_relatively(
-                    operator.gt, max(local_uuids.values()), uuid_master)
-            else:
-                new_uuid = _generate_uuid_between(left, right, uuid_master)
-
-        uuids_list[i] = new_uuid
-        uuid_master.add_existing_uuid(new_uuid)
-
+    uuid_filling.fill_array_inplace(
+        array=uuids_list,
+        minimum=uuid_filling.MIN_UUID_VALUE,
+        maximum=uuid_filling.MAX_UUID_VALUE,
+        generator=generator,
+    )
     assert None not in uuids_list
-    return dict(zip(filenames, map(str, uuids_list)))
-
-
-def _generate_uuid_relatively(compare: Callable, reference: str,
-                              uuid_master: UUIDMaster) -> str:
-    """Create UUID bigger or smaller than this one."""
-    new_uuid = f'{constants.PREFIX_META}_{uuid_master.generate_uuid()}'
-    while not compare(new_uuid, reference):
-        new_uuid = f'{constants.PREFIX_META}_{uuid_master.generate_uuid()}'
-    return new_uuid
-
-
-def _generate_uuid_between(left: str, right: str,
-                           uuid_master: UUIDMaster) -> str:
-    """Create UUID between two existing."""
-    new_uuid = f'{constants.PREFIX_META}_{uuid_master.generate_uuid()}'
-    while not (left < new_uuid < right):
-        new_uuid = f'{constants.PREFIX_META}_{uuid_master.generate_uuid()}'
-    return new_uuid
+    uuids_list = cast(List[str], uuids_list)
+    existing_uuids[group_uuid] = {**local_uuids,
+                                  **dict(zip(filenames, uuids_list))}
+    identity_master.add_files_cache(existing_uuids)
+    uuid_master.add_existing_uuids()
+    return existing_uuids

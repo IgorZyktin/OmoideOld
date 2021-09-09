@@ -55,4 +55,4 @@ def gather_variables_from_cache(branch: str, leaf: str, cache: dict,
         uuid_type = uuid_type_by_category[category]
         for name, value in variables.items():
             identity_master.add_variable(branch, leaf, uuid_type, name, value)
-            uuid_master.add_existing_uuid(value)
+            uuid_master.add_existing_uuids(value)

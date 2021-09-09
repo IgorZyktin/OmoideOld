@@ -72,11 +72,12 @@ class UUIDMaster:
         """Return prefix of the UUID."""
         return string.split('_')[0]
 
-    def add_existing_uuid(self, uuid: str) -> None:
+    def add_existing_uuids(self, *uuids: str) -> None:
         """Add this value to used ones (even if it is contained in queue)."""
-        prefix = self.get_prefix(uuid)
+        for uuid in uuids:
+            prefix = self.get_prefix(uuid)
 
-        if prefix not in constants.ALL_PREFIXES_SET:
-            raise ValueError(f'Unknown prefix {prefix!r} for uuid {uuid}')
+            if prefix not in constants.ALL_PREFIXES_SET:
+                raise ValueError(f'Unknown prefix {prefix!r} for uuid {uuid}')
 
-        self._all_uuids.add(uuid)
+            self._all_uuids.add(uuid)
