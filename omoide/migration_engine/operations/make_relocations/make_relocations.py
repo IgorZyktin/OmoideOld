@@ -2,6 +2,7 @@
 
 """Make relocations.
 """
+from dataclasses import asdict
 from typing import List
 
 import omoide.constants.media
@@ -47,7 +48,7 @@ def act(command: commands.MakeRelocationsCommand,
                 leaf=leaf,
                 filesystem=filesystem,
             )
-            relocations.append(new_relocations)
+            relocations.extend(new_relocations)
             total_new_relocations += 1
 
         save_relocations(
@@ -65,47 +66,60 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
                                   branch: str,
                                   leaf: str,
                                   filesystem: infra.Filesystem
-                                  ) -> classes.Relocation:
+                                  ) -> List[classes.Relocation]:
     """Gather all required resources for relocation information."""
     _, _, theme, group, _ = meta.path_to_content.split('/')
+    source_filename = f'{meta.original_filename}.{meta.original_extension}'
 
-    operations = [
-        classes.Operation(
+    def get_last_segment(path: str) -> str:
+        """Extract filename."""
+        head, ext = path.rsplit('.', maxsplit=1)
+        filename = head[-38:]
+        return f'{filename}.{ext}'
+
+    relocations = [
+        classes.Relocation(
+            uuid=meta.uuid,
             width=meta.width,
             height=meta.height,
+            folder_from=filesystem.join(command.sources_folder, branch, leaf,
+                                        theme, group),
             folder_to=filesystem.join(command.content_folder,
                                       constants.MEDIA_CONTENT_FOLDER_NAME,
                                       theme, group),
             operation_type='copy',
+            source_filename=source_filename,
+            target_filename=get_last_segment(meta.path_to_content),
         ),
-        classes.Operation(
+        classes.Relocation(
+            uuid=meta.uuid,
             width=omoide.constants.media.PREVIEW_SIZE[0],
             height=omoide.constants.media.PREVIEW_SIZE[1],
+            folder_from=filesystem.join(command.sources_folder, branch, leaf,
+                                        theme, group),
             folder_to=filesystem.join(command.content_folder,
                                       constants.MEDIA_PREVIEW_FOLDER_NAME,
                                       theme, group),
             operation_type='scale',
+            source_filename=source_filename,
+            target_filename=get_last_segment(meta.path_to_preview),
         ),
-        classes.Operation(
+        classes.Relocation(
+            uuid=meta.uuid,
             width=omoide.constants.media.THUMBNAIL_SIZE[0],
             height=omoide.constants.media.THUMBNAIL_SIZE[1],
+            folder_from=filesystem.join(command.sources_folder, branch, leaf,
+                                        theme, group),
             folder_to=filesystem.join(command.content_folder,
                                       constants.MEDIA_THUMBNAILS_FOLDER_NAME,
                                       theme, group),
             operation_type='scale',
+            source_filename=source_filename,
+            target_filename=get_last_segment(meta.path_to_thumbnail),
         ),
     ]
 
-    relocation = classes.Relocation(
-        uuid=meta.uuid,
-        source_filename=f'{meta.original_filename}.{meta.original_extension}',
-        target_filename=f'{meta.uuid}.{meta.original_extension}',
-        folder_from=filesystem.join(command.sources_folder, branch, leaf,
-                                    theme, group),
-        operations=operations,
-    )
-
-    return relocation
+    return relocations
 
 
 def save_relocations(folder: str,
@@ -113,5 +127,5 @@ def save_relocations(folder: str,
                      filesystem: infra.Filesystem) -> str:
     """Save relocations as JSON file."""
     file_path = filesystem.join(folder, constants.RELOCATION_FILE_NAME)
-    filesystem.write_json(file_path, [x.dict() for x in relocations])
+    filesystem.write_json(file_path, [asdict(x) for x in relocations])
     return file_path

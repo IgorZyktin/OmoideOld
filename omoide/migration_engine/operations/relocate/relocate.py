@@ -52,18 +52,18 @@ def relocate_single_file(relocation: classes.Relocation,
         )
 
     stdout.print(f'\t{relocation.source_filename}')
-    for operation in relocation.operations:
-        filesystem.ensure_folder_exists(operation.folder_to, stdout)
-        path_to = filesystem.join(operation.folder_to,
-                                  relocation.target_filename)
 
-        if filesystem.exists(path_to) and not force:
-            stdout.cyan(
-                f'\t\tFile already exist: {relocation.target_filename}')
-            continue
+    filesystem.ensure_folder_exists(relocation.folder_to, stdout)
+    path_to = filesystem.join(relocation.folder_to,
+                              relocation.target_filename)
 
-        if operation.operation_type == 'copy':
-            filesystem.copy_file(path_from, path_to)
-        else:
-            renderer.resize(path_from, path_to,
-                            operation.width, operation.height)
+    if filesystem.exists(path_to) and not force:
+        stdout.cyan(
+            f'\t\tFile already exist: {relocation.target_filename}')
+        return
+
+    if relocation.operation_type == 'copy':
+        filesystem.copy_file(path_from, path_to)
+    else:
+        renderer.resize(path_from, path_to,
+                        relocation.width, relocation.height)
