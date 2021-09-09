@@ -347,22 +347,28 @@ def generate_group_of_uuids(group_uuid: str,
     existing_uuids = identity_master.extract_files_cache()
     local_uuids = existing_uuids.get(group_uuid, {})
 
-    uuids_list = [None] * len(filenames)
-    for i, filename in enumerate(filenames):
-        uuids_list[i] = local_uuids.get(filename)
-
     def generator() -> uuid_filling.T:
         """Create new UUID value."""
         return f'{constants.PREFIX_META}_{uuid_master.generate_uuid()}'
 
-    uuid_filling.fill_array_inplace(
-        array=uuids_list,
-        minimum=uuid_filling.MIN_UUID_VALUE,
-        maximum=uuid_filling.MAX_UUID_VALUE,
-        generator=generator,
-    )
-    assert None not in uuids_list
-    uuids_list = cast(List[str], uuids_list)
+    if not local_uuids:
+        uuids_list = [uuid_master.generate_uuid_meta() for _ in filenames]
+        uuids_list.sort()
+
+    else:
+        uuids_list = [None] * len(filenames)
+        for i, filename in enumerate(filenames):
+            uuids_list[i] = local_uuids.get(filename)
+
+        uuid_filling.fill_array_inplace(
+            array=uuids_list,
+            minimum=uuid_filling.MIN_UUID_VALUE,
+            maximum=uuid_filling.MAX_UUID_VALUE,
+            generator=generator,
+        )
+        assert None not in uuids_list
+        uuids_list = cast(List[str], uuids_list)
+
     existing_uuids[group_uuid] = {**local_uuids,
                                   **dict(zip(filenames, uuids_list))}
     identity_master.add_files_cache(existing_uuids)
