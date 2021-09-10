@@ -22,7 +22,7 @@ __all__ = [
 #     height: int
 #     resolution: float
 #     size: int
-#     type: str
+#     type_: str
 #     signature: str
 #     signature_type: str
 
