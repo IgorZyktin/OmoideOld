@@ -177,8 +177,8 @@ def instantiate_source(raw_source: dict,
                 element = target_type(**each)
             except pydantic.error_wrappers.ValidationError:
                 stdout.red(
-                    'Failed on:\n'
-                    + json.dumps(each, indent=4, ensure_ascii=False)
+                    'Failed on:\n' + json.dumps(each, indent=4,
+                                                ensure_ascii=False)
                 )
                 raise
             else:

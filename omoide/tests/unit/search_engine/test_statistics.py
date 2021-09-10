@@ -83,23 +83,22 @@ def test_statistics_sum(statistics_fixture):
         'total_size': 1055,
     }
 
-    assert (statistics_fixture
-            + statistics_fixture
-            + statistics_fixture).as_dict() == {
-               'max_date': '2021-10-01',
-               'min_date': '2021-02-28',
-               'tags': {'alpha': 6,
-                        'ball': 3,
-                        'beta': 6,
-                        'cat': 3,
-                        'dog': 3,
-                        'fish': 3,
-                        'gamma': 3,
-                        'home': 3,
-                        'trust': 3},
-               'total_items': 9,
-               'total_size': 3165,
-           }
+    sum_ = statistics_fixture + statistics_fixture + statistics_fixture
+    assert sum_.as_dict() == {
+        'max_date': '2021-10-01',
+        'min_date': '2021-02-28',
+        'tags': {'alpha': 6,
+                 'ball': 3,
+                 'beta': 6,
+                 'cat': 3,
+                 'dog': 3,
+                 'fish': 3,
+                 'gamma': 3,
+                 'home': 3,
+                 'trust': 3},
+        'total_items': 9,
+        'total_size': 3165,
+    }
 
 
 def test_statistics_not_implemented(statistics_fixture):
