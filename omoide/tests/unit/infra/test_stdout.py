@@ -24,7 +24,7 @@ def test_stdout_colored(method_name, color_name):
     method = getattr(stdout, method_name)
     with mock.patch('omoide.infra.class_stdout.print') as fake_print:
         with mock.patch('omoide.infra.class_stdout.Fore') as fake_fore:
-            setattr(fake_fore, 'RESET', f'<reset>')
+            setattr(fake_fore, 'RESET', '<reset>')
             setattr(fake_fore, color_name, f'<{method_name}>')
             method('something')
             fake_print.assert_called_once_with(
