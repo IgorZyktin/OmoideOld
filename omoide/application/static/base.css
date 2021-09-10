@@ -143,3 +143,9 @@ h3 {
 .inactive-page {
     background-color: var(--darky) !important;
 }
+
+.flex_hr {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

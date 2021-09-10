@@ -1,7 +1,7 @@
 .query-container {
     margin: 10px;
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr 1fr 1fr 0.3fr;
+    grid-template-columns: 1fr 5fr 1fr 1fr 1fr;
     grid-column-gap: 1em;
 }
 

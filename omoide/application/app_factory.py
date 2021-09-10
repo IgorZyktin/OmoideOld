@@ -74,7 +74,7 @@ def create_app(command: commands.RunserverCommand,
                                              query_builder=query_builder,
                                              index=search_index)
 
-        return flask.render_template('search.html', **context)
+        return flask.render_template('index.html', **context)
 
     @app.route('/preview/<uuid>')
     def preview(uuid: str):
@@ -108,6 +108,7 @@ def create_app(command: commands.RunserverCommand,
             greet = True
 
         context = {
+            'on_feedback_page': True,
             'greet': greet,
             'web_query': web_query,
             'user_query': user_query,

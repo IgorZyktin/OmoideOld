@@ -50,9 +50,6 @@
             <a href="{{ url_for('navigation') + web_query|string|safe }}"
                class="button">Navigation</a>
 
-            <a href="{{ url_for('feedback') + web_query|string|safe }}"
-               class="button" title="Send feedback">@</a>
-
             <span></span>
 
             <span class="note small-text">{{ note }}</span>
@@ -72,6 +69,18 @@
 <hr>
 
 {% block body %}{% endblock %}
+
+<hr>
+
+<div class="flex_hr">
+    {% if not on_feedback_page %}
+        <a href="{{ url_for('feedback') + web_query|string|safe }}"
+           class="button" title="Send feedback">Send feedback</a>
+    {% endif %}
+    <a href="{{ url_for('search') + web_query|string|safe }}"
+       class="button" title="New search">New search</a>
+</div>
+<br>
 
 {{ injection|safe }}
 

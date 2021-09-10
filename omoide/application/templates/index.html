@@ -1,4 +1,4 @@
-{% extends "base_search.html" %}
+{% extends "base.html" %}
 {% from "macros.html" import pagination %}
 
 {% block upper_body %}
@@ -40,7 +40,5 @@
     </div>
 
     {{ pagination(paginator, web_query) }}
-
-    <br>
 
 {% endblock %}
