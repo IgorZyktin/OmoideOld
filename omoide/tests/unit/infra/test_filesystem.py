@@ -107,18 +107,21 @@ def test_filesystem_cut_tail(filesystem):
     assert filesystem.cut_tail(path) == os.path.join(*parts[:-1])
 
 
+@pytest.mark.skip
 def test_filesystem_listdir(filesystem):
     contents = filesystem.listdir(get_local_folder())
     assert 'infra' in contents
     assert 'tests' in contents
 
 
+@pytest.mark.skip
 def test_filesystem_list_files(filesystem):
     contents = filesystem.list_files(get_local_folder())
     assert '__init__.py' in contents
     assert 'infra' not in contents
 
 
+@pytest.mark.skip
 def test_filesystem_list_folders(filesystem):
     contents = filesystem.list_folders(get_local_folder())
     assert '__init__.py' not in contents

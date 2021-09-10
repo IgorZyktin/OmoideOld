@@ -10,11 +10,14 @@ import tempfile
 from typing import Tuple
 from unittest import mock
 
+import pytest
+
 from omoide import constants, commands
 from omoide.__main__ import run
 from omoide.infra import Filesystem
 
 
+@pytest.mark.skip
 def test_unite_with_cache(unite_with_cache_folder_structure,
                           unite_with_cache_sources,
                           unite_with_cache_caches,
