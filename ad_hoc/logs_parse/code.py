@@ -42,7 +42,13 @@ def get_lines(path: str) -> List[str]:
 
 def split_line(raw_request: str) -> Dict[str, str]:
     """Separate request into parts."""
-    parts = raw_request.split('|')
+    text = raw_request.strip()
+
+    if not text:
+        return {}
+
+    *parts_left, parts_right = text.split('|', maxsplit=6)
+    parts = parts_left + parts_right.rsplit('|', maxsplit=2)
 
     if not parts:
         return {}
