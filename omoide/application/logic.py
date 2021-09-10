@@ -59,6 +59,7 @@ def make_search_response(maker: sessionmaker, web_query: WebQuery,
         sequence=uuids,
         current_page=current_page,
         items_per_page=constants.ITEMS_PER_PAGE,
+        pages_in_block=constants.PAGES_IN_BLOCK,
     )
 
     duration = time.perf_counter() - start
@@ -157,7 +158,8 @@ def _build_paginator(group_uuids: List[str], current_uuid: str) \
 
     paginator = Paginator(group_uuids,
                           current_page=current_page,
-                          items_per_page=1)
+                          items_per_page=1,
+                          pages_in_block=constants.PAGES_IN_BLOCK)
 
     return _next, _previous, paginator
 

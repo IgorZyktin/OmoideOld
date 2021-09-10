@@ -3,32 +3,42 @@
         <div class="pages">
             {% if not paginator.is_fitting %}
                 {% if paginator.has_previous %}
-                    <a class="active-page" href="{{ web_query.replace(page=1) }}">First</a>
-                    <a class="active-page" href="{{ web_query.replace(page=paginator.previous_page_number) }}">Previous</a>
+                    <a class="active-page page-separate"
+                       href="{{ web_query.replace(page=paginator.previous_page_number) }}">Previous</a>
                 {% else %}
-                    <a>First</a>
-                    <a>Previous</a>
+                    <a class="page-separate">Previous</a>
                 {% endif %}
+                <span>&nbsp;</span>
             {% endif %}
 
             {% for page in paginator.iterate_over_pages() %}
+
+                {% if page.number == 1 %}
+                    {% set corner_style = 'page-left' %}
+                {% elif page.number == paginator.num_pages %}
+                    {% set corner_style = 'page-right' %}
+                {% else %}
+                    {% set corner_style = '' %}
+                {% endif %}
+
                 {% if page.is_dummy %}
-                    <a class="inactive-page">...</a>
+                    <a class="inactive-page {{ corner_style }}">...</a>
                 {% elif page.is_current %}
                     <a href="{{ web_query.replace(page=page.number) }}"
-                       class="active-page">{{ page.number }}</a>
+                       class="active-page {{ corner_style }}">{{ page.number }}</a>
                 {% else %}
-                    <a href="{{ web_query.replace(page=page.number) }}">{{ page.number }}</a>
+                    <a href="{{ web_query.replace(page=page.number) }}"
+                       class="{{ corner_style }}">{{ page.number }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if not paginator.is_fitting %}
+                <span>&nbsp;</span>
                 {% if paginator.has_next %}
-                    <a class="active-page" href="{{ web_query.replace(page=paginator.next_page_number) }}">Next</a>
-                    <a class="active-page" href="{{ web_query.replace(page=paginator.num_pages) }}">Last</a>
+                    <a class="active-page page-separate"
+                       href="{{ web_query.replace(page=paginator.next_page_number) }}">Next</a>
                 {% else %}
-                    <a>Next</a>
-                    <a>Last</a>
+                    <a class="page-separate">Next</a>
                 {% endif %}
             {% endif %}
         </div>
@@ -41,33 +51,41 @@
         <div class="pages">
             {% if not paginator.is_fitting %}
                 {% if paginator.has_previous %}
-                    <a class="active-page" href="{{ url_for('preview', uuid=paginator.first_value) + web_query|string }}">First</a>
-                    <a class="active-page" href="{{ url_for('preview', uuid=previous) + web_query|string }}">Previous</a>
+                    <a class="active-page page-separate"
+                       href="{{ url_for('preview', uuid=previous) + web_query|string }}">Previous</a>
                 {% else %}
-                    <a>First</a>
-                    <a>Previous</a>
+                    <a class="page-separate">Previous</a>
                 {% endif %}
+                <span>&nbsp;</span>
             {% endif %}
 
             {% for page in paginator.iterate_over_pages() %}
-                {% if page.is_dummy %}
-                    <a class="inactive-page">...</a>
-                {% elif page.is_current %}
-                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string }}"
-                       class="active-page">{{ page.number }}</a>
+                {% if page.number == 1 %}
+                    {% set corner_style = ' page-left' %}
+                {% elif page.number == paginator.num_pages %}
+                    {% set corner_style = ' page-right' %}
                 {% else %}
-                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string }}">
-                        {{ page.number }}</a>
+                    {% set corner_style = '' %}
+                {% endif %}
+
+                {% if page.is_dummy %}
+                    <a class="inactive-page{{ corner_style }}">...</a>
+                {% elif page.is_current %}
+                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string|safe }}"
+                       class="active-page{{ corner_style }}">{{ page.number }}</a>
+                {% else %}
+                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string|safe }}"
+                       class="{{ corner_style }}">{{ page.number }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if not paginator.is_fitting %}
+                <span>&nbsp;</span>
                 {% if paginator.has_next %}
-                    <a class="active-page" href="{{ url_for('preview', uuid=next) + web_query|string }}">Next</a>
-                    <a class="active-page" href="{{ url_for('preview', uuid=paginator.last_value) + web_query|string }}">Last</a>
+                    <a class="active-page page-separate"
+                       href="{{ url_for('preview', uuid=next) + web_query|string|safe }}">Next</a>
                 {% else %}
-                    <a>Next</a>
-                    <a>Last</a>
+                    <a class="page-separate">Next</a>
                 {% endif %}
             {% endif %}
         </div>

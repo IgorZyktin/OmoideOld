@@ -11,7 +11,7 @@ class Paginator:
     """
 
     def __init__(self, sequence: Sequence, current_page: int,
-                 items_per_page: int, pages_in_block: int = 15) -> None:
+                 items_per_page: int, pages_in_block: int) -> None:
         """Initialize instance."""
         assert items_per_page
         self._sequence = sequence
