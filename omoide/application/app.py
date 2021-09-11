@@ -7,8 +7,9 @@ from omoide.application import app_factory
 from omoide.database import operations
 
 filesystem = infra.Filesystem()
-root = filesystem.absolute('/media/pi/FLASH/omoide')
-injection_path = filesystem.join(root, constants.INJECTION_FILE_NAME)
+root = filesystem.absolute('/home/pi/OmoideStorage/root')
+injection_path = filesystem.join(root, 'injection',
+                                 constants.INJECTION_FILE_NAME)
 
 try:
     INJECTION = filesystem.read_file(injection_path)
@@ -22,6 +23,7 @@ command = commands.RunserverCommand(
     database_folder=filesystem.join(root, constants.DATABASE_FOLDER_NAME),
     content_folder=filesystem.join(root, constants.CONTENT_FOLDER_NAME),
     templates_folder='/home/pi/Omoide/omoide/application/templates',
+    static_folder='/home/pi/Omoide/omoide/application/static',
 )
 
 engine = operations.create_read_only_database(
