@@ -3,4 +3,4 @@
 """Constant values.
 """
 # global values for the whole project
-VERSION = '2021-09-05'
+VERSION = '2021-09-12'
