@@ -20,7 +20,8 @@
 
 <body>
 <div>
-    <form method="post"
+    <form id="main_form"
+          method="post"
           onsubmit="goSearch(this);">
         <div class="query-container">
 
@@ -77,8 +78,9 @@
         <a href="{{ url_for('feedback') + web_query|string|safe }}"
            class="button" title="Send feedback">Send feedback</a>
     {% endif %}
-    <a href="{{ url_for('search') + web_query|string|safe }}"
-       class="button" title="New search">New search</a>
+    <a class="button"
+       title="New search"
+       onclick="externalSubmit()">New search</a>
 </div>
 <br>
 

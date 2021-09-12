@@ -131,3 +131,10 @@ function explainSearchResults() {
 //     document.body.removeChild(input);
 //     return result;
 // }
+
+function externalSubmit() {
+    // same as pressing search button, but not inside search form
+    let form = document.getElementById("main_form");
+    goSearch(form)
+    form.submit()
+}
