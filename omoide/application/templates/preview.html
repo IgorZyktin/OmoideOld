@@ -11,7 +11,7 @@
 {% block body %}
 
     <div class="pages">
-        <a class="active-page"
+        <a class="active-page page-separate"
            href="{{ url_for('search') + web_query.replace(q=meta.group.uuid)|string }}">{{ meta.group.theme.label }}: {{ meta.group.label }}</a>
     </div>
 
