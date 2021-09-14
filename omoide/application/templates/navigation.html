@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <link type="text/css"
-          href="{{ url_for('static', filename='navigation.css') }}"
-          rel="stylesheet">
     <script>
         let visibility = JSON.parse('{{ visibility_json|safe }}')
     </script>
@@ -12,16 +9,11 @@
 {% block body %}
     <div class="limited-width">
 
-        <div class="textual-header">
-            <h3>Narrow search to selected categories</h3>
-        </div>
+        <h3>Narrow search to selected categories</h3>
 
         <div class="nav-button-block">
-            <a class="nav-button"
-               onclick="toggleAllThemes(true)">Select all</a>
-
-            <a class="nav-button"
-               onclick="toggleAllThemes(false)">Ignore all</a>
+            <a href="" onclick="toggleAllThemes(true)">Select all</a>
+            <a href="" onclick="toggleAllThemes(false)">Ignore all</a>
         </div>
 
         <hr>
@@ -39,9 +31,9 @@
                     <td>
                         <label class="checkbox-container">
                             <input id="toggle_{{ theme_uuid }}"
-                                    type="checkbox"
+                                   type="checkbox"
                                    class="custom-checkbox"
-                                   {{ 'checked' if active else '' }}>
+                                    {{ 'checked' if active else '' }}>
                             <span class="checkmark"
                                   id="checkmark_{{ theme_uuid }}"
                                   onclick="toggleTheme('{{ theme_uuid }}')"></span>

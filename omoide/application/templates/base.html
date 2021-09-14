@@ -7,10 +7,7 @@
     <link rel="shortcut icon"
           href="{{ url_for('static', filename='favicon.ico') }}">
     <link type="text/css"
-          href="{{ url_for('static', filename='base.css') }}"
-          rel="stylesheet">
-    <link type="text/css"
-          href="{{ url_for('static', filename='search.css') }}"
+          href="{{ url_for('static', filename='styles.css') }}"
           rel="stylesheet">
     <script type="text/javascript"
             src="{{ url_for('static', filename='code.js') }}"></script>
@@ -76,9 +73,9 @@
 <div class="flex_hr">
     {% if not on_feedback_page %}
         <a href="{{ url_for('feedback') + web_query|string|safe }}"
-           class="button" title="Send feedback">Send feedback</a>
+           title="Send feedback">Send feedback</a>
     {% endif %}
-    <a class="button"
+    <a href=""
        title="New search"
        onclick="externalSubmit()">New search</a>
 </div>

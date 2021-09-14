@@ -1,25 +1,17 @@
 {% extends "base.html" %}
 
-{% block head %}
-    <link type="text/css"
-          href="{{ url_for('static', filename='tags.css') }}"
-          rel="stylesheet">
-{% endblock %}
-
 {% block body %}
     <div class="limited-width">
-        <div class="textual-header">
-            <h3>Statistics</h3>
-        </div>
 
-        <div class="content">
-            <table class="tag_table">
+        <h3>Statistics</h3>
+        <div class="content-block">
+            <table class="stat-table">
                 <tr>
-                    <td>Total items</td>
+                    <td>Total items:</td>
                     <td>{{ sep_digits(statistic.total_items) }}</td>
                 </tr>
                 <tr>
-                    <td>Total size</td>
+                    <td>Total size:</td>
                     <td>{{ byte_count_to_text(statistic.total_size) }}</td>
                 </tr>
 
@@ -38,39 +30,31 @@
                 {% endif -%}
 
                 <tr>
-                    <td>Total tags</td>
+                    <td>Total tags:</td>
                     <td>{{ statistic|length }}</td>
                 </tr>
             </table>
         </div>
 
-        <br>
-
         {% if statistic.tags_by_frequency %}
-            <div class="textual-header">
-                <h3>Tags by frequency</h3>
-            </div>
-
-            <div class="content">
+            <h3>Tags by frequency</h3>
+            <div class="content-block">
                 {% for tag, times in statistic.tags_by_frequency %}
-                    <a href="{{ url_for('search') + web_query.replace(q=tag)|string }}"
-                       class="one_tag">{{ tag }} ⋅ {{ times }}</a>
+                    <a href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}"
+                       class="tag-box">{{ tag }} ⋅ {{ times }}</a>
                 {% endfor %}
             </div>
         {% endif %}
 
         {% if statistic.tags_by_alphabet %}
-            <div class="textual-header">
-                <h3>Tags by alphabet</h3>
-            </div>
-
-            <div class="content">
+            <h3>Tags by alphabet</h3>
+            <div class="content-block">
                 {% for letter, tags in statistic.tags_by_alphabet %}
                     <ul>
-                        <li><p>{{ letter|upper }}</p></li>
+                        <p class="tag-header">{{ letter|upper }}</p>
                         {% for tag in tags %}
                             <li>
-                                <a href="{{ url_for('search') + web_query.replace(q=tag)|string }}">
+                                <a href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">
                                     {{ tag }}</a>
                             </li>
                         {% endfor %}

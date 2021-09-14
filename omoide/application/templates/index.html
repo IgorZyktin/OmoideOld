@@ -29,12 +29,11 @@
     <div class="envelope-container">
         {% for meta in paginator %}
             <div>
-                <div class="envelope">
-                    <a href="{{ url_for('preview', uuid=meta.uuid) + web_query|string }}">
-                        <img src="/content{{ meta.path_to_thumbnail }}"
-                             alt=""/>
-                    </a>
-                </div>
+                <a class="envelope"
+                   href="{{ url_for('preview', uuid=meta.uuid) + web_query|string }}">
+                    <img src="/content{{ meta.path_to_thumbnail }}"
+                         alt=""/>
+                </a>
             </div>
         {% endfor %}
     </div>
