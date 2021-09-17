@@ -69,7 +69,7 @@
                 {% endif %}
 
                 {% if page.is_dummy %}
-                    <a class="inactive-page{{ corner_style }}">...</a>
+                    <a class="inactive-page {{ corner_style }}">...</a>
                 {% elif page.is_current %}
                     <a href="{{ url_for('preview', uuid=page.value) + web_query|string|safe }}"
                        class="active-page{{ corner_style }}">{{ page.number }}</a>

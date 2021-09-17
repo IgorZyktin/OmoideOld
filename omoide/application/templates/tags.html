@@ -6,33 +6,23 @@
         <h3>Statistics</h3>
         <div class="content-block">
             <table class="stat-table">
+
                 <tr>
-                    <td>Total items:</td>
-                    <td>{{ sep_digits(statistic.total_items) }}</td>
+                    <td>Total size</td>
+                    <td>Total items</td>
+                    <td>Total tags</td>
+                    <td>Oldest item</td>
+                    <td>Newest item</td>
                 </tr>
+
                 <tr>
-                    <td>Total size:</td>
                     <td>{{ byte_count_to_text(statistic.total_size) }}</td>
-                </tr>
-
-                {%- if statistic.min_date %}
-                    <tr>
-                        <td>Oldest item:</td>
-                        <td>{{ statistic.min_date }}</td>
-                    </tr>
-                {% endif -%}
-
-                {%- if statistic.max_date %}
-                    <tr>
-                        <td>Newest item:</td>
-                        <td>{{ statistic.max_date }}</td>
-                    </tr>
-                {% endif -%}
-
-                <tr>
-                    <td>Total tags:</td>
+                    <td>{{ sep_digits(statistic.total_items) }}</td>
                     <td>{{ statistic|length }}</td>
+                    <td>{{ statistic.min_date }}</td>
+                    <td>{{ statistic.max_date }}</td>
                 </tr>
+
             </table>
         </div>
 
@@ -50,7 +40,7 @@
             <h3>Tags by alphabet</h3>
             <div class="content-block">
                 {% for letter, tags in statistic.tags_by_alphabet %}
-                    <ul>
+                    <ul class="tags-list">
                         <p class="tag-header">{{ letter|upper }}</p>
                         {% for tag in tags %}
                             <li>

@@ -16,7 +16,7 @@
 </head>
 
 <body>
-<div>
+<div id="header">
     <form id="main_form"
           method="post"
           onsubmit="goSearch(this);">
@@ -50,21 +50,17 @@
 
             <span></span>
 
-            <span class="note small-text">{{ note }}</span>
-
-            {% if search_report %}
-                <a class="small-button small-text"
-                   onclick="explainSearchResults()">Explain</a>
-            {% endif %}
+            <span class="note small-text"
+                  onclick="explainSearchResults()">{{ note }}</span>
 
         </div>
     </form>
 
     {% block upper_body %}{% endblock %}
 
-</div>
+    <hr>
 
-<hr>
+</div>
 
 {% block body %}{% endblock %}
 
@@ -75,8 +71,7 @@
         <a href="{{ url_for('feedback') + web_query|string|safe }}"
            title="Send feedback">Send feedback</a>
     {% endif %}
-    <a href=""
-       title="New search"
+    <a title="New search"
        onclick="externalSubmit()">New search</a>
 </div>
 <br>
