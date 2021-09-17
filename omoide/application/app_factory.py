@@ -104,7 +104,9 @@ def create_app(command: commands.RunserverCommand,
         if flask.request.method == 'POST':
             name = flask.request.form.get('name', '')
             _feedback = flask.request.form.get('feedback', '')
-            logic.save_feedback(command.database_folder, name, _feedback)
+            _path = flask.request.form.get('path', '')
+            logic.save_feedback(command.database_folder, name,
+                                _feedback, _path)
             greet = True
 
         context = {

@@ -4,8 +4,12 @@
 
     {% if greet %}
         <div class="limited-width active-page">
+            <br>
             <h3>Thank you for your feedback!</h3>
+            <br>
         </div>
+        <br>
+        <br>
     {% endif %}
 
     <div class="limited-width">
@@ -13,6 +17,12 @@
             <label for="name">You name or nickname (optional)<br>
                 <input name="name"
                        type="text"
+                       class="feedback"/>
+            </label>
+            <label for="path">
+                <input name="path"
+                       type="hidden"
+                       value="{{ web_query|string }}"
                        class="feedback"/>
             </label>
             <br>

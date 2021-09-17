@@ -239,7 +239,7 @@ def is_correct_theme_uuid(uuid: str) -> bool:
     return constants.STRICT_THEME_UUID_PATTERN.match(uuid)
 
 
-def save_feedback(folder: str, name: str, feedback: str) -> None:
+def save_feedback(folder: str, name: str, feedback: str, path: str) -> None:
     """Save user feedback.
 
     Temporary way, this design is terrible.
@@ -250,6 +250,7 @@ def save_feedback(folder: str, name: str, feedback: str) -> None:
         'moment': str(moment),
         'name': str(name)[:constants.MAX_TEXT_INPUT_SIZE],
         'feedback': str(feedback)[:constants.MAX_TEXT_INPUT_SIZE],
+        'path': str(path)[:constants.MAX_TEXT_INPUT_SIZE],
     }
     text = json.dumps(payload, ensure_ascii=False)
     path = f'{folder}/feedback.txt'
