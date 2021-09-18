@@ -56,8 +56,8 @@ def generate_variables(text: str, branch: str, leaf: str,
         )
         _to_replace.append((text[match.start():match.end()], variable_value))
 
-    for pattern, value in _to_replace:
-        text = text.replace(pattern, value)
+    for placeholder, value in _to_replace:
+        text = text.replace(placeholder, value)
 
     return text
 

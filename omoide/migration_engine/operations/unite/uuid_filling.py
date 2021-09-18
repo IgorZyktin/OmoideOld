@@ -14,7 +14,7 @@ MAX_UUID_VALUE = 'm_ffffffff-ffff-ffff-ffff-ffffffffffff'
 def generate_value(minimum: T, maximum: T, generator: Callable[[], T]) -> T:
     """Generate new random value between two given examples."""
     new_value = generator()
-    while not (minimum < new_value < maximum):
+    while not (minimum < new_value < maximum):  # type: ignore
         new_value = generator()
     return new_value
 

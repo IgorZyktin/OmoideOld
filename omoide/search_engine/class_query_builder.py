@@ -7,8 +7,9 @@ from typing import TypeVar, Generic, Type, List, Dict, Set, Tuple
 
 from omoide import constants
 from omoide.utils import group_to_size
+from omoide.search_engine.class_query import Query
 
-QueryType = TypeVar('QueryType')
+QueryType = TypeVar('QueryType', bound=Query)
 
 
 class QueryBuilder(Generic[QueryType]):
@@ -53,9 +54,9 @@ class QueryBuilder(Generic[QueryType]):
 
     def from_query(self, query_text: str) -> QueryType:
         """Make instance representing given query."""
-        sets = dict(and_=set(),
-                    or_=set(),
-                    not_=set())
+        sets: Dict[str, Set[str]] = dict(and_=set(),
+                                         or_=set(),
+                                         not_=set())
 
         sequence: List[Tuple[str, str]] = []
         parts = self.split_request_into_parts(query_text)

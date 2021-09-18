@@ -45,6 +45,6 @@ class Index:
         """Return total amount of records."""
         return len(self.all_metas)
 
-    def get_by_tag(self, tag: str) -> Set[str]:
+    def get_by_tag(self, tag: str) -> FrozenSet[str]:
         """Return UUIDs corresponding to this tag."""
-        return self.by_tags.get(tag, set())
+        return self.by_tags.get(tag, frozenset())

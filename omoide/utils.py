@@ -83,12 +83,12 @@ def sep_digits(number: Union[int, float, str], precision: int = 2) -> str:
 
     elif isinstance(number, float):
         if precision == 0:
-            value = int(round(number, precision))
-            result = '{:,}'.format(value).replace(',', ' ')
+            int_value = int(round(number, precision))
+            result = '{:,}'.format(int_value).replace(',', ' ')
 
         else:
-            value = round(number, precision)
-            result = '{:,}'.format(value).replace(',', ' ')
+            float_value = round(number, precision)
+            result = '{:,}'.format(float_value).replace(',', ' ')
 
         if '.' in result:
             tail = result.rsplit('.', maxsplit=1)[-1]

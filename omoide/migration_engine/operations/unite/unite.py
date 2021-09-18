@@ -202,6 +202,7 @@ def assert_no_variables(unit_text: str,
             f'\n...{fragment}...\n'
         )
         sys.exit(1)
+    return None
 
 
 def load_cached_uuids(filesystem: infra.Filesystem, storage_folder: str,

@@ -39,6 +39,7 @@ def assert_unique(field_name: str, collection: Collection[str]
         raise ValueError(
             f'Field {field_name} must have unique items, got {collection}'
         )
+    return None
 
 
 def assert_has_prefix(field_name: str, string: str,
@@ -51,6 +52,7 @@ def assert_has_prefix(field_name: str, string: str,
             f'Field {field_name} is supposed to '
             f'have prefix {expected_prefix}, got {string!r}'
         )
+    return None
 
 
 def assert_equal(var1: str, var2: str) -> Optional[NoReturn]:
@@ -59,6 +61,7 @@ def assert_equal(var1: str, var2: str) -> Optional[NoReturn]:
         raise ValueError(
             f'Values are different {var1!r} != {var2!r}'
         )
+    return None
 
 
 # noinspection PyMethodParameters
