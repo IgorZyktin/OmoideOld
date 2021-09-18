@@ -2,8 +2,6 @@
 
 """Constant values.
 """
-import os as _os
-
 # files and folders
 SOURCES_FOLDER_NAME = 'sources'
 STORAGE_FOLDER_NAME = 'storage'
@@ -14,10 +12,7 @@ MEDIA_CONTENT_FOLDER_NAME = 'content'
 MEDIA_PREVIEW_FOLDER_NAME = 'preview'
 MEDIA_THUMBNAILS_FOLDER_NAME = 'thumbnails'
 
-DEFAULT_SOURCES_FOLDER = _os.path.join('.', SOURCES_FOLDER_NAME)
-DEFAULT_STORAGE_FOLDER = _os.path.join('.', STORAGE_FOLDER_NAME)
-DEFAULT_CONTENT_FOLDER = _os.path.join('.', CONTENT_FOLDER_NAME)
-DEFAULT_DATABASE_FOLDER = _os.path.join('.', DATABASE_FOLDER_NAME)
+DEFAULT_ROOT_FOLDER = '.'
 
 SOURCE_FILE_NAME = 'source.json'
 UNIT_FILE_NAME = 'unit.json'

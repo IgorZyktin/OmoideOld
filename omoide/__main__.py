@@ -75,10 +75,18 @@ def run_using_server(command: commands.RunserverCommand,
                      stdout: infra.STDOut = infra.STDOut()) -> None:
     """Start of execution."""
     _abs = filesystem.absolute
-    command.content_folder = _abs(command.content_folder)
-    command.database_folder = _abs(command.database_folder)
-    command.templates_folder = _abs(command.templates_folder)
-    command.static_folder = _abs(command.static_folder)
+    _join = filesystem.join
+    cwd = filesystem.absolute('.')
+    command.content_folder = _abs(_join(command.root_folder,
+                                        constants.CONTENT_FOLDER_NAME))
+    command.database_folder = _abs(_join(command.root_folder,
+                                         constants.DATABASE_FOLDER_NAME))
+
+    command.templates_folder = _abs(_join(cwd,
+                                          *constants.DEFAULT_TEMPLATES_PATH))
+    command.static_folder = _abs(_join(cwd,
+                                       *constants.DEFAULT_STATIC_PATH))
+
     perform.perform_runserver(command, filesystem, stdout)
 
 
@@ -126,18 +134,9 @@ def cli():
 @click.option('--static/--no-static',
               default=False,
               help='Serve static from web app (use only for development)')
-@click.option('--content-folder',
-              default=constants.DEFAULT_CONTENT_FOLDER,
-              help='Where to load media content from (only if static is on)')
-@click.option('--database-folder',
-              default=constants.DEFAULT_DATABASE_FOLDER,
-              help='Where to load database from')
-@click.option('--templates-folder',
-              default=constants.DEFAULT_TEMPLATES_FOLDER,
-              help='Where to load templates from')
-@click.option('--static-folder',
-              default=constants.DEFAULT_STATIC_FOLDER,
-              help='Where to load static from (only if static is on)')
+@click.option('--root-folder',
+              default=constants.DEFAULT_ROOT_FOLDER,
+              help='Where to load content from')
 def cmd_runserver(**kwargs) -> None:
     """Command that starts web server."""
     command = commands.RunserverCommand(**kwargs)
@@ -149,22 +148,22 @@ def cmd_runserver(**kwargs) -> None:
 def cmd_example() -> None:
     """Command that starts demo server."""
     import os
-    content_folder = os.path.join('omoide', 'example',
-                                  constants.CONTENT_FOLDER_NAME)
-    db_path = os.path.join('omoide', 'example',
-                           constants.DATABASE_FOLDER_NAME)
-    templates_folder = os.path.join('omoide', 'application', 'templates')
-    static_folder = os.path.join('omoide', 'application', 'static')
+    cwd = os.path.abspath(os.getcwd())
+    root = os.path.join(cwd, 'omoide', 'example')
 
     command = commands.RunserverCommand(
         host=constants.DEFAULT_SERVER_HOST,
         port=constants.DEFAULT_SERVER_PORT,
         reload=True,
         static=True,
-        content_folder=content_folder,
-        database_folder=db_path,
-        templates_folder=templates_folder,
-        static_folder=static_folder,
+        root_folder=root,
+        content_folder=os.path.join(root, 'example',
+                                    constants.CONTENT_FOLDER_NAME),
+        database_folder=os.path.join(root, 'example',
+                                     constants.DATABASE_FOLDER_NAME),
+        templates_folder=os.path.join(cwd, *constants.
+                                      DEFAULT_TEMPLATES_PATH),
+        static_folder=os.path.join(cwd, *constants.DEFAULT_STATIC_PATH),
     )
     run_using_server(command)
 
@@ -226,18 +225,9 @@ _FILE_RELATED_DECORATORS = [
     click.option('--dry-run/--no-dry-run',
                  default=False,
                  help='Only display info without performing operation'),
-    click.option('--sources-folder',
-                 default=constants.DEFAULT_SOURCES_FOLDER,
-                 help='Where to look for source files'),
-    click.option('--storage-folder',
-                 default=constants.DEFAULT_STORAGE_FOLDER,
-                 help='Where to save intermediate results'),
-    click.option('--content-folder',
-                 default=constants.DEFAULT_CONTENT_FOLDER,
-                 help='Where to save media content'),
-    click.option('--database-folder',
-                 default=constants.DEFAULT_DATABASE_FOLDER,
-                 help='Where to save created database'),
+    click.option('--root-folder',
+                 default=constants.DEFAULT_ROOT_FOLDER,
+                 help='Where to load content from'),
     click.option('--now',
                  default='',
                  help='Which time should be embedded into migration'),

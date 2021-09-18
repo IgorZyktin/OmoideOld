@@ -431,6 +431,17 @@ img {
     background-color: #545454;
 }
 
+
+.preview-swipe-inactive {
+    background-color: unset;
+}
+
+.preview-swipe-inactive:hover {
+    background-color: unset;
+    text-decoration: none;
+    cursor: default;
+}
+
 .as-link {
     color: var(--main-text-color) !important;
     text-decoration: underline !important;

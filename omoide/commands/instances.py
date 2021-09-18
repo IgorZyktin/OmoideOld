@@ -29,6 +29,7 @@ class FilesRelatedCommand(BaseCommand):
     """Works mainly with files."""
     now: str = ''
     revision: str = ''
+    root_folder: str = ''
     sources_folder: str = ''
     storage_folder: str = ''
     content_folder: str = ''
@@ -94,6 +95,7 @@ class RunserverCommand(BaseCommand):
     port: int = 0
     reload: bool = False
     static: bool = False
+    root_folder: str = ''
     content_folder: str = '.'
     database_folder: str = '.'
     templates_folder: str = '.'

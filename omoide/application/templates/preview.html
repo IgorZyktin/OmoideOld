@@ -33,7 +33,7 @@
             <a href="{{ url_for('preview', uuid=previous) + web_query|string|safe }}"
                class="preview-swipe">Previous</a>
         {% else %}
-            <a class="preview-swipe">&nbsp;</a>
+            <a class="preview-swipe preview-swipe-inactive">&nbsp;</a>
         {% endif %}
 
         <a href="/content{{ meta.path_to_content }}">
@@ -45,7 +45,7 @@
             <a href="{{ url_for('preview', uuid=next) + web_query|string|safe }}"
                class="preview-swipe">Next</a>
         {% else %}
-            <a class="preview-swipe">&nbsp;</a>
+            <a class="preview-swipe preview-swipe-inactive">&nbsp;</a>
         {% endif %}
     </div>
 
