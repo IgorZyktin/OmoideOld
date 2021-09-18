@@ -114,7 +114,6 @@ def create_app(command: commands.RunserverCommand,
             'greet': greet,
             'web_query': web_query,
             'user_query': user_query,
-            'folded': web_query.get('folded') == 'yes',
         }
         return flask.render_template('feedback.html', **context)
 
@@ -127,7 +126,6 @@ def create_app(command: commands.RunserverCommand,
         context = {
             'web_query': web_query,
             'user_query': user_query,
-            'folded': web_query.get('folded') == 'yes',
         }
         return flask.render_template('help.html', **context)
 

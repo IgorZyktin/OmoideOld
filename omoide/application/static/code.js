@@ -139,30 +139,6 @@ function externalSubmit() {
     form.submit()
 }
 
-function toggleTopPanel(image) {
-    // hide or show top panel
-    let element = document.getElementById('header')
-
-    if (!element) {
-        console.log('Could not find header element')
-        return
-    }
-
-    let searchParams = new URLSearchParams(window.location.search);
-
-    if (element.style.display === 'none' || !element.style.display) {
-        image.src = "../static/collapse-arrow.svg";
-        element.style.display = 'block'
-        searchParams.set("folded", "no");
-    } else {
-        image.src = "../static/expand-arrow.svg";
-        element.style.display = 'none'
-        searchParams.set("folded", "yes");
-    }
-    let newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-    history.pushState(null, '', newRelativePathQuery);
-}
-
 function goBack() {
     // navigate to the previous page
     window.history.back();

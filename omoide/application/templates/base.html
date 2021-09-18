@@ -16,7 +16,7 @@
 </head>
 
 <body>
-<div id="header" style="display: block">
+<div id="header" style="display: {{ 'none' if folded else 'block' }}">
     <form id="main_form"
           method="post"
           onsubmit="goSearch(this);">
@@ -36,16 +36,19 @@
             </label>
 
             <input id="searchButton"
+                   title="Press to perform search"
                    type="submit"
                    class="button"
                    name="search"
                    value="Search" autofocus/>
 
             <a id="tagsButton"
+               title="Display all available tags"
                href="{{ url_for('tags') + web_query|string|safe }}"
                class="button">Tags</a>
 
             <a href="{{ url_for('navigation') + web_query|string|safe }}"
+               title="Display and navigate on all available themes"
                class="button">Navigation</a>
 
             <span></span>

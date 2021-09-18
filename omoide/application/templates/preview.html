@@ -11,18 +11,26 @@
 {% endblock %}
 
 {% block body %}
-    {#    TODO: need to implement folding button, but it requires altering of navigation paradigm #}
-    {#    {% set filename ='expand-arrow.svg' if folded else 'collapse-arrow.svg' %}#}
-    {#    <img src="{{ url_for('static', filename=filename) }}"#}
-    {#         class="fold-button"#}
-    {#         onclick="toggleTopPanel(this)"#}
-    {#         alt="Hide or show header panel"/>#}
+    {% if folded %}
+        <a href="{{ url_for('preview', uuid=uuid) + web_query.replace(folded='no')|string|safe }}"
+           class="fold-button">
+            <img src="{{ url_for('static', filename='expand-arrow.svg') }}"
+                 title="Show header panel" alt="Header visibility switch"/>
+        </a>
+    {% else %}
+        <a href="{{ url_for('preview', uuid=uuid) + web_query.replace(folded='yes')|string|safe }}"
+           class="fold-button">
+            <img src="{{ url_for('static', filename='collapse-arrow.svg') }}"
+                 title="Hide header panel" alt="Header visibility switch"/>
+        </a>
+    {% endif %}
+
     {{ preview_pagination(paginator, web_query, next, previous) }}
 
     <div class="preview-content limited-width">
 
         {% if previous %}
-            <a href="/preview/{{ previous }}"
+            <a href="{{ url_for('preview', uuid=previous) + web_query|string|safe }}"
                class="preview-swipe">Previous</a>
         {% else %}
             <a class="preview-swipe">&nbsp;</a>
@@ -34,7 +42,7 @@
         </a>
 
         {% if next %}
-            <a href="/preview/{{ next }}"
+            <a href="{{ url_for('preview', uuid=next) + web_query|string|safe }}"
                class="preview-swipe">Next</a>
         {% else %}
             <a class="preview-swipe">&nbsp;</a>
@@ -111,7 +119,5 @@
 
         </table>
     </div>
-
-    <br>
 
 {% endblock %}

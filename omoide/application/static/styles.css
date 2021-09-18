@@ -445,10 +445,11 @@ ol > li > a {
 }
 
 .fold-button {
-    max-height: 2em;
-    max-width: 2em;
     position: absolute;
     cursor: pointer;
+    max-height: 2em;
+    max-width: 2em;
+    width: 100%;
 }
 
 .light-text-section {
