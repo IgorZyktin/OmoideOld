@@ -46,35 +46,40 @@ from omoide.commands import perform
 from omoide.migration_engine.operations.unite import persistent
 
 
-def run(command: commands.BaseCommand,
-        filesystem: infra.Filesystem = infra.Filesystem(),
-        stdout: infra.STDOut = infra.STDOut()) -> None:
+def run_using_files(command: commands.FilesRelatedCommand,
+                    filesystem: infra.Filesystem = infra.Filesystem(),
+                    stdout: infra.STDOut = infra.STDOut()) -> None:
     """Start of execution."""
     _abs = filesystem.absolute
 
-    if isinstance(command, commands.FilesRelatedCommand):
-        command.sources_folder = _abs(command.sources_folder)
-        command.storage_folder = _abs(command.storage_folder)
-        command.content_folder = _abs(command.content_folder)
-        command.database_folder = _abs(command.database_folder)
-        filesystem.ensure_folder_exists(command.storage_folder, stdout)
-        filesystem.ensure_folder_exists(command.content_folder, stdout)
-        assert_sources_folder_exist(command, filesystem, stdout)
+    command.sources_folder = _abs(command.sources_folder)
+    command.storage_folder = _abs(command.storage_folder)
+    command.content_folder = _abs(command.content_folder)
+    command.database_folder = _abs(command.database_folder)
+    filesystem.ensure_folder_exists(command.storage_folder, stdout)
+    filesystem.ensure_folder_exists(command.content_folder, stdout)
+    assert_sources_folder_exist(command, filesystem, stdout)
 
-        if command.now:
-            persistent.set_now(command.now)
+    if command.now:
+        persistent.set_now(command.now)
 
-        if command.revision:
-            persistent.set_revision(command.revision)
-
-    elif isinstance(command, commands.RunserverCommand):
-        command.content_folder = _abs(command.content_folder)
-        command.database_folder = _abs(command.database_folder)
-        command.templates_folder = _abs(command.templates_folder)
-        command.static_folder = _abs(command.static_folder)
+    if command.revision:
+        persistent.set_revision(command.revision)
 
     target_func = get_target_func(command)
     target_func(command, filesystem, stdout)
+
+
+def run_using_server(command: commands.RunserverCommand,
+                     filesystem: infra.Filesystem = infra.Filesystem(),
+                     stdout: infra.STDOut = infra.STDOut()) -> None:
+    """Start of execution."""
+    _abs = filesystem.absolute
+    command.content_folder = _abs(command.content_folder)
+    command.database_folder = _abs(command.database_folder)
+    command.templates_folder = _abs(command.templates_folder)
+    command.static_folder = _abs(command.static_folder)
+    perform.perform_runserver(command, filesystem, stdout)
 
 
 def assert_sources_folder_exist(command: commands.FilesRelatedCommand,
@@ -97,7 +102,6 @@ def get_target_func(command: commands.BaseCommand) -> Callable:
         'sync': perform.perform_sync,
         'freeze': perform.perform_freeze,
         'show_tree': perform.perform_show_tree,
-        'runserver': perform.perform_runserver,
     }[getattr(command, 'name')]
 
     return target_func
@@ -137,7 +141,7 @@ def cli():
 def cmd_runserver(**kwargs) -> None:
     """Command that starts web server."""
     command = commands.RunserverCommand(**kwargs)
-    run(command)
+    run_using_server(command)
 
 
 @cli.command(name='example',
@@ -162,7 +166,7 @@ def cmd_example() -> None:
         templates_folder=templates_folder,
         static_folder=static_folder,
     )
-    run(command)
+    run_using_server(command)
 
 
 def _function_factory(name: str, _command_type: type) -> Callable:
@@ -176,7 +180,7 @@ def _function_factory(name: str, _command_type: type) -> Callable:
         instance will just overwrite all.
         """
         command = _command_type(**kwargs)
-        run(command)
+        run_using_files(command)
 
     _new_func.__name__ = name
     return _new_func
@@ -241,7 +245,6 @@ _FILE_RELATED_DECORATORS = [
                  default='',
                  help='Which revision should be embedded into migration'),
 ]
-
 
 for command_name, help_text, command_type in _FILE_RELATED_COMMANDS:
     # noinspection PyRedeclaration
