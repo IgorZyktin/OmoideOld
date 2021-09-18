@@ -118,6 +118,19 @@ def create_app(command: commands.RunserverCommand,
         }
         return flask.render_template('feedback.html', **context)
 
+    @app.route('/help')
+    def show_help():
+        """Show help page."""
+        web_query = WebQuery.from_request(flask.request.args)
+        user_query = web_query.get('q')
+
+        context = {
+            'web_query': web_query,
+            'user_query': user_query,
+            'folded': web_query.get('folded') == 'yes',
+        }
+        return flask.render_template('help.html', **context)
+
     if command.static:
         @app.route('/content/<path:filename>')
         def serve_content(filename: str):

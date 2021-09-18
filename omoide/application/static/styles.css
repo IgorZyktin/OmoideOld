@@ -450,3 +450,10 @@ ol > li > a {
     position: absolute;
     cursor: pointer;
 }
+
+.light-text-section {
+    background-color: #c0c0c0;
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 1em;
+}

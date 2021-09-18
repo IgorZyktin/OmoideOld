@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <div class="limited-width light-text-section">
+        <h3>How search works</h3>
+        <p>If you not enter anything in the search field, system returns you
+            random images. You'll get new portion of random images on every
+            page refresh.</p>
+
+        <p>You can enter one or more tag into search field and system will try
+            to find results correspondingly.</p>
+
+        <p>Search engine is strict, it expects you to enter exact tags, no
+            spelling mistakes, no similar words. Exact tag or nothing. You can
+            browse all existing tags on the tags page.</p>
+
+        <p>You can also specify your query by using + as AND, - as NOT and | as
+            OR. For example <strong>fat cats | small dogs + frogs -
+                snakes</strong> will be
+            treated as anything with tag "fat cats" or with tag "small dogs",
+            obligatory with tag "frogs" and definitely without tag
+            "snakes".</p>
+
+        <p>If you're getting strange results and want to ensure that system
+            understood your request, you can click on note under search field
+            (works only if you're actually searched something).
+            This will toggle explanation section with parsed request and timing
+            for each operation. This allows you to verity that your request is
+            parsed correctly.</p>
+
+        <p>Example of query parsing:</p>
+
+        <div class="explain-query"
+             style="display: flex; justify-content: center">
+
+            <span class="explain-query-keyword">or</span>
+            <span class="explain-query-word">fat cats</span>
+
+            <span class="explain-query-keyword">or</span>
+            <span class="explain-query-word">small dogs</span>
+
+            <span class="explain-query-keyword">and</span>
+            <span class="explain-query-word">frogs</span>
+
+            <span class="explain-query-keyword">not</span>
+            <span class="explain-query-word">snakes</span>
+
+        </div>
+
+        <p>Please note that search query does not have full scale logic. Each
+            <strong>and</strong> statement is treated as "result must include
+            this", each <strong>not</strong> is
+            treated as "result must not include this" and each
+            <strong>or</strong> is treated as
+            "result could include this, but it is okay if it does not". Logic
+            of a phrase is built on the sign it has. First phrase of a query
+            implicitly gets its sign too. You can explicitly specify it by
+            entering something like "+ cats + dogs".</p>
+
+        <p>Each phrase is treated individually, they do not work as a
+            whole.</p>
+
+        <h3>How tags page works</h3>
+        <p>Tags page gives you easy access to all available tags.</p>
+        <p>Header of the page displays some basic statistics. Then there are
+            all tags ordered by their popularity.
+            And in the end there are list of tags ordered by alphabet.
+            From there you can click on any tag and see corresponding
+            images.</p>
+
+        <h3>How navigation page works</h3>
+        <p>Navigation page allows you to specify which themes you are
+            interested in.</p>
+        <p>By clicking on checkboxes you can exclude some themes from search.
+            Excluded theme will appear crossed out and will not be used during
+            search.</p>
+
+        <p>Additionally this will affect:</p>
+        <ul>
+            <li>No materials from theme will appear during random search (when
+                there is no user query) and standard search.
+            </li>
+            <li>Items from excluded theme will not be counted in statistics on
+                the tags page.
+            </li>
+            <li>Tags from excluded theme will not be displayed on the tags
+                page.
+            </li>
+        </ul>
+
+        <p>
+            By clicking on the arrow in the right corner of every theme you can
+            get list of all groups in that theme.
+        </p>
+
+        <p>
+            Beware: you can get strange results if try to click on groups in
+            excluded themes. Usually you will find nothing. Include theme
+            before browsing its groups.
+        </p>
+
+    </div>
+
+{% endblock %}
