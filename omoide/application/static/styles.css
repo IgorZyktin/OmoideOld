@@ -443,3 +443,10 @@ ol > li > a {
 .round {
     border-radius: 20px;
 }
+
+.fold-button {
+    max-height: 2em;
+    max-width: 2em;
+    position: absolute;
+    cursor: pointer;
+}

@@ -2,13 +2,21 @@
 {% from "macros.html" import if_not_empty %}
 {% from "macros.html" import preview_pagination %}
 
-{% block body %}
-
+{% block upper_body %}
+    {{ super() }}
     <h3>
         <a class="as-link"
            href="{{ url_for('search') + web_query.replace(q=meta.group.uuid)|string }}">{{ meta.group.theme.label }}: {{ meta.group.label }}</a>
     </h3>
+{% endblock %}
 
+{% block body %}
+    {#    TODO: need to implement folding button, but it requires altering of navigation paradigm #}
+    {#    {% set filename ='expand-arrow.svg' if folded else 'collapse-arrow.svg' %}#}
+    {#    <img src="{{ url_for('static', filename=filename) }}"#}
+    {#         class="fold-button"#}
+    {#         onclick="toggleTopPanel(this)"#}
+    {#         alt="Hide or show header panel"/>#}
     {{ preview_pagination(paginator, web_query, next, previous) }}
 
     <div class="preview-content limited-width">

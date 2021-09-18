@@ -68,6 +68,7 @@ def make_search_response(maker: sessionmaker, web_query: WebQuery,
     context = {
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'folded': web_query.get('folded') == 'yes',
         'search_query': search_query,
         'paginator': paginator,
         'search_report': search_report,
@@ -94,6 +95,7 @@ def make_navigation_response(maker: sessionmaker, web_query: WebQuery,
     context = {
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'folded': web_query.get('folded') == 'yes',
         'graph': graph,
         'visibility': visibility,
         'visibility_json': ujson.dumps(visibility),
@@ -121,6 +123,7 @@ def make_preview_response(maker: sessionmaker,
     context = {
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'folded': web_query.get('folded') == 'yes',
         'paginator': paginator,
         'next': _next,
         'previous': _previous,
@@ -176,6 +179,7 @@ def make_tags_response(maker: sessionmaker,
     context = {
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'folded': web_query.get('folded') == 'yes',
         'statistic': statistic,
     }
     return context
