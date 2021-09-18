@@ -71,8 +71,10 @@
         <a href="{{ url_for('feedback') + web_query|string|safe }}"
            title="Send feedback">Send feedback</a>
     {% endif %}
-    <a title="New search"
-       onclick="externalSubmit()">New search</a>
+    <a title="Return to the previous page"
+       onclick="goBack()">Back</a>
+    <a title="Run new search, same as search button in the header"
+       onclick="externalSubmit()">Search</a>
 </div>
 <br>
 

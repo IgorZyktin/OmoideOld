@@ -162,3 +162,8 @@ function toggleTopPanel(image) {
     let newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
     history.pushState(null, '', newRelativePathQuery);
 }
+
+function goBack() {
+    // navigate to the previous page
+    window.history.back();
+}
