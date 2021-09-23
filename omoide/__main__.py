@@ -51,14 +51,20 @@ def run_using_files(command: commands.FilesRelatedCommand,
                     stdout: infra.STDOut = infra.STDOut()) -> None:
     """Start of execution."""
     _abs = filesystem.absolute
+    _join = filesystem.join
 
-    command.sources_folder = _abs(command.sources_folder)
-    command.storage_folder = _abs(command.storage_folder)
-    command.content_folder = _abs(command.content_folder)
-    command.database_folder = _abs(command.database_folder)
+    command.sources_folder = _abs(_join(command.root_folder,
+                                        constants.SOURCES_FOLDER_NAME))
+    command.storage_folder = _abs(_join(command.root_folder,
+                                        constants.STORAGE_FOLDER_NAME))
+    command.content_folder = _abs(_join(command.root_folder,
+                                        constants.CONTENT_FOLDER_NAME))
+    command.database_folder = _abs(_join(command.root_folder,
+                                         constants.DATABASE_FOLDER_NAME))
+
+    assert_sources_folder_exist(command, filesystem, stdout)
     filesystem.ensure_folder_exists(command.storage_folder, stdout)
     filesystem.ensure_folder_exists(command.content_folder, stdout)
-    assert_sources_folder_exist(command, filesystem, stdout)
 
     if command.now:
         persistent.set_now(command.now)
