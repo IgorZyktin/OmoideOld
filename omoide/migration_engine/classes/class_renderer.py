@@ -2,12 +2,15 @@
 
 """Object that handles image analyzing and conversion.
 """
+import math
 import os
-from typing import Optional, Callable
-# from typing import TypedDict, Optional, Callable # FIXME
+from typing import Optional, Callable, Tuple
 
 from PIL import Image
+
 from omoide import constants
+
+# from typing import TypedDict, Optional, Callable # FIXME
 
 __all__ = [
     'Renderer',
@@ -94,8 +97,28 @@ class Renderer:
         return info
 
     @staticmethod
-    def resize(path_from: str, path_to: str, width: int, height: int) -> None:
-        """Resize image."""
+    def calculate_size(original_width: int, original_height: int,
+                       target_width: int, target_height: int
+                       ) -> Tuple[int, int]:
+        """Get size for preview or thumbnail.
+
+        Unlike pillow, this method revolves around height.
+        We have strict target height but can tolerate various
+        variants of width.
+        """
+        if not all([original_width, original_height,
+                    target_width, target_height]):
+            raise ValueError('Resize is not working with zero sized images')
+
+        dimension = min(target_height, original_height)
+        coefficient = dimension / original_height
+        resulting_width = math.ceil(coefficient * original_width)
+        return resulting_width, dimension
+
+    @staticmethod
+    def save_new_size(path_from: str, path_to: str,
+                      width: int, height: int) -> None:
+        """Save image with given dimensions to a new path."""
         if path_to.endswith('jpg'):
             kwargs = constants.SAVE_PARAMETERS['jpg']
         else:
@@ -107,6 +130,6 @@ class Renderer:
             # non jpg downscale produces terrible quality
             image = image.convert('RGB')
 
-        image.thumbnail((width, height))
+        image = image.resize((width, height))
         image.save(path_to, **kwargs)
         image.close()

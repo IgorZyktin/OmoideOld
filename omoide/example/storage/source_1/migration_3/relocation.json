@@ -11,7 +11,7 @@
     },
     {
         "uuid": "m_18fe3a9f-caf2-4266-97ea-a320e6d81f2d",
-        "width": 1024,
+        "width": 1542,
         "height": 1024,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_3\\gerbils\\no_group",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\gerbils\\no_group",
@@ -21,7 +21,7 @@
     },
     {
         "uuid": "m_18fe3a9f-caf2-4266-97ea-a320e6d81f2d",
-        "width": 384,
+        "width": 579,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_3\\gerbils\\no_group",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\gerbils\\no_group",
@@ -41,7 +41,7 @@
     },
     {
         "uuid": "m_12b9e096-ac5d-4c54-9ec6-1f874a6aa3d3",
-        "width": 1024,
+        "width": 1547,
         "height": 1024,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_3\\gerbils\\no_group",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\gerbils\\no_group",
@@ -51,7 +51,7 @@
     },
     {
         "uuid": "m_12b9e096-ac5d-4c54-9ec6-1f874a6aa3d3",
-        "width": 384,
+        "width": 580,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_3\\gerbils\\no_group",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\gerbils\\no_group",
@@ -71,7 +71,7 @@
     },
     {
         "uuid": "m_2c46a227-a7ed-4ed9-875f-28f25b30d079",
-        "width": 1024,
+        "width": 1449,
         "height": 1024,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_3\\gerbils\\no_group",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\gerbils\\no_group",
@@ -81,7 +81,7 @@
     },
     {
         "uuid": "m_2c46a227-a7ed-4ed9-875f-28f25b30d079",
-        "width": 384,
+        "width": 544,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_3\\gerbils\\no_group",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\gerbils\\no_group",

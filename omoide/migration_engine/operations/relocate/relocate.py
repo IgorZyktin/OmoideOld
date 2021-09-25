@@ -65,5 +65,5 @@ def relocate_single_file(relocation: classes.Relocation,
     if relocation.operation_type == 'copy':
         filesystem.copy_file(path_from, path_to)
     else:
-        renderer.resize(path_from, path_to,
-                        relocation.width, relocation.height)
+        renderer.save_new_size(path_from, path_to,
+                               relocation.width, relocation.height)

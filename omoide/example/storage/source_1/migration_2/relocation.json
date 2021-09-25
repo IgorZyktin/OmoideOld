@@ -11,8 +11,8 @@
     },
     {
         "uuid": "m_5f4c16eb-d244-4fdb-9a97-004161ff6410",
-        "width": 1024,
-        "height": 1024,
+        "width": 960,
+        "height": 640,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\farm\\farm",
         "operation_type": "scale",
@@ -21,7 +21,7 @@
     },
     {
         "uuid": "m_5f4c16eb-d244-4fdb-9a97-004161ff6410",
-        "width": 384,
+        "width": 576,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\farm\\farm",
@@ -41,8 +41,8 @@
     },
     {
         "uuid": "m_74117f6b-836b-43aa-922a-ad210f16b1db",
-        "width": 1024,
-        "height": 1024,
+        "width": 960,
+        "height": 637,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\farm\\farm",
         "operation_type": "scale",
@@ -51,7 +51,7 @@
     },
     {
         "uuid": "m_74117f6b-836b-43aa-922a-ad210f16b1db",
-        "width": 384,
+        "width": 579,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\farm\\farm",
@@ -71,8 +71,8 @@
     },
     {
         "uuid": "m_7ae9f8b8-80f8-4044-9751-37a5f9b91c98",
-        "width": 1024,
-        "height": 1024,
+        "width": 960,
+        "height": 552,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\farm\\farm",
         "operation_type": "scale",
@@ -81,7 +81,7 @@
     },
     {
         "uuid": "m_7ae9f8b8-80f8-4044-9751-37a5f9b91c98",
-        "width": 384,
+        "width": 668,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\farm\\farm",
@@ -101,8 +101,8 @@
     },
     {
         "uuid": "m_908d2176-0c2a-4b71-a177-3f367fef126b",
-        "width": 1024,
-        "height": 1024,
+        "width": 960,
+        "height": 640,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\farm\\farm",
         "operation_type": "scale",
@@ -111,7 +111,7 @@
     },
     {
         "uuid": "m_908d2176-0c2a-4b71-a177-3f367fef126b",
-        "width": 384,
+        "width": 576,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\farm\\farm",
@@ -131,8 +131,8 @@
     },
     {
         "uuid": "m_bce2058c-0a09-446b-a2be-fdadbb033e95",
-        "width": 1024,
-        "height": 1024,
+        "width": 960,
+        "height": 642,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\farm\\farm",
         "operation_type": "scale",
@@ -141,7 +141,7 @@
     },
     {
         "uuid": "m_bce2058c-0a09-446b-a2be-fdadbb033e95",
-        "width": 384,
+        "width": 575,
         "height": 384,
         "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_2\\farm\\farm",
         "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\farm\\farm",
