@@ -2,6 +2,9 @@
 
 """Relocate.
 """
+import math
+from typing import Collection
+
 from omoide import commands
 from omoide import constants
 from omoide import infra
@@ -26,44 +29,81 @@ def act(command: commands.RelocateCommand,
             )
             continue
 
-        raw_relocations = filesystem.read_json(relocation_file_path)
-        relocations = [classes.Relocation(**x) for x in raw_relocations]
-        total_new_relocations += len(relocations)
+        raw_relocation = filesystem.read_json(relocation_file_path)
+        relocation = classes.Relocation(**raw_relocation)
+        total_new_relocations = 0
 
-        for relocation in relocations:
-            relocate_single_file(relocation, renderer, filesystem,
-                                 stdout, command.force)
+        groups = sorted(relocation.groups.keys())
+        for group_key in groups:
+            group = relocation.groups[group_key]
+            theme_route, group_route = group_key.split(',')
+            applied = relocate_single_group(group, renderer, filesystem,
+                                            branch, leaf, theme_route,
+                                            group_route, stdout, command.force)
+            total_new_relocations += applied
 
     return total_new_relocations
 
 
-def relocate_single_file(relocation: classes.Relocation,
+def relocate_single_group(group: classes.OneGroup,
+                          renderer: classes.Renderer,
+                          filesystem: infra.Filesystem,
+                          branch: str,
+                          leaf: str,
+                          theme_route: str,
+                          group_route: str,
+                          stdout: infra.STDOut,
+                          force: bool) -> int:
+    """Save one group as a whole."""
+    if filesystem.exists(group.folder_from) and not force:
+        stdout.cyan(f'\t[{branch}][{leaf}] Already relocated')
+        return 0
+
+    stdout.green(
+        f'\t[{branch}][{leaf}] Converting {theme_route}/{group_route}'
+    )
+
+    for file in with_progress(group.files.values(), stdout):
+        relocate_single_file(file, group.folder_from, renderer,
+                             filesystem, stdout)
+
+    return sum(len(file.conversions) for file in group.files.values())
+
+
+def relocate_single_file(file: classes.OneFile,
+                         folder_from: str,
                          renderer: classes.Renderer,
                          filesystem: infra.Filesystem,
-                         stdout: infra.STDOut,
-                         force: bool) -> None:
+                         stdout: infra.STDOut) -> None:
     """Save one source file onto output files."""
-    path_from = filesystem.join(relocation.folder_from,
-                                relocation.source_filename)
+    path_from = filesystem.join(folder_from, file.source_filename)
 
     if filesystem.not_exists(path_from):
         raise FileNotFoundError(
             f'Original media file does not exist: {path_from}'
         )
 
-    stdout.print(f'\t{relocation.source_filename}')
+    for conversion in file.conversions:
+        filesystem.ensure_folder_exists(conversion.folder_to, stdout)
+        path_to = filesystem.join(conversion.folder_to, file.target_filename)
 
-    filesystem.ensure_folder_exists(relocation.folder_to, stdout)
-    path_to = filesystem.join(relocation.folder_to,
-                              relocation.target_filename)
+        if conversion.operation_type == 'copy':
+            filesystem.copy_file(path_from, path_to)
+        else:
+            renderer.save_new_size(path_from, path_to,
+                                   conversion.width, conversion.height)
 
-    if filesystem.exists(path_to) and not force:
-        stdout.cyan(
-            f'\t\tFile already exist: {relocation.target_filename}')
-        return
 
-    if relocation.operation_type == 'copy':
-        filesystem.copy_file(path_from, path_to)
-    else:
-        renderer.save_new_size(path_from, path_to,
-                               relocation.width, relocation.height)
+def with_progress(iterable: Collection, stdout: infra.STDOut):
+    """Iterate with progress bar."""
+    sequence = list(iterable)
+    total = len(sequence)
+    bar_width = 65
+    for i, element in enumerate(sequence, start=1):
+        percent = i / total
+        complete = math.ceil(bar_width * percent)
+        left = bar_width - complete
+        stdout.print('#' * complete + '_' * left + f' {percent:.1%}',
+                     prefix='\r\t', end='')
+        yield element
+    stdout.print('', prefix='\r', end='')

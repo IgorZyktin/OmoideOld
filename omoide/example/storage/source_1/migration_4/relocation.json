@@ -1,122 +1,109 @@
-[
-    {
-        "uuid": "m_1603fe89-9198-40cd-9f97-fde64197e28a",
-        "width": 532,
-        "height": 800,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
-        "operation_type": "copy",
-        "source_filename": "514173.jpg",
-        "target_filename": "m_1603fe89-9198-40cd-9f97-fde64197e28a.jpg"
-    },
-    {
-        "uuid": "m_1603fe89-9198-40cd-9f97-fde64197e28a",
-        "width": 532,
-        "height": 800,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "514173.jpg",
-        "target_filename": "m_1603fe89-9198-40cd-9f97-fde64197e28a.jpg"
-    },
-    {
-        "uuid": "m_1603fe89-9198-40cd-9f97-fde64197e28a",
-        "width": 256,
-        "height": 384,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "514173.jpg",
-        "target_filename": "m_1603fe89-9198-40cd-9f97-fde64197e28a.jpg"
-    },
-    {
-        "uuid": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4",
-        "width": 670,
-        "height": 443,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
-        "operation_type": "copy",
-        "source_filename": "514169.jpg",
-        "target_filename": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4.jpg"
-    },
-    {
-        "uuid": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4",
-        "width": 670,
-        "height": 443,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "514169.jpg",
-        "target_filename": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4.jpg"
-    },
-    {
-        "uuid": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4",
-        "width": 581,
-        "height": 384,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "514169.jpg",
-        "target_filename": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4.jpg"
-    },
-    {
-        "uuid": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed",
-        "width": 533,
-        "height": 800,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
-        "operation_type": "copy",
-        "source_filename": "514181.jpg",
-        "target_filename": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed.jpg"
-    },
-    {
-        "uuid": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed",
-        "width": 533,
-        "height": 800,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "514181.jpg",
-        "target_filename": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed.jpg"
-    },
-    {
-        "uuid": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed",
-        "width": 256,
-        "height": 384,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "514181.jpg",
-        "target_filename": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed.jpg"
-    },
-    {
-        "uuid": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc",
-        "width": 1024,
-        "height": 683,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
-        "operation_type": "copy",
-        "source_filename": "E7FcYUEXMAIDpNv.jpg",
-        "target_filename": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc.jpg"
-    },
-    {
-        "uuid": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc",
-        "width": 1024,
-        "height": 683,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "E7FcYUEXMAIDpNv.jpg",
-        "target_filename": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc.jpg"
-    },
-    {
-        "uuid": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc",
-        "width": 576,
-        "height": 384,
-        "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
-        "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
-        "operation_type": "scale",
-        "source_filename": "E7FcYUEXMAIDpNv.jpg",
-        "target_filename": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc.jpg"
+{
+    "groups": {
+        "mice,no_group": {
+            "folder_from": "D:\\PycharmProjects\\Omoide\\omoide\\example\\sources\\source_1\\migration_4\\mice\\no_group",
+            "files": {
+                "m_1603fe89-9198-40cd-9f97-fde64197e28a": {
+                    "uuid": "m_1603fe89-9198-40cd-9f97-fde64197e28a",
+                    "source_filename": "514173.jpg",
+                    "target_filename": "m_1603fe89-9198-40cd-9f97-fde64197e28a.jpg",
+                    "conversions": [
+                        {
+                            "width": 532,
+                            "height": 800,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
+                            "operation_type": "copy"
+                        },
+                        {
+                            "width": 532,
+                            "height": 800,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
+                            "operation_type": "scale"
+                        },
+                        {
+                            "width": 256,
+                            "height": 384,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
+                            "operation_type": "scale"
+                        }
+                    ]
+                },
+                "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4": {
+                    "uuid": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4",
+                    "source_filename": "514169.jpg",
+                    "target_filename": "m_633bf3c1-f4ba-4dce-a7dc-a89305be3df4.jpg",
+                    "conversions": [
+                        {
+                            "width": 670,
+                            "height": 443,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
+                            "operation_type": "copy"
+                        },
+                        {
+                            "width": 670,
+                            "height": 443,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
+                            "operation_type": "scale"
+                        },
+                        {
+                            "width": 581,
+                            "height": 384,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
+                            "operation_type": "scale"
+                        }
+                    ]
+                },
+                "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed": {
+                    "uuid": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed",
+                    "source_filename": "514181.jpg",
+                    "target_filename": "m_41d1ffdf-2f9c-46b7-9b26-bb0396e2ceed.jpg",
+                    "conversions": [
+                        {
+                            "width": 533,
+                            "height": 800,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
+                            "operation_type": "copy"
+                        },
+                        {
+                            "width": 533,
+                            "height": 800,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
+                            "operation_type": "scale"
+                        },
+                        {
+                            "width": 256,
+                            "height": 384,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
+                            "operation_type": "scale"
+                        }
+                    ]
+                },
+                "m_5e20b862-77d8-4421-a816-88d6e98ff4cc": {
+                    "uuid": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc",
+                    "source_filename": "E7FcYUEXMAIDpNv.jpg",
+                    "target_filename": "m_5e20b862-77d8-4421-a816-88d6e98ff4cc.jpg",
+                    "conversions": [
+                        {
+                            "width": 1024,
+                            "height": 683,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\content\\mice\\no_group",
+                            "operation_type": "copy"
+                        },
+                        {
+                            "width": 1024,
+                            "height": 683,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\preview\\mice\\no_group",
+                            "operation_type": "scale"
+                        },
+                        {
+                            "width": 576,
+                            "height": 384,
+                            "folder_to": "D:\\PycharmProjects\\Omoide\\omoide\\example\\content\\thumbnails\\mice\\no_group",
+                            "operation_type": "scale"
+                        }
+                    ]
+                }
+            }
+        }
     }
-]
+}

@@ -16,10 +16,10 @@ class STDOut:
     """
 
     @classmethod
-    def print(cls, text: str, *args, **kwargs) -> None:
+    def print(cls, text: str, *args, prefix: str = '', **kwargs) -> None:
         """Just print, no fancy colors."""
         kwargs['end'] = kwargs.get('end', '\n')
-        return cls.extended_print('', text, *args, **kwargs)
+        return cls.extended_print(prefix, text, *args, **kwargs)
 
     @classmethod
     def light_green(cls, text: str, *args, **kwargs) -> None:

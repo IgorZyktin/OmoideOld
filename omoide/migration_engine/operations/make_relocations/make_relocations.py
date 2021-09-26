@@ -2,9 +2,6 @@
 
 """Make relocations.
 """
-from dataclasses import asdict
-from typing import List
-
 from omoide import commands
 from omoide import infra
 from omoide.constants import media as media_const
@@ -37,25 +34,37 @@ def act(command: commands.MakeRelocationsCommand,
             stdout.cyan(f'\t[{branch}][{leaf}] Relocation file already exist')
             continue
 
-        relocations: List[classes.Relocation] = []
         unit_dict = filesystem.read_json(unit_file_path)
         unit = entities.Unit(**unit_dict)
+        relocation = classes.Relocation()
 
         for meta in unit.metas:
-            new_relocations = make_relocations_for_one_meta(
+            _, _, theme, group, _ = meta.path_to_content.split('/')
+            key = f'{theme},{group}'
+
+            if key in relocation.groups:
+                relocation_group = relocation.groups[key]
+            else:
+                relocation_group = classes.OneGroup(
+                    folder_from=filesystem.join(
+                        command.sources_folder, branch, leaf, theme, group),
+                )
+                relocation.groups[key] = relocation_group
+
+            new_file = make_relocations_for_one_meta(
                 command=command,
                 meta=meta,
-                branch=branch,
-                leaf=leaf,
+                theme=theme,
+                group=group,
                 filesystem=filesystem,
                 renderer=renderer,
             )
-            relocations.extend(new_relocations)
-            total_new_relocations += 1
+            relocation_group.files[meta.uuid] = new_file
+            total_new_relocations += len(new_file.conversions)
 
-        save_relocations(
+        save_relocation(
             folder=storage_folder,
-            relocations=relocations,
+            relocation=relocation,
             filesystem=filesystem,
         )
         stdout.green(f'\t[{branch}][{leaf}] Created relocations')
@@ -65,13 +74,12 @@ def act(command: commands.MakeRelocationsCommand,
 
 def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
                                   meta: entities.Meta,
-                                  branch: str,
-                                  leaf: str,
+                                  theme: str,
+                                  group: str,
                                   filesystem: infra.Filesystem,
                                   renderer: classes.Renderer,
-                                  ) -> List[classes.Relocation]:
+                                  ) -> classes.OneFile:
     """Gather all required resources for relocation information."""
-    _, _, theme, group, _ = meta.path_to_content.split('/')
     source_filename = f'{meta.original_filename}.{meta.original_extension}'
 
     def get_last_segment(path: str) -> str:
@@ -88,55 +96,44 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
         meta.width, meta.height,
         media_const.THUMBNAIL_WIDTH, media_const.THUMBNAIL_HEIGHT)
 
-    relocations = [
-        classes.Relocation(
-            uuid=meta.uuid,
-            width=meta.width,
-            height=meta.height,
-            folder_from=filesystem.join(
-                command.sources_folder, branch, leaf, theme, group),
-            folder_to=filesystem.join(
-                command.content_folder,
-                storage_const.MEDIA_CONTENT_FOLDER_NAME, theme, group),
-            operation_type='copy',
-            source_filename=source_filename,
-            target_filename=get_last_segment(meta.path_to_content),
-        ),
-        classes.Relocation(
-            uuid=meta.uuid,
-            width=preview_width,
-            height=preview_height,
-            folder_from=filesystem.join(
-                command.sources_folder, branch, leaf, theme, group),
-            folder_to=filesystem.join(
-                command.content_folder,
-                storage_const.MEDIA_PREVIEW_FOLDER_NAME, theme, group),
-            operation_type='scale',
-            source_filename=source_filename,
-            target_filename=get_last_segment(meta.path_to_preview),
-        ),
-        classes.Relocation(
-            uuid=meta.uuid,
-            width=thumbnail_width,
-            height=thumbnail_height,
-            folder_from=filesystem.join(
-                command.sources_folder, branch, leaf, theme, group),
-            folder_to=filesystem.join(
-                command.content_folder,
-                storage_const.MEDIA_THUMBNAILS_FOLDER_NAME, theme, group),
-            operation_type='scale',
-            source_filename=source_filename,
-            target_filename=get_last_segment(meta.path_to_thumbnail),
-        ),
-    ]
+    return classes.OneFile(
+        uuid=meta.uuid,
+        source_filename=source_filename,
+        target_filename=get_last_segment(meta.path_to_content),
+        conversions=[
+            classes.OneConversion(
+                width=meta.width,
+                height=meta.height,
+                folder_to=filesystem.join(
+                    command.content_folder,
+                    storage_const.MEDIA_CONTENT_FOLDER_NAME, theme, group),
+                operation_type='copy',
+            ),
+            classes.OneConversion(
+                width=preview_width,
+                height=preview_height,
+                folder_to=filesystem.join(
+                    command.content_folder,
+                    storage_const.MEDIA_PREVIEW_FOLDER_NAME, theme, group),
+                operation_type='scale',
 
-    return relocations
+            ),
+            classes.OneConversion(
+                width=thumbnail_width,
+                height=thumbnail_height,
+                folder_to=filesystem.join(
+                    command.content_folder,
+                    storage_const.MEDIA_THUMBNAILS_FOLDER_NAME, theme, group),
+                operation_type='scale',
+            )
+        ]
+    )
 
 
-def save_relocations(folder: str,
-                     relocations: List[classes.Relocation],
-                     filesystem: infra.Filesystem) -> str:
+def save_relocation(folder: str,
+                    relocation: classes.Relocation,
+                    filesystem: infra.Filesystem) -> str:
     """Save relocations as JSON file."""
     file_path = filesystem.join(folder, storage_const.RELOCATION_FILE_NAME)
-    filesystem.write_json(file_path, [asdict(x) for x in relocations])
+    filesystem.write_json(file_path, relocation.dict())
     return file_path
