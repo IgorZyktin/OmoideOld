@@ -8,6 +8,7 @@ from omoide import commands
 from omoide import constants
 from omoide import infra
 from omoide.migration_engine import classes
+from omoide.migration_engine.classes import passport
 from omoide.migration_engine.operations.make_migrations import schema
 
 
@@ -28,8 +29,13 @@ def act(command: commands.MakeMigrationsCommand,
         migration_file_path = filesystem.join(leaf_folder,
                                               constants.MIGRATION_FILE_NAME)
 
-        if filesystem.exists(migration_file_path) and not command.force:
-            stdout.cyan(f'\t[{branch}][{leaf}] Migration file already exist')
+        passport_inst = passport.load_from_file(command.root_folder,
+                                                branch, leaf, filesystem)
+
+        if passport_inst.already_made_make_migrations(
+                command, migration_file_path, filesystem) \
+                and not command.force:
+            stdout.cyan(f'\t[{branch}][{leaf}] Migrations already created')
             continue
 
         content = filesystem.read_json(unit_file_path)
@@ -41,6 +47,10 @@ def act(command: commands.MakeMigrationsCommand,
         )
         stdout.green(f'\t[{branch}][{leaf}] Created migration file')
         total_migrations += len(new_migrations)
+        passport_inst.register_make_migrations(command, branch, leaf,
+                                               migration_file_path, filesystem)
+        passport.save_to_file(passport_inst, command.root_folder,
+                              branch, leaf, filesystem)
 
     return total_migrations
 
@@ -50,5 +60,6 @@ def save_migrations(leaf_folder: str,
                     filesystem: infra.Filesystem) -> str:
     """Save migration as SQL file."""
     file_path = filesystem.join(leaf_folder, constants.MIGRATION_FILE_NAME)
-    filesystem.write_file(file_path, ';\n'.join(map(str, migrations)))
+    new_migrations = ';\n'.join(map(str, migrations))
+    filesystem.write_file(file_path, new_migrations)
     return file_path

@@ -4,7 +4,7 @@
 """
 import json
 import sys
-from typing import Optional, NoReturn, List, Dict
+from typing import Optional, NoReturn, Dict
 
 import pydantic
 
@@ -13,6 +13,7 @@ from omoide import constants
 from omoide import infra
 from omoide.migration_engine import classes
 from omoide.migration_engine import entities
+from omoide.migration_engine.classes import passport
 from omoide.migration_engine.operations.unite import identity
 from omoide.migration_engine.operations.unite import preprocessing
 from omoide.migration_engine.operations.unite import raw_entities
@@ -55,20 +56,33 @@ def act(command: commands.UniteCommand,
 
         unit_path = filesystem.join(command.storage_folder, branch, leaf,
                                     constants.UNIT_FILE_NAME)
-        if filesystem.exists(unit_path) and not command.force:
-            stdout.cyan(f'\t[{branch}][{leaf}] Unit file already exist')
+
+        passport_inst = passport.load_from_file(command.root_folder,
+                                                branch, leaf, filesystem)
+
+        if passport_inst.already_made_unite(command, unit_path, filesystem) \
+                and not command.force:
+            stdout.cyan(f'\t[{branch}][{leaf}] Unit file already processed')
             continue
 
-        new_path = make_unit_in_leaf(command=command,
-                                     branch=branch,
-                                     leaf=leaf,
-                                     leaf_folder=leaf_folder,
-                                     router=router,
-                                     identity_master=identity_master,
-                                     uuid_master=uuid_master,
-                                     renderer=renderer,
-                                     filesystem=filesystem,
-                                     stdout=stdout)
+        new_path = make_unit_in_leaf(
+            command=command,
+            passport_inst=passport_inst,
+            branch=branch,
+            leaf=leaf,
+            leaf_folder=leaf_folder,
+            router=router,
+            identity_master=identity_master,
+            uuid_master=uuid_master,
+            renderer=renderer,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+
+        passport_inst.register_unite(command, branch, leaf,
+                                     unit_path, filesystem)
+        passport.save_to_file(passport_inst, command.root_folder,
+                              branch, leaf, filesystem)
 
         if new_path:
             stdout.green(f'\t[{branch}][{leaf}] Created unit file')
@@ -78,7 +92,9 @@ def act(command: commands.UniteCommand,
 
 
 # pylint: disable=too-many-locals
-def make_unit_in_leaf(command: commands.UniteCommand, branch: str, leaf: str,
+def make_unit_in_leaf(command: commands.UniteCommand,
+                      passport_inst: passport.Passport,
+                      branch: str, leaf: str,
                       leaf_folder: str, router: Router,
                       identity_master: IdentityMaster,
                       uuid_master: UUIDMaster,

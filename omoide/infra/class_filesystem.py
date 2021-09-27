@@ -2,6 +2,7 @@
 
 """Abstraction of filesystem.
 """
+import hashlib
 import os
 import shutil
 import typing
@@ -150,3 +151,30 @@ class Filesystem:
     def create_directory(target_path: str) -> None:
         """Create directory."""
         os.mkdir(target_path)
+
+    @staticmethod
+    def get_fingerprint(path: str) -> dict:
+        """Get fingerprint of a file."""
+        try:
+            stat = os.stat(path)
+
+            with open(path, 'rb') as f:
+                file_hash = hashlib.md5()
+                while chunk := f.read(8192):
+                    file_hash.update(chunk)
+        except FileNotFoundError:
+            fingerprint = {
+                'md5': '',
+                'created': -1,
+                'modified': -1,
+                'size': -1,
+            }
+        else:
+            fingerprint = {
+                'md5': str(file_hash.hexdigest()),
+                'created': int(stat.st_ctime),
+                'modified': int(stat.st_mtime),
+                'size': stat.st_size,
+            }
+
+        return fingerprint

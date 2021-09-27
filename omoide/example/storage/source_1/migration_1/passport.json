@@ -1,0 +1,39 @@
+{
+    "last_update": "2021-08-20 00:00:00",
+    "unite": {
+        "last_update": "2021-08-20 00:00:00",
+        "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "fingerprints": {
+            "all_all": {
+                "md5": "3961dc1510a06435806d0452a7b41850",
+                "created": 1631299544,
+                "modified": 1633860476,
+                "size": 27620
+            }
+        }
+    },
+    "make_migrations": {
+        "last_update": "2021-08-20 00:00:00",
+        "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    },
+    "make_relocations": {
+        "last_update": "",
+        "revision": ""
+    },
+    "migrate": {
+        "last_update": "",
+        "revision": ""
+    },
+    "relocate": {
+        "last_update": "",
+        "revision": ""
+    },
+    "sync": {
+        "last_update": "",
+        "revision": ""
+    },
+    "freeze": {
+        "last_update": "",
+        "revision": ""
+    }
+}
