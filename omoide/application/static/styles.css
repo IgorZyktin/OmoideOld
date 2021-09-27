@@ -404,6 +404,11 @@ img {
     height: 100%;
 }
 
+.preview-center {
+    display: flex;
+    flex-direction: row;
+}
+
 .preview-table {
     border-collapse: collapse;
 }
@@ -421,6 +426,7 @@ img {
 
 .preview-swipe {
     width: 100%;
+    min-width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;

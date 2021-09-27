@@ -27,7 +27,7 @@
 
     {{ preview_pagination(paginator, web_query, next, previous) }}
 
-    <div class="preview-content limited-width">
+    <div class="preview-center limited-width">
 
         {% if previous %}
             <a href="{{ url_for('preview', uuid=previous) + web_query|string|safe }}"
