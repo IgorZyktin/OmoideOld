@@ -9,8 +9,9 @@ from sqlalchemy.orm import sessionmaker
 
 import omoide.constants.project
 import omoide.database.operations
-from omoide import commands, constants, utils
+from omoide import commands, utils
 from omoide import search_engine
+from omoide.application import constants
 from omoide.application import database, logic
 from omoide.application.class_web_query import WebQuery
 
