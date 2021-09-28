@@ -155,8 +155,8 @@ h3 {
 .tag-box {
     color: var(--main-text-color) !important;
     border: 2px solid black;
-    margin: var(--gap-small);
-    padding: var(--gap-small);
+    margin: 0.1em;
+    padding: var(--gap-tiny);
     border-radius: var(--radius);
     background-color: #46813C2D;
     text-decoration: none;
@@ -284,7 +284,7 @@ h3 {
     border-radius: 5px;
     margin-top: var(--gap-tiny);
     margin-bottom: var(--gap-tiny);
-    padding: var(--gap-tiny);
+    padding: var(--gap-small);
     display: flex;
     flex-direction: row;
     justify-content: space-between;

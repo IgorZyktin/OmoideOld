@@ -10,7 +10,6 @@
                 <tr>
                     <td>Total size</td>
                     <td>Total items</td>
-                    <td>Total tags</td>
                     <td>Oldest item</td>
                     <td>Newest item</td>
                 </tr>
@@ -18,7 +17,6 @@
                 <tr>
                     <td>{{ byte_count_to_text(statistic.total_size) }}</td>
                     <td>{{ sep_digits(statistic.total_items) }}</td>
-                    <td>{{ statistic|length }}</td>
                     <td>{{ statistic.min_date }}</td>
                     <td>{{ statistic.max_date }}</td>
                 </tr>
@@ -26,26 +24,17 @@
             </table>
         </div>
 
-        {% if statistic.tags_by_frequency %}
-            <h3>Tags by frequency</h3>
-            <div class="content-block">
-                {% for tag, times in statistic.tags_by_frequency %}
-                    <a href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}"
-                       class="tag-box">{{ tag }} ⋅ {{ times }}</a>
-                {% endfor %}
-            </div>
-        {% endif %}
-
         {% if statistic.tags_by_alphabet %}
-            <h3>Tags by alphabet</h3>
+            <h3>Total tags: {{ sep_digits(statistic|length) }}</h3>
             <div class="content-block">
                 {% for letter, tags in statistic.tags_by_alphabet %}
                     <ul class="tags-list">
                         <p class="tag-header">{{ letter|upper }}</p>
                         {% for tag in tags %}
                             <li>
-                                <a href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">
-                                    {{ tag }}</a>
+                                <a class="tag-box"
+                                   href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">
+                                    {{ tag }}</a> x {{ sep_digits(statistic.tags.get(tag, 0)) }}
                             </li>
                         {% endfor %}
                     </ul>

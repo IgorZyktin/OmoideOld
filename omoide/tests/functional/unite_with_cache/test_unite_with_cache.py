@@ -13,7 +13,7 @@ from unittest import mock
 import pytest
 
 from omoide import constants, commands
-from omoide.__main__ import run
+from omoide.__main__ import run_using_files
 from omoide.infra import Filesystem
 
 
@@ -49,7 +49,7 @@ def test_unite_with_cache(unite_with_cache_folder_structure,
         )
 
         # apply
-        run(command, stdout=mock.Mock())
+        run_using_files(command, stdout=mock.Mock())
         caches, units = _gather_contents(filesystem, storage_path, structure)
 
     # assert

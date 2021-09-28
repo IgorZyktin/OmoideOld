@@ -3,9 +3,7 @@
 """Statistics on current level of display.
 """
 from collections import defaultdict
-from typing import (
-    List, Dict, Collection, Tuple, Any, Optional
-)
+from typing import List, Dict, Collection, Tuple, Any, Optional
 
 from omoide import utils
 
@@ -27,7 +25,6 @@ class Statistics:
         self.total_items = total_items
         self.total_size = total_size
         self._tags: Dict[str, int] = defaultdict(int)
-        self._tags_by_freq: List[Tuple[str, int]] = []
         self._tags_by_alphabet: List[Tuple[str, List[str]]] = []
         self._need_recalculation = True
 
@@ -104,36 +101,10 @@ class Statistics:
 
     def _recalculate(self) -> None:
         """Update inner storages."""
-        # frequency -----------------------------------------------------------
-
-        self._tags_by_freq = list(self.tags.items())
-
-        # sorting items by alphabet
-        self._tags_by_freq.sort(key=lambda x: x[0], reverse=False)
-
-        # sorting items by frequency
-        self._tags_by_freq.sort(key=lambda x: x[1], reverse=True)
-
-        # alphabet ------------------------------------------------------------
         self._tags_by_alphabet = list(
             utils.arrange_by_alphabet(self._tags).items()
         )
-
         self._need_recalculation = False
-
-    @property
-    def tags_by_frequency(self) -> List[Tuple[str, int]]:
-        """Return list of tags sorted by popularity.
-
-        Example:
-        [
-            ("tag_1", 25),
-            ("tag_2", 14),
-        ]
-        """
-        if self._need_recalculation:
-            self._recalculate()
-        return self._tags_by_freq
 
     @property
     def tags_by_alphabet(self) -> List[Tuple[str, List[str]]]:
@@ -151,5 +122,5 @@ class Statistics:
 
     @property
     def tags(self) -> Dict[str, int]:
-        """Return copy of inner tags."""
-        return dict(self._tags.copy())
+        """Return inner tags."""
+        return self._tags

@@ -40,17 +40,17 @@ def test_statistics_as_dict(statistics_fixture):
 
 
 def test_statistics_tags_by_frequency(statistics_fixture):
-    assert statistics_fixture.tags_by_frequency == [
-        ('alpha', 2),
-        ('beta', 2),
-        ('ball', 1),
-        ('cat', 1),
-        ('dog', 1),
-        ('fish', 1),
-        ('gamma', 1),
-        ('home', 1),
-        ('trust', 1),
-    ]
+    assert statistics_fixture.tags == {
+        'alpha': 2,
+        'beta': 2,
+        'ball': 1,
+        'cat': 1,
+        'dog': 1,
+        'fish': 1,
+        'gamma': 1,
+        'home': 1,
+        'trust': 1,
+    }
 
 
 def test_statistics_tags_by_alphabet(statistics_fixture):
