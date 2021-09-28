@@ -84,19 +84,29 @@ def restore_database_from_scratch(folder: str,
     return database
 
 
-def synchronize(session_from: Session, session_to: Session) -> None:
+def synchronize(session_from: Session, session_to: Session,
+                stdout: infra.STDOut) -> None:
     """Synchronize objects from one database to another."""
+    stdout.green('Synchronize:')
     sync_model(session_from, session_to, models.Theme)
+    stdout.green('\tmodels.Theme complete')
     sync_model(session_from, session_to, models.TagTheme)
+    stdout.green('\tmodels.TagTheme complete')
 
     sync_model(session_from, session_to, models.Synonym)
+    stdout.green('\tmodels.Synonym complete')
     sync_model(session_from, session_to, models.SynonymValue)
+    stdout.green('\tmodels.SynonymValue complete')
 
     sync_model(session_from, session_to, models.Group)
+    stdout.green('\tmodels.Group complete')
     sync_model(session_from, session_to, models.TagGroup)
+    stdout.green('\tmodels.TagGroup complete')
 
     sync_model(session_from, session_to, models.Meta)
+    stdout.green('\tmodels.Meta complete')
     sync_model(session_from, session_to, models.TagMeta)
+    stdout.green('\tmodels.TagMeta complete')
 
 
 def sync_model(session_from: Session, session_to: Session, model) -> None:

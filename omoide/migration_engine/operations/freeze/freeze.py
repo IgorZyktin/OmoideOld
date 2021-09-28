@@ -58,7 +58,7 @@ def act(command: commands.FreezeCommand,
     SessionDb = sessionmaker(bind=database)  # pylint: disable=invalid-name
     session_db = SessionDb()
 
-    operations.synchronize(session_root, session_db)
+    operations.synchronize(session_root, session_db, stdout)
     indexes.build_indexes(session_db, stdout)
     helpers.build_helpers(session_db, stdout)
 
