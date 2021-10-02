@@ -86,7 +86,10 @@ def act(command: commands.SyncCommand,
                 stdout=stdout,
             )
 
-        synchronize(session_from=session_branch, session_to=session_root)
+        synchronize(session_from=session_branch,
+                    session_to=session_root,
+                    stdout=stdout)
+
         total_migrations += 1
         stdout.green(f'\t[{branch}] Synchronized')
         branch_db.dispose()
@@ -108,7 +111,9 @@ def sync_leaf(leaf_folder: str, leaf: str, session_branch: Session,
 
     session_leaf = sessionmaker(bind=leaf_db)()
 
-    synchronize(session_from=session_leaf, session_to=session_branch)
+    synchronize(session_from=session_leaf,
+                session_to=session_branch,
+                stdout=stdout)
     stdout.yellow(f'\t * [{leaf}] Synchronized')
     leaf_db.dispose()
     session_leaf.close()

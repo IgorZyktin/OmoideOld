@@ -6,6 +6,7 @@ import os
 
 import sqlalchemy
 from sqlalchemy.engine import Engine
+from sqlalchemy import exc
 
 import code
 import constants
@@ -41,24 +42,20 @@ def main() -> None:
                           nullable=False, index=True),
         sqlalchemy.Column('referer', sqlalchemy.Text, nullable=False),
         sqlalchemy.Column('user_agent', sqlalchemy.Text, nullable=False),
+        sqlalchemy.UniqueConstraint('time', 'ip', 'bytes_sent', 'url',
+                                    name='uix_1')
     )
     metadata.create_all()
-    newest_time = code.get_newest_time(engine, table)
-    if newest_time:
-        print(f'Got newest time: {newest_time}')
-
     try:
         for filename in filenames:
             print('Handling', filename)
-            handle_single_file(constants.LOGS_FOLDER, filename,
-                               table, engine, newest_time)
+            handle_single_file(constants.LOGS_FOLDER, filename, table, engine)
     finally:
         engine.dispose()
 
 
 def handle_single_file(path: str, filename: str,
-                       table: sqlalchemy.Table, engine: Engine,
-                       newest_time: str) -> None:
+                       table: sqlalchemy.Table, engine: Engine) -> None:
     """Parse and save contents of one file."""
     full_path = os.path.join(path, filename)
     lines = code.get_lines(full_path)
@@ -70,8 +67,10 @@ def handle_single_file(path: str, filename: str,
             if not request:
                 continue
 
-            if request['time'] > newest_time:
+            try:
                 code.dump_request(request, conn, table)
+            except exc.IntegrityError:
+                print('Skipped', request)
 
     os.rename(full_path, os.path.join(path, '_' + filename))
 

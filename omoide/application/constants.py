@@ -2,4 +2,4 @@
 
 """Server constants.
 """
-VERSION = '2021-09-23'
+VERSION = '2021-10-02'
