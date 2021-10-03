@@ -55,7 +55,8 @@ def relocate_single_group(group: classes.OneGroup,
                           stdout: infra.STDOut,
                           force: bool) -> int:
     """Save one group as a whole."""
-    if filesystem.exists(group.folder_from) and not force:
+    one_file = list(group.files.values())[0]
+    if filesystem.exists(one_file.conversions[0].folder_to) and not force:
         stdout.cyan(f'\t[{branch}][{leaf}] Already relocated')
         return 0
 
