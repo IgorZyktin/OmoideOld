@@ -111,7 +111,6 @@ class Theme(BaseModel, UniqueTagsMixin):
     uuid: str
     route: str
     label: str
-    synonyms: List[Synonym] = Field(default_factory=dict)
     tags: List[str] = Field(default_factory=list)
 
     @validator('uuid')
