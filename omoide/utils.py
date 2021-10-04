@@ -2,6 +2,7 @@
 
 """Various unrelated functions.
 """
+import datetime
 from collections import defaultdict
 from itertools import zip_longest
 from typing import Union, Collection, Dict, List, Iterable, Any, Iterator
@@ -133,3 +134,8 @@ def group_to_size(iterable: Iterable, group_size: int = 2,
     [(1, 2, 3), (4, 5, 6), (7, '?', '?')]
     """
     return zip_longest(*[iter(iterable)] * group_size, fillvalue=default)
+
+
+def now() -> datetime.datetime:
+    """Return current time."""
+    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
