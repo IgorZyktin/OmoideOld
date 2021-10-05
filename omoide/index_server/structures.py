@@ -14,7 +14,7 @@ class ShallowMeta:
     """Typical metarecord, simplified form."""
     __slots__ = ('uuid', 'number', 'path_to_thumbnail')
 
-    def __init__(self, uuid: str, number: str, path_to_thumbnail: str) -> None:
+    def __init__(self, uuid: str, number: int, path_to_thumbnail: str) -> None:
         """Initialize instance."""
         self.uuid = uuid
         self.number = number
@@ -33,6 +33,7 @@ class ShallowMeta:
         return {
             'uuid': self.uuid,
             'path': self.path_to_thumbnail,
+            'number': self.number,
         }
 
 

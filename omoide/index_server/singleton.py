@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 """Main state keeper.
 """
-from threading import Lock
+import psutil
 
 from omoide import infra
-from omoide.index_server.index import Index
 from omoide.index_server.status import Status
+from omoide.index_server.structures import Index
 
 
 class Singleton(metaclass=infra.SingletonMeta):
     """Main state keeper.
     """
-    lock: Lock
     index: Index
     status: Status
     filesystem: infra.Filesystem
     stdout: infra.STDOut
     db_path: str
+    version: str
+    process: psutil.Process

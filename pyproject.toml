@@ -18,6 +18,8 @@ ujson = "^4.1.0"
 gunicorn = "^20.1.0"
 fastapi = "^0.68.1"
 uvicorn = "^0.15.0"
+Pympler = "^0.9"
+psutil = "^5.8.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

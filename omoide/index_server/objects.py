@@ -35,8 +35,9 @@ class SearchResult(BaseModel):
     """All found resources."""
     items: list[dict]
     report: list[str]
+    announce: str = ''
 
 
 class NewDbPath(BaseModel):
     """New database path."""
-    db_path: str
+    path: str = ''

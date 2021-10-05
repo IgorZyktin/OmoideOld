@@ -1,0 +1,528 @@
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T233524.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233505.200.json
+
+###
+
+POST http://localhost:9000/reload
+Content-Type: application/json
+
+{}
+
+<> 2021-10-05T233502.200.json
+
+###
+
+POST http://localhost:9000/update_db_path
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T233457.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233452.200.json
+
+###
+
+POST http://localhost:9000/reload
+Content-Type: application/json
+
+{}
+
+<> 2021-10-05T233422.500.txt
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233345.200.json
+
+###
+
+POST http://localhost:9000/update_db_path
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T233338.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233334.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233124.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T232832.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+    ],
+    "or_": [
+    ],
+    "not_": [
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232812.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+    ],
+    "or_": [
+    ],
+    "not_": [
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232807.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+    ],
+    "or_": [
+    ],
+    "not_": [
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232634.500.txt
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232606.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232600.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232505.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232248.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232240.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232033.500.txt
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232015.500.txt
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T231850.422.json
+
+###
+
+POST http://localhost:9000
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T231845.405.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T231648.200.json
+
+###
+
+POST http://localhost:9000/update_db_path
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T231638.500.txt
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T231635.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T231536.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T231319.500.txt
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T231308.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230714.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230628.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230615.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230603.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230555.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230342.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230323.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T230227.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T225526.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T225243.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T224240.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T223359.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T223352.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T223348.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T223321.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T223309.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T222953.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T222951.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T222944.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T222309.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+###
+
