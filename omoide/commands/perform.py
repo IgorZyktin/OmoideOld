@@ -128,3 +128,16 @@ def perform_show_tree(command: commands.ShowTreeCommand,
         stdout=stdout,
     )
     stdout.magenta(f'Got {total} subfolders')
+
+
+def perform_run_index(command: commands.RunIndexCommand,
+                      filesystem: infra.Filesystem,
+                      stdout: infra.STDOut) -> None:
+    """Perform command."""
+    from omoide.index_server import implementation
+    stdout.magenta('[RUN_INDEX] Starting index server')
+    implementation.run_index(
+        command=command,
+        filesystem=filesystem,
+        stdout=stdout,
+    )

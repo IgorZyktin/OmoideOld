@@ -11,14 +11,12 @@ from omoide import commands
 from omoide import infra
 from omoide import utils
 from omoide.constants import storage as storage_constants
-from omoide.index_server import constants
-from omoide.index_server import status
-from omoide.index_server import structures
+from omoide.index_server import constants, status, structures
 from omoide.index_server.app import app
 from omoide.index_server.singleton import Singleton
 
 
-def run_index(command: commands.RunserverCommand,
+def run_index(command: commands.RunIndexCommand,
               filesystem: infra.Filesystem,
               stdout: infra.STDOut) -> None:
     """Run dev server."""

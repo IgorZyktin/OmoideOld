@@ -5,9 +5,7 @@ import asyncio
 
 import fastapi
 
-from omoide.index_server import logic
-from omoide.index_server import objects
-from omoide.index_server import singleton
+from omoide.index_server import logic, objects, singleton
 
 
 async def get_singleton() -> singleton.Singleton:

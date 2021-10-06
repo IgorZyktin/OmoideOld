@@ -32,6 +32,9 @@ Possible call variants:
         python -m omoide runserver
         python -m omoide runserver --host=127.0.0.1 --port9000
 
+    To launch index server:
+        python -m omoide run_index
+
     To display folder structure:
         python -m omoide show_tree
 """
@@ -44,6 +47,7 @@ from omoide import commands, infra
 from omoide import constants
 from omoide.commands import perform
 from omoide.migration_engine.operations.unite import persistent
+from omoide.index_server import constants as index_constants
 
 
 def run_using_files(command: commands.FilesRelatedCommand,
@@ -96,6 +100,22 @@ def run_using_server(command: commands.RunserverCommand,
     perform.perform_runserver(command, filesystem, stdout)
 
 
+def _apply_source_paths(command, filesystem: infra.Filesystem) -> None:
+    """Alter command inplace and fill sources related paths."""
+    root = command.root or '.'
+    root = filesystem.absolute(root)
+
+    if hasattr(command, 'content_folder'):
+        command.content_folder = filesystem.absolute(
+            filesystem.join(root, constants.CONTENT_FOLDER_NAME)
+        )
+
+    if hasattr(command, 'database_folder'):
+        command.database_folder = filesystem.absolute(
+            filesystem.join(root, constants.DATABASE_FOLDER_NAME)
+        )
+
+
 def assert_sources_folder_exist(command: commands.FilesRelatedCommand,
                                 filesystem: infra.Filesystem,
                                 stdout: infra.STDOut) -> None:
@@ -124,6 +144,27 @@ def get_target_func(command: commands.BaseCommand) -> Callable:
 @click.group()
 def cli():
     """Store media materials, search by tags, browse content."""
+
+
+@cli.command(name='run_index',
+             help='Run search machine index server')
+@click.option('--host',
+              default=index_constants.HOST,
+              help='Host to run index server on')
+@click.option('--port',
+              default=index_constants.PORT,
+              help='Port to run index server on')
+@click.option('--root',
+              default=constants.DEFAULT_ROOT_FOLDER,
+              help='Path to the main data containing folder')
+def cmd_run_index(**kwargs) -> None:
+    """Command that starts web server."""
+    command = commands.RunIndexCommand(**kwargs)
+    filesystem = infra.Filesystem()
+    stdout = infra.STDOut()
+    _apply_source_paths(command, filesystem)
+
+    perform.perform_run_index(command, filesystem, stdout)
 
 
 @cli.command(name='runserver',

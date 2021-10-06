@@ -1,3 +1,10 @@
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T194107.200.json
+
+###
+
 GET http://localhost:9000
 Content-Type: application/json
 
@@ -518,11 +525,6 @@ GET http://localhost:9000/status
 Accept: application/json
 
 <> 2021-10-05T222309.200.json
-
-###
-
-GET http://localhost:9000/status
-Accept: application/json
 
 ###
 
