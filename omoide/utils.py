@@ -5,7 +5,7 @@
 import datetime
 from collections import defaultdict
 from itertools import zip_longest
-from typing import Union, Collection, Dict, List, Iterable, Any, Iterator
+from typing import Collection, Iterable, Any, Iterator
 
 SUFFIXES = {
     'RU': {'B': 'Б', 'kB': 'кБ', 'MB': 'МБ', 'GB': 'ГБ', 'TB': 'ТБ',
@@ -18,8 +18,7 @@ SUFFIXES = {
 }
 
 
-def byte_count_to_text(total_bytes: Union[int, float],
-                       language: str = 'EN') -> str:
+def byte_count_to_text(total_bytes: int | float, language: str = 'EN') -> str:
     """Convert amount of bytes into human readable format.
 
     >>> byte_count_to_text(1023)
@@ -64,7 +63,7 @@ def byte_count_to_text(total_bytes: Union[int, float],
     return f'{total_bytes / 1024 / 1024 :0.1f} {suffix}'
 
 
-def sep_digits(number: Union[int, float, str], precision: int = 2) -> str:
+def sep_digits(number: int | float | str, precision: int = 2) -> str:
     """Return number as string with separated thousands.
 
     >>> sep_digits('12345678')
@@ -102,7 +101,7 @@ def sep_digits(number: Union[int, float, str], precision: int = 2) -> str:
 
 
 def arrange_by_alphabet(words: Collection[str],
-                        unique: bool = True) -> Dict[str, List[str]]:
+                        unique: bool = True) -> dict[str, list[str]]:
     """Group words by first letter.
 
     >>> arrange_by_alphabet(['best', 'ant', 'art', '25'])
@@ -139,3 +138,36 @@ def group_to_size(iterable: Iterable, group_size: int = 2,
 def now() -> datetime.datetime:
     """Return current time."""
     return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+
+
+def human_readable_time(seconds: int) -> str:
+    """Format interval as human readable description.
+
+    >>> human_readable_time(46551387)
+    '76w 6d 18h 56m 27s'
+
+    >>> human_readable_time(600)
+    '10m'
+    """
+    if seconds < 1:
+        return '0s'
+
+    _weeks = 0
+    _days = 0
+    _hours = 0
+    _minutes = 0
+    _seconds = 0
+    _suffixes = ('w', 'd', 'h', 'm', 's')
+
+    if seconds > 0:
+        _minutes, _seconds = divmod(seconds, 60)
+        _hours, _minutes = divmod(_minutes, 60)
+        _days, _hours = divmod(_hours, 24)
+        _weeks, _days = divmod(_days, 7)
+
+    values = [_weeks, _days, _hours, _minutes, _seconds]
+    string = ' '.join(
+        f'{x}{_suffixes[i]}' for i, x in enumerate(values) if x
+    )
+
+    return string
