@@ -46,8 +46,8 @@ import click
 from omoide import commands, infra
 from omoide import constants
 from omoide.commands import perform
-from omoide.migration_engine.operations.unite import persistent
 from omoide.index_server import constants as index_constants
+from omoide.migration_engine.operations.unite import persistent
 
 
 def run_using_files(command: commands.FilesRelatedCommand,
@@ -102,7 +102,7 @@ def run_using_server(command: commands.RunserverCommand,
 
 def _apply_source_paths(command, filesystem: infra.Filesystem) -> None:
     """Alter command inplace and fill sources related paths."""
-    root = command.root or '.'
+    root = command.root.strip('"').strip("'") or '.'
     root = filesystem.absolute(root)
 
     if hasattr(command, 'content_folder'):

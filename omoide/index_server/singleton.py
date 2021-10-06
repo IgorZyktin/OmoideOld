@@ -5,7 +5,7 @@ import psutil
 
 from omoide import infra
 from omoide.index_server.status import Status
-from omoide.index_server.structures import Index
+from omoide.index_server.search_engine import Index
 
 
 class Singleton(metaclass=infra.SingletonMeta):

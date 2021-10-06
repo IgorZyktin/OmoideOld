@@ -3,7 +3,7 @@
 """
 import datetime
 
-from omoide.index_server import conversion
+from omoide import utils
 
 STATUS_INIT = 'init'
 STATUS_ACTIVE = 'active'
@@ -28,20 +28,20 @@ class Status:
         self.index_max_bucket = 0
         self.index_size = '0 B'
 
-    def make_report(self, now: datetime.datetime,
-                    server_size: str, version: str) -> dict:
+    async def make_report(self, now: datetime.datetime,
+                          server_size: str, version: str) -> dict:
         """Format server state as a dictionary."""
         server_uptime = int((now - self.server_last_restart).total_seconds())
         index_uptime = int((now - self.index_last_reload).total_seconds())
         return {
             'version': version,
             'server_last_restart': str(self.server_last_restart),
-            'server_uptime': conversion.human_readable_time(server_uptime),
+            'server_uptime': utils.human_readable_time(server_uptime),
             'server_size': server_size,
             'index_status': self.index_status,
             'index_last_reload': str(self.index_last_reload),
             'index_last_reload_duration': self.index_last_reload_duration,
-            'index_uptime': conversion.human_readable_time(index_uptime),
+            'index_uptime': utils.human_readable_time(index_uptime),
             'index_comment': self.index_comment,
             'index_records': self.index_records,
             'index_buckets': self.index_buckets,

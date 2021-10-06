@@ -2,7 +2,6 @@
 
 """Fast search storage.
 """
-from typing import List, FrozenSet, Dict
 
 __all__ = [
     'ShallowMeta',
@@ -38,11 +37,12 @@ class ShallowMeta:
 
 
 class Index:
-    """Fast search storage.
+    """ShallowMeta storage that supports fast search.
     """
 
-    def __init__(self, all_metas: List[ShallowMeta],
-                 by_tags: Dict[str, FrozenSet[str]]) -> None:
+    def __init__(self,
+                 all_metas: list[ShallowMeta],
+                 by_tags: dict[str, frozenset[str]]) -> None:
         """Initialize instance."""
         self.all_metas = tuple(all_metas)
         self.all_uuids = frozenset(x.uuid for x in all_metas)

@@ -1,11 +1,27 @@
 # -*- coding: utf-8 -*-
-"""Application server.
+"""Index server.
+
+This component encapsulate search logic inside.
+
+Initially, all of it were placed inside application. But since it used
+Gunicorn with four workers, total launch time started to grow. At some moment
+server restart stated taking too long from Gunicorn point of view, so
+application could not even start. Separate server makes possible to contain
+index only in a single exemplar for any amount of workers and also can easily
+make hot reload of the index without downtime.
+
+There is a possibility of a race condition. Some request may happen in same
+exact moment as index reload. Since we usually only add content to the index,
+this is considered as non critical situation. On the next search request user
+will get new version of the content.
 """
 import asyncio
 
 import fastapi
 
-from omoide.index_server import logic, objects, singleton
+from omoide.index_server import logic
+from omoide.index_server import objects
+from omoide.index_server import singleton
 
 
 async def get_singleton() -> singleton.Singleton:
@@ -28,11 +44,17 @@ app = fastapi.FastAPI(
 
 
 @app.get('/')
+async def do_healthcheck() -> dict:
+    """Return something that can be used as service health check."""
+    return {'result': 'ok'}
+
+
+@app.get('/search')
 async def do_search(
         query: objects.Query,
         state: singleton.Singleton = fastapi.Depends(get_singleton)) -> dict:
     """Perform search on the in-memory database."""
-    result = logic.search(query, state.index)
+    result = await logic.search(query, state)
     return result.dict()
 
 
@@ -71,8 +93,8 @@ async def do_reload(
     return {'result': 'Started reloading'}
 
 
-@app.post('/update_db_path')
-async def do_update_db_path(
+@app.post('/update_database_folder')
+async def do_update_database_folder(
         path: objects.NewDbPath,
         state: singleton.Singleton = fastapi.Depends(get_singleton)) -> dict:
     """Refresh database file location.
@@ -89,9 +111,3 @@ async def do_update_db_path(
     """
     state.db_path = path.path or state.db_path
     return {'result': f'Now using {state.db_path!r}'}
-
-
-@app.get('/healthcheck')
-async def do_healthcheck() -> dict:
-    """Return something that can be used as service health check."""
-    return {'result': 'ok'}

@@ -5,31 +5,45 @@ import asyncio
 import concurrent
 import sys
 import time
+import traceback
 from collections import defaultdict
 
 import sqlalchemy
 from pympler import asizeof
 
 from omoide import utils
-from omoide.index_server import find, singleton, status
+from omoide.index_server import find
 from omoide.index_server import objects
-from omoide.index_server import structures
+from omoide.index_server import search_engine
+from omoide.index_server import singleton
+from omoide.index_server import status
 
 
-def search(query: objects.Query,
-           index: structures.Index) -> objects.SearchResult:
+async def search(query: objects.Query,
+                 state: singleton.Singleton) -> objects.SearchResult:
     """Perform fast search using index."""
+    match state.status.index_status:
+        case status.STATUS_INIT:
+            announce = 'Please wait a few minutes for server init after reload'
+        case status.STATUS_RELOADING:
+            announce = ('New content is loading right now and '
+                        'will be available in a few minutes')
+        case _:
+            announce = ''
+
     if query:
-        result = find.specific_records(query, index)
+        result = find.specific_records(query, state.index)
     else:
-        result = find.random_records(query, index)
+        result = find.random_records(query, state.index)
+
+    result.announce = announce
     return result
 
 
 async def format_status(state: singleton.Singleton) -> dict:
     """Format server state as a dictionary."""
     server_size = state.process.memory_info()[0]
-    return state.status.make_report(
+    return await state.status.make_report(
         now=utils.now(),
         server_size=utils.byte_count_to_text(server_size),
         version=state.version,
@@ -49,6 +63,8 @@ async def reload(state: singleton.Singleton) -> None:
             index, params = await loop.run_in_executor(
                 executor, index_pipeline, state.db_path)
     except Exception as exc:
+        traceback.print_exc()
+        print(f'Failed on db path: {state.db_path}')
         state.status.index_status = status.STATUS_FAILED
         state.status.index_comment = f'{type(exc)} {exc}'
         params = {}
@@ -64,11 +80,10 @@ async def reload(state: singleton.Singleton) -> None:
     for param_name, param_value in params.items():
         setattr(state.status, param_name, param_value)
 
-    # can potentially create race condition
     state.index = index
 
 
-def index_pipeline(db_path: str) -> tuple[structures.Index, dict]:
+def index_pipeline(db_path: str) -> tuple[search_engine.Index, dict]:
     """Process raw data into fully functional index."""
     parts, tags = actually_load_from_database(db_path)
     index = create_index(parts, tags)
@@ -104,10 +119,10 @@ def actually_load_from_database(db_path: str
     return list(parts), list(tags)
 
 
-def create_index(parts: list[tuple], tags: list[tuple]) -> structures.Index:
+def create_index(parts: list[tuple], tags: list[tuple]) -> search_engine.Index:
     """Instantiate index from its components."""
     all_metas = [
-        structures.ShallowMeta(
+        search_engine.ShallowMeta(
             uuid=uuid,
             number=number,
             path_to_thumbnail=path,
@@ -117,9 +132,10 @@ def create_index(parts: list[tuple], tags: list[tuple]) -> structures.Index:
 
     by_tags = defaultdict(set)
     for tag, uuid in tags:
+        # this optimisation can save up to 50% of the index size in bytes
         by_tags[sys.intern(tag.lower())].add(sys.intern(uuid))
 
-    index = structures.Index(
+    index = search_engine.Index(
         all_metas=all_metas,
         by_tags={
             tag: frozenset(uuids)
@@ -133,7 +149,7 @@ def create_index(parts: list[tuple], tags: list[tuple]) -> structures.Index:
     return index
 
 
-def analyze_index(index: structures.Index) -> dict:
+def analyze_index(index: search_engine.Index) -> dict:
     """Format index parameters."""
     _size_bytes = asizeof.asizeof(index)
     index_records = len(index)

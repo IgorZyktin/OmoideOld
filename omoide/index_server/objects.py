@@ -35,6 +35,8 @@ class SearchResult(BaseModel):
     """All found resources."""
     items: list[dict]
     report: list[str]
+    page: int
+    has_more: bool
     announce: str = ''
 
 
