@@ -32,9 +32,9 @@ async def search(query: objects.Query,
             announce = ''
 
     if query:
-        result = find.specific_records(query, state.index)
+        result = await find.specific_records(query, state.index)
     else:
-        result = find.random_records(query, state.index)
+        result = await find.random_records(query, state.index)
 
     result.announce = announce
     return result

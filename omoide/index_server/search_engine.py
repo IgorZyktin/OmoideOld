@@ -44,15 +44,19 @@ class Index:
                  all_metas: list[ShallowMeta],
                  by_tags: dict[str, frozenset[str]]) -> None:
         """Initialize instance."""
-        self.all_metas = tuple(all_metas)
-        self.all_uuids = frozenset(x.uuid for x in all_metas)
-        self.by_tags = by_tags
+        self.all_metas_tuple = tuple(all_metas)
+        self.all_metas_set = frozenset(all_metas)
         self.by_uuid = {meta.uuid: meta for meta in all_metas}
+        self.by_tags: dict[str, frozenset[ShallowMeta]] = {}
+
+        for tag, uuids in by_tags.items():
+            self.by_tags[tag] = frozenset([self.by_uuid[uuid]
+                                           for uuid in uuids])
 
     def __len__(self) -> int:
         """Return total amount of records."""
-        return len(self.all_metas)
+        return len(self.all_metas_tuple)
 
-    def get_by_tag(self, tag: str) -> frozenset[str]:
+    def get_by_tag(self, tag: str) -> frozenset[ShallowMeta]:
         """Return UUIDs corresponding to this tag."""
         return self.by_tags.get(tag, frozenset())

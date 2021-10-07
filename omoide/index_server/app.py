@@ -10,7 +10,7 @@ application could not even start. Separate server makes possible to contain
 index only in a single exemplar for any amount of workers and also can easily
 make hot reload of the index without downtime.
 
-There is a possibility of a race condition. Some request may happen in same
+There is a possibility of a race condition. Request can happen in the same
 exact moment as index reload. Since we usually only add content to the index,
 this is considered as non critical situation. On the next search request user
 will get new version of the content.
@@ -53,7 +53,38 @@ async def do_healthcheck() -> dict:
 async def do_search(
         query: objects.Query,
         state: singleton.Singleton = fastapi.Depends(get_singleton)) -> dict:
-    """Perform search on the in-memory database."""
+    """Perform search on the in-memory database.
+
+    Example request:
+    {
+        "and_": ["movie"],
+        "or_": ["matrix"],
+        "not_": ["matrix 4"],
+        "page": 1,
+        "items_per_page": 10,
+        "themes": null
+    }
+
+    Example response:
+    {
+        "items": [
+            {
+                "uuid": "m_010a6971-1209-46ef-b6f4-07546d676de4",
+                "path": "/thumbnails/movies/the_art_of_the_matrix/...",
+                "number": 17666
+            },
+            ...
+        ],
+        "report": [
+            "Found 19 733 records in index.",
+            ...
+        ],
+        "time": 0.0003309000749140978,
+        "page": 1,
+        "has_more": true,
+        "announce": ""
+    }
+    """
     result = await logic.search(query, state)
     return result.dict()
 
