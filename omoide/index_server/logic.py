@@ -10,6 +10,7 @@ from collections import defaultdict
 
 import sqlalchemy
 from pympler import asizeof
+from sqlalchemy.engine import Engine
 
 from omoide import utils
 from omoide.index_server import find
@@ -91,14 +92,19 @@ def index_pipeline(db_path: str) -> tuple[search_engine.Index, dict]:
     return index, params
 
 
-def actually_load_from_database(db_path: str
-                                ) -> tuple[list[tuple], list[tuple]]:
-    """Load index components from database."""
-    engine = sqlalchemy.create_engine(
+def get_engine(db_path: str) -> Engine:
+    """Create DB connection."""
+    return sqlalchemy.create_engine(
         f'sqlite+pysqlite:///{db_path}?uri=true',
         echo=False,
         future=True,
     )
+
+
+def actually_load_from_database(db_path: str
+                                ) -> tuple[list[tuple], list[tuple]]:
+    """Load index components from database."""
+    engine = get_engine(db_path)
 
     stmt_parts = sqlalchemy.text("""
     SELECT meta_uuid, number, path_to_thumbnail 

@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from starlette.testclient import TestClient
 
-from omoide.index_server.app import app
+from omoide.index_server.app import app, quietly_update_index_on_start
 
 client = TestClient(app)
 
@@ -32,7 +32,9 @@ def test_app_status(fix_singleton):
     # act
     with patch('omoide.index_server.app.logic.reload',
                return_value=async_return('called')):
-        response = client.get('/status')
+        with patch('omoide.utils.now',
+                   return_value=fix_singleton.status.server_last_restart):
+            response = client.get('/status')
 
     # assert
     assert response.status_code == 200
@@ -100,3 +102,11 @@ def test_app_search(fix_singleton):
     assert response.status_code == 200
     assert response.json() == {'ok': 1}
     fake_logic.search.assert_called_once_with(mock.ANY, fix_singleton)
+
+
+def test_app_quietly_update_index_on_start():
+    with patch('omoide.index_server.app.logic.reload',
+               return_value=async_return('called')) as fake:
+        asyncio.run(quietly_update_index_on_start())
+
+    fake.assert_awaited_once()

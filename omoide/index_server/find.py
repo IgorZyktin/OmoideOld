@@ -2,6 +2,7 @@
 
 """Actual search operations.
 """
+import math
 import random
 import time
 from typing import TypeVar
@@ -230,7 +231,7 @@ async def _do_not(target_records: set[search_engine.ShallowMeta],
 
 async def get_max_page(total: int, page: int, items_per_page: int) -> int:
     """Calculate maximum page depending on amount of items."""
-    possible_max_page = total // items_per_page
+    possible_max_page = int(math.ceil(total / items_per_page))
     return min(page, possible_max_page)
 
 
@@ -239,4 +240,6 @@ async def paginate(sequence: list[T], page: int,
     """Extract specific page elements from sequence."""
     left = (page - 1) * items_per_page
     right = left + items_per_page
-    return sequence[left:right], bool(sequence[right:])
+    section = sequence[left:right]
+    has_more = bool(sequence[right:]) and bool(section)
+    return section, has_more

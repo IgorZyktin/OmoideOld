@@ -8,17 +8,19 @@ from unittest import mock
 import pytest
 
 from omoide import infra
-from omoide.index_server import search_engine, status
+from omoide.index_server import objects
+from omoide.index_server import search_engine
 from omoide.index_server import singleton
+from omoide.index_server import status
 
 
 @pytest.fixture
-def index_server_empty_index():
+def fix_empty_index():
     return search_engine.Index(all_metas=[], by_tags={})
 
 
 @pytest.fixture
-def index_server_index():
+def fix_index():
     all_metas = [
         search_engine.ShallowMeta('u1', 1, 'cat.jpg'),
         search_engine.ShallowMeta('u2', 2, 'dog.jpg'),
@@ -41,7 +43,7 @@ def index_server_index():
 
 
 @pytest.fixture
-def fix_singleton(index_server_empty_index):
+def fix_singleton(fix_empty_index):
     inst = singleton.Singleton()
     inst.version = 'test'
     inst.process = mock.Mock()
@@ -52,6 +54,30 @@ def fix_singleton(index_server_empty_index):
         datetime.datetime(2021, 10, 6, 21, 37).replace(
             tzinfo=datetime.timezone.utc)
     )
-    inst.index = index_server_empty_index
+    inst.index = fix_empty_index
     inst.db_path = '/test/path'
     return inst
+
+
+@pytest.fixture
+def fix_empty_query():
+    return objects.Query(
+        and_=[],
+        or_=[],
+        not_=[],
+        page=1,
+        items_per_page=4,
+        themes=None,
+    )
+
+
+@pytest.fixture
+def fix_query():
+    return objects.Query(
+        and_=['animal'],
+        or_=['small'],
+        not_=['big'],
+        page=1,
+        items_per_page=4,
+        themes=None,
+    )
