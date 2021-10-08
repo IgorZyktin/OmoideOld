@@ -19,7 +19,7 @@ def async_return(result):
     return f
 
 
-def test_app_healthcheck():
+def test_index_server_app_healthcheck():
     # act
     response = client.get('/')
 
@@ -28,7 +28,7 @@ def test_app_healthcheck():
     assert response.json() == {'result': 'ok'}
 
 
-def test_app_status(fix_singleton):
+def test_index_server_app_status(fix_singleton):
     # act
     with patch('omoide.index_server.app.logic.reload',
                return_value=async_return('called')):
@@ -57,7 +57,7 @@ def test_app_status(fix_singleton):
     }
 
 
-def test_app_update_database_folder_read(fix_singleton):
+def test_index_server_app_update_database_folder_read(fix_singleton):
     # act
     response = client.post('/update_database_folder', json={})
 
@@ -66,7 +66,7 @@ def test_app_update_database_folder_read(fix_singleton):
     assert response.json() == {'result': "Now using '/test/path'"}
 
 
-def test_app_update_database_folder_write(fix_singleton):
+def test_index_server_app_update_database_folder_write(fix_singleton):
     # act
     response = client.post('/update_database_folder', json={'path': '/new'})
 
@@ -75,7 +75,7 @@ def test_app_update_database_folder_write(fix_singleton):
     assert response.json() == {'result': "Now using '/new'"}
 
 
-def test_app_reload(fix_singleton):
+def test_index_server_app_reload(fix_singleton):
     # act
     with patch('omoide.index_server.app.logic') as fake_logic:
         fake_logic.reload.return_value = async_return('called')
@@ -87,7 +87,7 @@ def test_app_reload(fix_singleton):
     fake_logic.reload.assert_called_once_with(fix_singleton)
 
 
-def test_app_search(fix_singleton):
+def test_index_server_app_search(fix_singleton):
     # arrange
     query = {'and_': [], 'or_': [], 'not_': [], 'page': 1, 'items_per_page': 2}
     fake_return = mock.Mock()
@@ -104,7 +104,7 @@ def test_app_search(fix_singleton):
     fake_logic.search.assert_called_once_with(mock.ANY, fix_singleton)
 
 
-def test_app_quietly_update_index_on_start():
+def test_index_server_app_quietly_update_index_on_start():
     with patch('omoide.index_server.app.logic.reload',
                return_value=async_return('called')) as fake:
         asyncio.run(quietly_update_index_on_start())

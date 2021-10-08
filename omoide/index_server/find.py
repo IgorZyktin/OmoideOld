@@ -32,12 +32,15 @@ async def random_records(query: objects.Query,
                                                              index, report)
 
     duration = time.perf_counter() - start
+    items = [x.dict() for x in chosen_records if x is not None]
 
     return objects.SearchResult(
-        items=[x.dict() for x in chosen_records if x is not None],
+        items=items,
         report=report,
         time=duration,
         page=1,
+        total_pages=1,
+        total_items=len(items),
         has_more=False,
     )
 
@@ -108,12 +111,12 @@ async def specific_records(query: objects.Query,
     page = await get_max_page(len(chosen_records),
                               query.page, query.items_per_page)
 
-    section, has_more = await paginate(
+    section = await paginate(
         sequence=chosen_records,
         page=page,
         items_per_page=query.items_per_page,
     )
-
+    total_pages = int(math.ceil(len(chosen_records) / query.items_per_page))
     full_duration = time.perf_counter() - full_start
 
     return objects.SearchResult(
@@ -121,7 +124,8 @@ async def specific_records(query: objects.Query,
         report=report,
         time=full_duration,
         page=page,
-        has_more=has_more,
+        total_items=len(chosen_records),
+        total_pages=total_pages,
     )
 
 
@@ -173,7 +177,7 @@ async def _do_or(target_records: set[search_engine.ShallowMeta],
         total = utils.sep_digits(len(target_records))
         duration = time.perf_counter() - or_start
         report.append(
-            f'Found {total} records after OR in {duration:0.5f} sec.'
+            f'Got {total} records after OR in {duration:0.5f} sec.'
         )
     return target_records
 
@@ -198,7 +202,7 @@ async def _do_and(target_records: set[search_engine.ShallowMeta],
         total = utils.sep_digits(len(target_records))
         duration = time.perf_counter() - and_start
         report.append(
-            f'Found {total} records after AND in {duration:0.5f} sec.'
+            f'Got {total} records after AND in {duration:0.5f} sec.'
         )
     return target_records
 
@@ -224,7 +228,7 @@ async def _do_not(target_records: set[search_engine.ShallowMeta],
         total = utils.sep_digits(len(target_records))
         duration = time.perf_counter() - not_start
         report.append(
-            f'Found {total} records after NOT in {duration:0.5f} sec.'
+            f'Got {total} records after NOT in {duration:0.5f} sec.'
         )
     return target_records
 
@@ -236,10 +240,9 @@ async def get_max_page(total: int, page: int, items_per_page: int) -> int:
 
 
 async def paginate(sequence: list[T], page: int,
-                   items_per_page: int) -> tuple[list[T], bool]:
+                   items_per_page: int) -> list[T]:
     """Extract specific page elements from sequence."""
     left = (page - 1) * items_per_page
     right = left + items_per_page
     section = sequence[left:right]
-    has_more = bool(sequence[right:]) and bool(section)
-    return section, has_more
+    return section

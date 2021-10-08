@@ -11,6 +11,94 @@ Content-Type: application/json
     "not_": [
         "matrix 4"
     ],
+    "page": 200,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T211010.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 20,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T211006.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 2,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T210952.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T210748.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
     "page": 1,
     "items_per_page": 10,
     "themes": null
@@ -692,94 +780,6 @@ Content-Type: application/json
 }
 
 <> 2021-10-05T232634.500.txt
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-        "movie"
-    ],
-    "or_": [
-        "matrix"
-    ],
-    "not_": [
-        "matrix 4"
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232606.200.json
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-        "movie"
-    ],
-    "or_": [
-        "matrix"
-    ],
-    "not_": [
-        "matrix 4"
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232600.200.json
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-        "movie"
-    ],
-    "or_": [
-        "matrix"
-    ],
-    "not_": [
-        "matrix 4"
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232505.200.json
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-        "movie"
-    ],
-    "or_": [
-        "matrix"
-    ],
-    "not_": [
-        "matrix 4"
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232248.200.json
 
 ###
 

@@ -13,6 +13,7 @@ from pympler import asizeof
 from sqlalchemy.engine import Engine
 
 from omoide import utils
+from omoide.index_server import constants
 from omoide.index_server import find
 from omoide.index_server import objects
 from omoide.index_server import search_engine
@@ -25,10 +26,9 @@ async def search(query: objects.Query,
     """Perform fast search using index."""
     match state.status.index_status:
         case status.STATUS_INIT:
-            announce = 'Please wait a few minutes for server init after reload'
+            announce = constants.MESSAGE_INIT
         case status.STATUS_RELOADING:
-            announce = ('New content is loading right now and '
-                        'will be available in a few minutes')
+            announce = constants.MESSAGE_RELOADING
         case _:
             announce = ''
 
@@ -54,9 +54,11 @@ async def format_status(state: singleton.Singleton) -> dict:
 async def reload(state: singleton.Singleton) -> None:
     """Quietly reload index without downtime."""
     start = time.perf_counter()
-    state.status.index_status = status.STATUS_RELOADING
     loop = asyncio.get_event_loop()
     index = state.index
+
+    if state.status.index_status != status.STATUS_INIT:
+        state.status.index_status = status.STATUS_RELOADING
 
     # noinspection PyBroadException
     try:
@@ -64,19 +66,17 @@ async def reload(state: singleton.Singleton) -> None:
             index, params = await loop.run_in_executor(
                 executor, index_pipeline, state.db_path)
     except Exception as exc:
-        traceback.print_exc()
         print(f'Failed on db path: {state.db_path}')
+        traceback.print_exc()
         state.status.index_status = status.STATUS_FAILED
         state.status.index_comment = f'{type(exc)} {exc}'
         params = {}
     else:
+        stop = time.perf_counter()
         state.status.index_status = status.STATUS_ACTIVE
         state.status.index_comment = ''
-    finally:
-        stop = time.perf_counter()
-
-    state.status.index_last_reload_duration = round(stop - start, 2)
-    state.status.index_last_reload = utils.now()
+        state.status.index_last_reload_duration = round(stop - start, 2)
+        state.status.index_last_reload = utils.now()
 
     for param_name, param_value in params.items():
         setattr(state.status, param_name, param_value)
@@ -106,21 +106,14 @@ def actually_load_from_database(db_path: str
     """Load index components from database."""
     engine = get_engine(db_path)
 
-    stmt_parts = sqlalchemy.text("""
-    SELECT meta_uuid, number, path_to_thumbnail 
-    FROM index_metas
-    ORDER BY number;
-    """)
-
-    stmt_tags = sqlalchemy.text("""
-    SELECT tag, uuid 
-    FROM index_tags
-    ORDER BY id;
-    """)
+    stmt_parts = sqlalchemy.text(constants.SELECT_INDEX_METAS)
+    stmt_tags = sqlalchemy.text(constants.SELECT_INDEX_TAGS)
 
     with engine.begin() as conn:
         parts = conn.execute(stmt_parts).fetchall()
         tags = conn.execute(stmt_tags).fetchall()
+
+    engine.dispose()
 
     return list(parts), list(tags)
 

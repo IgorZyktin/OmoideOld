@@ -3,6 +3,7 @@
 """Tests.
 """
 import datetime
+from collections import defaultdict
 from unittest import mock
 
 import pytest
@@ -20,25 +21,48 @@ def fix_empty_index():
 
 
 @pytest.fixture
-def fix_index():
-    all_metas = [
-        search_engine.ShallowMeta('u1', 1, 'cat.jpg'),
-        search_engine.ShallowMeta('u2', 2, 'dog.jpg'),
-        search_engine.ShallowMeta('u3', 3, 'frog.jpg'),
-        search_engine.ShallowMeta('u4', 4, 'ant.jpg'),
-        search_engine.ShallowMeta('u5', 5, 'bird.jpg'),
-        search_engine.ShallowMeta('u6', 6, 'box.jpg'),
-        search_engine.ShallowMeta('u7', 7, 'building.jpg'),
-        search_engine.ShallowMeta('u8', 8, 'river.jpg'),
-        search_engine.ShallowMeta('u9', 9, 'sky.jpg'),
+def fix_parts():
+    return [
+        ('u1', 1, 'cat.jpg'),
+        ('u2', 2, 'dog.jpg'),
+        ('u3', 3, 'frog.jpg'),
+        ('u4', 4, 'ant.jpg'),
+        ('u5', 5, 'bird.jpg'),
+        ('u6', 6, 'box.jpg'),
+        ('u7', 7, 'building.jpg'),
+        ('u8', 8, 'river.jpg'),
+        ('u9', 9, 'sky.jpg'),
     ]
 
-    by_tags = {
-        'animal': frozenset(['u1', 'u2', 'u3', 'u4', 'u5']),
-        'object': frozenset(['u6', 'u7', 'u8']),
-        'small': frozenset(['u3', 'u4']),
-        'big': frozenset(['u7', 'u8']),
-    }
+
+@pytest.fixture
+def fix_tags():
+    return [
+        ('animal', 'u1'),
+        ('animal', 'u2'),
+        ('animal', 'u3'),
+        ('animal', 'u4'),
+        ('animal', 'u5'),
+        ('object', 'u6'),
+        ('object', 'u7'),
+        ('object', 'u8'),
+        ('small', 'u3'),
+        ('small', 'u4'),
+        ('big', 'u7'),
+        ('big', 'u8'),
+    ]
+
+
+@pytest.fixture
+def fix_index(fix_parts, fix_tags):
+    all_metas = [search_engine.ShallowMeta(*x) for x in fix_parts]
+
+    grouped = defaultdict(list)
+    for tag, uuid in fix_tags:
+        grouped[tag].append(uuid)
+
+    by_tags = {tag: frozenset(uuids) for tag, uuids in grouped.items()}
+
     return search_engine.Index(all_metas=all_metas, by_tags=by_tags)
 
 
@@ -60,23 +84,11 @@ def fix_singleton(fix_empty_index):
 
 
 @pytest.fixture
-def fix_empty_query():
+def fix_query():
     return objects.Query(
         and_=[],
         or_=[],
         not_=[],
-        page=1,
-        items_per_page=4,
-        themes=None,
-    )
-
-
-@pytest.fixture
-def fix_query():
-    return objects.Query(
-        and_=['animal'],
-        or_=['small'],
-        not_=['big'],
         page=1,
         items_per_page=4,
         themes=None,

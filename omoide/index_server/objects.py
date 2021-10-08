@@ -22,9 +22,16 @@ class Query(BaseModel):
         """Return total amount of registered items."""
         return len(self.and_) + len(self.or_) + len(self.not_)
 
+    def __str__(self) -> str:
+        """Return textual representation."""
+        return repr(self)
+
     def __repr__(self) -> str:
         """Return textual representation."""
-        return f'<{type(self).__name__}, n={len(self)}>'
+        return (f'Query(and_={self.and_!r}, or_={self.or_!r}, '
+                f'not_={self.not_!r}, page={self.page}, '
+                f'items_per_page={self.items_per_page}, '
+                f'themes={self.themes!r})')
 
     def __bool__(self) -> bool:
         """Return True if query has actual words to search."""
@@ -37,7 +44,8 @@ class SearchResult(BaseModel):
     report: list[str]
     time: float
     page: int
-    has_more: bool
+    total_pages: int
+    total_items: int
     announce: str = ''
 
 
