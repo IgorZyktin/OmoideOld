@@ -4,20 +4,21 @@
 
     <div class="limited-width light-text-section">
         <h3>How search works</h3>
-        <p>If you not enter anything in the search field, system returns you
+        <p>If you try to search with empty search field, system return you
             random images. You'll get new portion of random images on every
             page refresh.</p>
 
-        <p>You can enter one or more tag into search field and system will try
+        <p>You can enter one or more tags into search field and system will try
             to find results correspondingly.</p>
 
         <p>Search engine is strict, it expects you to enter exact tags, no
             spelling mistakes, no similar words. Exact tag or nothing. You can
             browse all existing tags on the tags page.</p>
 
-        <p>You can also specify your query by using + as AND, - as NOT and | as
-            OR. For example <strong>fat cats | small dogs + frogs -
-                snakes</strong> will be
+        <p>You can also specify your query by using + as <strong>and</strong>,
+            - as <strong>not</strong> and | as
+            <strong>or</strong>. For example <strong>fat cats | small dogs +
+                frogs - snakes</strong> will be
             treated as anything with tag "fat cats" or with tag "small dogs",
             obligatory with tag "frogs" and definitely without tag
             "snakes".</p>
@@ -29,7 +30,9 @@
             for each operation. This allows you to verity that your request is
             parsed correctly.</p>
 
-        <p>Example of query parsing:</p>
+        <p>First phrase of a query implicitly gets its keyword.
+            You can explicitly specify it by entering something like "+ cats +
+            dogs" or "- cats + dogs".</p>
 
         <div class="explain-query"
              style="display: flex; justify-content: center">
@@ -48,29 +51,88 @@
 
         </div>
 
-        <p>Please note that search query does not have full scale logic. Each
-            <strong>and</strong> statement is treated as "result must include
-            this", each <strong>not</strong> is
-            treated as "result must not include this" and each
-            <strong>or</strong> is treated as
-            "result could include this, but it is okay if it does not". Logic
-            of a phrase is built on the sign it has. First phrase of a query
-            implicitly gets its sign too. You can explicitly specify it by
-            entering something like "+ cats + dogs".</p>
+        <p>Each <strong>and</strong> is treated as "result must include this
+            tag". More tags you enter, more specific the result will be.</p>
 
-        <p>Each phrase is treated individually, they do not work as a
-            whole.</p>
+        <p>Each <strong>not</strong> is treated as "result must not include
+            this tag". More tags you enter, less results you get.</p>
+
+        <p>When working with <strong>or</strong>, search engine combines all
+            records, that have at least one of the given tags. You will see
+            difference only entering more than one <strong>or</strong>
+            statement, otherwise result will be the same as entering
+            <strong>and</strong>.</p>
 
         <h3>How tags page works</h3>
-        <p>Tags page gives you easy access to all available tags.</p>
-        <p>Header of the page displays some basic statistics. Then there are
-            all tags ordered by their popularity.
-            And in the end there are list of tags ordered by alphabet.
-            From there you can click on any tag and see corresponding
-            images.</p>
+        <p>Tags page gives you easy access to all available tags, ordered by
+            alphabet.</p>
+        <p>Number after tag box show how many records are
+            using this tag (numbers in this example are arbitrary).
+        </p>
+
+        <div class="content-block">
+            <ul class="tags-list">
+                <li>
+                    <p class="tag-header">1</p>
+                </li>
+
+                <li>
+                    <a class="tag-box"
+                       href="{{ url_for('search') + web_query.replace(q='1997')|string|safe }}">1997</a>
+                    x 10
+                </li>
+
+                <li>
+                    <a class="tag-box"
+                       href="{{ url_for('search') + web_query.replace(q='1998')|string|safe }}">1998</a>
+                    x 20
+                </li>
+
+            </ul>
+
+            <ul class="tags-list">
+                <li>
+                    <p class="tag-header">C</p>
+                </li>
+
+                <li>
+                    <a class="tag-box"
+                       href="{{ url_for('search') + web_query.replace(q='cats')|string|safe }}">cats</a>
+                    x 30
+                </li>
+
+                <li>
+                    <a class="tag-box"
+                       href="{{ url_for('search') + web_query.replace(q='cabbage')|string|safe }}">cabbage</a>
+                    x 45
+                </li>
+
+            </ul>
+
+            <ul class="tags-list">
+                <li>
+                    <p class="tag-header">D</p>
+                </li>
+
+                <li>
+                    <a class="tag-box"
+                       href="{{ url_for('search') + web_query.replace(q='dogs')|string|safe }}">dogs</a>
+                    x 74
+                </li>
+
+                <li>
+                    <a class="tag-box"
+                       href="{{ url_for('search') + web_query.replace(q='dark fantasy')|string|safe }}">dark
+                        fantasy</a> x 2 587
+                </li>
+
+            </ul>
+
+        </div>
 
         <h3>How navigation page works</h3>
-        <p>Navigation page allows you to specify which themes you are
+        <p>
+            Navigation page allows you to specify which themes you are
             interested in.</p>
         <p>By clicking on checkboxes you can exclude some themes from search.
             Excluded theme will appear crossed out and will not be used during
@@ -95,10 +157,18 @@
         </p>
 
         <p>
-            Beware: you can get strange results if try to click on groups in
+            Beware: you can get strange results clicking on groups in
             excluded themes. Usually you will find nothing. Include theme
             before browsing its groups.
         </p>
+
+        <h3>How feedback page works</h3>
+        <p>Feedback page was added so users could mention which material they'd
+            like to see on site and also note bugs that should be fixed. You
+            can submit any thoughts related to the site, what you liked, what
+            not and which materials you see as not appropriate. Don't forget to
+            mention your contact address if you want to get response. Usually
+            inbox gets checked once a week, so do not expect a fast reply.</p>
 
     </div>
 

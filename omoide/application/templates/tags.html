@@ -29,11 +29,14 @@
             <div class="content-block">
                 {% for letter, tags in statistic.tags_by_alphabet %}
                     <ul class="tags-list">
-                        <p class="tag-header">{{ letter|upper }}</p>
+                        <li>
+                            <p class="tag-header">{{ letter|upper }}</p>
+                        </li>
                         {% for tag in tags %}
-                            <li class="nowrap">
+                            <li>
                                 <a class="tag-box"
-                                   href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">{{ tag }}</a> x {{ sep_digits(statistic.tags.get(tag, 0)) }}
+                                   href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">{{ tag }}</a>
+                                x {{ sep_digits(statistic.tags.get(tag, 0)) }}
                             </li>
                         {% endfor %}
                     </ul>

@@ -254,16 +254,20 @@ h3 {
     color: var(--main-text-color) !important;
 }
 
+.tags-list > {
+    white-space: nowrap;
+    display: block;
+}
+
+.tags-list li:first-child {
+list-style-type: none;
+}
+
 .content-block {
     display: flex;
     align-items: stretch;
     flex-wrap: wrap;
     justify-content: space-evenly;
-}
-
-.nowrap {
-    white-space: nowrap;
-    display: block;
 }
 
 .stat-table {
