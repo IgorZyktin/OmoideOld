@@ -6,7 +6,7 @@ authors = ["IgorZyktin <nicord@yandex.ru>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 SQLAlchemy = "^1.4.18"
 Pillow = "^8.2.0"
 colorama = "^0.4.4"
@@ -16,6 +16,10 @@ pydantic = "^1.8.2"
 click = "^8.0.1"
 ujson = "^4.1.0"
 gunicorn = "^20.1.0"
+fastapi = "^0.68.1"
+uvicorn = "^0.15.0"
+Pympler = "^0.9"
+psutil = "^5.8.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

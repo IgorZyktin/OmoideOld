@@ -1,0 +1,13 @@
+[Unit]
+Description=Omoide index server
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/Omoide
+ExecStart=/home/pi/Omoide/run_index.sh
+CPUAccounting=true
+MemoryAccounting=true
+
+[Install]
+WantedBy=multi-user.target

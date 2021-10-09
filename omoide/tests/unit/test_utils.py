@@ -2,59 +2,78 @@
 
 """Tests.
 """
+import pytest
+
 from omoide import utils
 
 
-def test_byte_count_to_text_ru():
+@pytest.mark.parametrize('size, reference', [
+    (-2_000, '-2.0 КиБ'),
+    (-2_048, '-2.0 КиБ'),
+    (0, '0 Б'),
+    (27, '27 Б'),
+    (999, '999 Б'),
+    (1_000, '1000 Б'),
+    (1_023, '1023 Б'),
+    (1_024, '1.0 КиБ'),
+    (1_728, '1.7 КиБ'),
+    (110_592, '108.0 КиБ'),
+    (1_000_000, '976.6 КиБ'),
+    (7_077_888, '6.8 МиБ'),
+    (452_984_832, '432.0 МиБ'),
+    (1_000_000_000, '953.7 МиБ'),
+    (28_991_029_248, '27.0 ГиБ'),
+    (1_855_425_871_872, '1.7 ТиБ'),
+    (9_223_372_036_854_775_807, '8.0 ЭиБ'),
+])
+def test_byte_count_to_text_ru(size, reference):
     """Must convert to readable size in russian."""
-    func = utils.byte_count_to_text
-    assert func(-2_000, language='RU') == '-2.0 КиБ'
-    assert func(-2_048, language='RU') == '-2.0 КиБ'
-    assert func(0, language='RU') == '0 Б'
-    assert func(27, language='RU') == '27 Б'
-    assert func(999, language='RU') == '999 Б'
-    assert func(1_000, language='RU') == '1000 Б'
-    assert func(1_023, language='RU') == '1023 Б'
-    assert func(1_024, language='RU') == '1.0 КиБ'
-    assert func(1_728, language='RU') == '1.7 КиБ'
-    assert func(110_592, language='RU') == '108.0 КиБ'
-    assert func(1_000_000, language='RU') == '976.6 КиБ'
-    assert func(7_077_888, language='RU') == '6.8 МиБ'
-    assert func(452_984_832, language='RU') == '432.0 МиБ'
-    assert func(1_000_000_000, language='RU') == '953.7 МиБ'
-    assert func(28_991_029_248, language='RU') == '27.0 ГиБ'
-    assert func(1_855_425_871_872, language='RU') == '1.7 ТиБ'
-    assert func(9_223_372_036_854_775_807, language='RU') == '8.0 ЭиБ'
+    assert utils.byte_count_to_text(size, language='RU') == reference
 
 
-def test_byte_count_to_text_en():
+@pytest.mark.parametrize('size, reference', [
+    (-2_000, '-2.0 KiB'),
+    (-2_048, '-2.0 KiB'),
+    (0, '0 B'),
+    (27, '27 B'),
+    (999, '999 B'),
+    (1_000, '1000 B'),
+    (1_023, '1023 B'),
+    (1_024, '1.0 KiB'),
+    (1_728, '1.7 KiB'),
+    (110_592, '108.0 KiB'),
+    (1_000_000, '976.6 KiB'),
+    (7_077_888, '6.8 MiB'),
+    (452_984_832, '432.0 MiB'),
+    (1_000_000_000, '953.7 MiB'),
+    (28_991_029_248, '27.0 GiB'),
+    (1_855_425_871_872, '1.7 TiB'),
+    (9_223_372_036_854_775_807, '8.0 EiB'),
+])
+def test_byte_count_to_text_en(size, reference):
     """Must convert to readable size in english."""
-    func = utils.byte_count_to_text
-    assert func(-2_000, language='EN') == '-2.0 KiB'
-    assert func(-2_048, language='EN') == '-2.0 KiB'
-    assert func(0, language='EN') == '0 B'
-    assert func(27, language='EN') == '27 B'
-    assert func(999, language='EN') == '999 B'
-    assert func(1_000, language='EN') == '1000 B'
-    assert func(1_023, language='EN') == '1023 B'
-    assert func(1_024, language='EN') == '1.0 KiB'
-    assert func(1_728, language='EN') == '1.7 KiB'
-    assert func(110_592, language='EN') == '108.0 KiB'
-    assert func(1_000_000, language='EN') == '976.6 KiB'
-    assert func(7_077_888, language='EN') == '6.8 MiB'
-    assert func(452_984_832, language='EN') == '432.0 MiB'
-    assert func(1_000_000_000, language='EN') == '953.7 MiB'
-    assert func(28_991_029_248, language='EN') == '27.0 GiB'
-    assert func(1_855_425_871_872, language='EN') == '1.7 TiB'
-    assert func(9_223_372_036_854_775_807, language='EN') == '8.0 EiB'
+    assert utils.byte_count_to_text(size, language='EN') == reference
 
 
 def test_sep_digits():
     """Must separate digits on 1000s."""
-    func = utils.sep_digits
-    assert func('12345678') == '12345678'
-    assert func(12345678) == '12 345 678'
-    assert func(1234.5678) == '1 234.57'
-    assert func(1234.5678, precision=4) == '1 234.5678'
-    assert func(1234.0, precision=4) == '1 234.0000'
-    assert func(1234.0, precision=0) == '1 234'
+    assert utils.sep_digits('12345678') == '12345678'
+    assert utils.sep_digits(12345678) == '12 345 678'
+    assert utils.sep_digits(1234.5678) == '1 234.57'
+    assert utils.sep_digits(1234.5678, precision=4) == '1 234.5678'
+    assert utils.sep_digits(1234.0, precision=4) == '1 234.0000'
+    assert utils.sep_digits(1234.0, precision=0) == '1 234'
+
+
+@pytest.mark.parametrize('seconds, reference', [
+    (0, '0s'),
+    (1, '1s'),
+    (60, '1m'),
+    (100, '1m 40s'),
+    (900, '15m'),
+    (2_760, '46m'),
+    (86_400, '1d'),
+    (99_658, '1d 3h 40m 58s'),
+])
+def test_format_as_human_readable_time(seconds, reference):
+    assert utils.human_readable_time(seconds) == reference

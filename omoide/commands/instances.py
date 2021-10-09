@@ -16,6 +16,7 @@ __all__ = [
     'FreezeCommand',
     'ShowTreeCommand',
     'RunserverCommand',
+    'RunIndexCommand',
 ]
 
 
@@ -102,3 +103,13 @@ class RunserverCommand(BaseCommand):
     static_folder: str = '.'
     injection: str = ''
     name: str = 'runserver'
+
+
+@dataclass
+class RunIndexCommand(BaseCommand):
+    """Start index server."""
+    host: str = ''
+    port: int = 0
+    root: str = ''
+    database_folder: str = '.'
+    name: str = 'run_index'

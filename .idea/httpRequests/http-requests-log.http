@@ -1,0 +1,791 @@
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+
+    ],
+    "or_": [
+        "bgc","priss"
+    ],
+    "not_": [
+        ""
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-09T105851.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "bgc"
+    ],
+    "or_": [
+        "priss"
+    ],
+    "not_": [
+        ""
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-09T105816.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 200,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T211010.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 20,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T211006.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 2,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T210952.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-08T210748.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T194401.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T194345.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T194316.500.txt
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T193825.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T193747.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T193711.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-07T193705.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T191809.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-07T191801.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-07T191755.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T212553.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+    ],
+    "or_": [
+    ],
+    "not_": [
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T212532.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T212511.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T212109.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T212104.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T212015.500.txt
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T211854.500.txt
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T211849.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T211422.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T211418.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T211142.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T211137.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T211132.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T211128.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T211123.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-06T210954.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T202759.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T202716.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T202626.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T202320.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T201916.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-06T194107.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+        "movie"
+    ],
+    "or_": [
+        "matrix"
+    ],
+    "not_": [
+        "matrix 4"
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T233524.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233505.200.json
+
+###
+
+POST http://localhost:9000/reload
+Content-Type: application/json
+
+{}
+
+<> 2021-10-05T233502.200.json
+
+###
+
+POST http://localhost:9000/update_db_path
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T233457.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233452.200.json
+
+###
+
+POST http://localhost:9000/reload
+Content-Type: application/json
+
+{}
+
+<> 2021-10-05T233422.500.txt
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233345.200.json
+
+###
+
+POST http://localhost:9000/update_db_path
+Content-Type: application/json
+
+{
+    "path": "/some/test/path.db"
+}
+
+<> 2021-10-05T233338.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233334.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T233124.200.json
+
+###
+
+GET http://localhost:9000/status
+Accept: application/json
+
+<> 2021-10-05T232832.200.json
+
+###
+
+GET http://localhost:9000
+Content-Type: application/json
+
+{
+    "and_": [
+    ],
+    "or_": [
+    ],
+    "not_": [
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-05T232812.200.json
+
+###
+
