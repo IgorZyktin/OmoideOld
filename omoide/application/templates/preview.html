@@ -69,7 +69,7 @@
                         <ol>
                             {%- for tag in tags %}
                                 <li>
-                                    <a href="{{ url_for('search') + web_query.replace(q=tag)|string }}">{{ tag }}</a>
+                                    <a href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">{{ tag }}</a>
                                 </li>
                             {% endfor -%}
                         </ol>
@@ -77,10 +77,11 @@
                 </tr>
             {% endif -%}
 
-            {% if meta.author or meta.origin_url %}
+            {% if meta.author or meta.origin_url or meta.author_url %}
                 <tr>
                     <th colspan="2">Origin</th>
                 </tr>
+
                 {% if meta.origin_url %}
                     <tr>
                         <td>Url</td>
@@ -90,23 +91,29 @@
                     </tr>
                 {% endif %}
 
-                {% if meta.author %}
+                {% if meta.author and meta.author_url %}
+                    <tr>
+                        <td>Author</td>
+                        <td>
+                            <a href="{{ meta.author_url }}">{{ meta.author }}</a>
+                        </td>
+                    </tr>
+                {% elif meta.author and not meta.author_url %}
                     <tr>
                         <td>Author</td>
                         <td>
                             {{ meta.author }}
                         </td>
                     </tr>
-                {% endif %}
-
-                {% if meta.author_url %}
+                {% elif not meta.author and meta.author_url %}
                     <tr>
-                        <td>Profile</td>
+                        <td>Author</td>
                         <td>
                             <a href="{{ meta.author_url }}">Link</a>
                         </td>
                     </tr>
                 {% endif %}
+
             {% endif %}
 
             <tr>
