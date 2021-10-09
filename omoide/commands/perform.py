@@ -136,8 +136,6 @@ def perform_run_index(command: commands.RunIndexCommand,
     """Perform command."""
     from omoide.index_server import implementation
     stdout.magenta('[RUN_INDEX] Starting index server')
-    implementation.run_index(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
+    implementation.run_index(command=command,
+                             filesystem=filesystem,
+                             stdout=stdout)

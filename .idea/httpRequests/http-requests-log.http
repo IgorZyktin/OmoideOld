@@ -3,6 +3,50 @@ Content-Type: application/json
 
 {
     "and_": [
+
+    ],
+    "or_": [
+        "bgc","priss"
+    ],
+    "not_": [
+        ""
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-09T105851.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
+        "bgc"
+    ],
+    "or_": [
+        "priss"
+    ],
+    "not_": [
+        ""
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-09T105816.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
         "movie"
     ],
     "or_": [
@@ -742,44 +786,6 @@ Content-Type: application/json
 }
 
 <> 2021-10-05T232812.200.json
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-    ],
-    "or_": [
-    ],
-    "not_": [
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232807.200.json
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-    ],
-    "or_": [
-    ],
-    "not_": [
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232634.500.txt
 
 ###
 
