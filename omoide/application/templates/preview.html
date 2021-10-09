@@ -27,11 +27,14 @@
 
     {{ preview_pagination(paginator, web_query, next, previous) }}
 
-    <div class="preview-center limited-width">
+    <div class="preview-center">
 
         {% if previous %}
             <a href="{{ url_for('preview', uuid=previous) + web_query|string|safe }}"
-               class="preview-swipe">Previous</a>
+               class="preview-swipe">
+                <span class="arrow">&lt;&lt;</span>
+                <span class="label">Previous</span>
+            </a>
         {% else %}
             <a class="preview-swipe preview-swipe-inactive">&nbsp;</a>
         {% endif %}
@@ -43,7 +46,10 @@
 
         {% if next %}
             <a href="{{ url_for('preview', uuid=next) + web_query|string|safe }}"
-               class="preview-swipe">Next</a>
+               class="preview-swipe">
+                <span class="arrow">&gt;&gt;</span>
+                <span class="label">Next</span>
+            </a>
         {% else %}
             <a class="preview-swipe preview-swipe-inactive">&nbsp;</a>
         {% endif %}

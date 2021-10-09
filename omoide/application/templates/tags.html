@@ -31,10 +31,9 @@
                     <ul class="tags-list">
                         <p class="tag-header">{{ letter|upper }}</p>
                         {% for tag in tags %}
-                            <li>
+                            <li class="nowrap">
                                 <a class="tag-box"
-                                   href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">
-                                    {{ tag }}</a> x {{ sep_digits(statistic.tags.get(tag, 0)) }}
+                                   href="{{ url_for('search') + web_query.replace(q=tag)|string|safe }}">{{ tag }}</a> x {{ sep_digits(statistic.tags.get(tag, 0)) }}
                             </li>
                         {% endfor %}
                     </ul>
