@@ -47,13 +47,13 @@ from omoide import commands, infra
 from omoide import constants
 from omoide.commands import perform
 from omoide.index_server import constants as index_constants
-from omoide.migration_engine.operations.unite import persistent
 
 
 def run_using_files(command: commands.FilesRelatedCommand,
                     filesystem: infra.Filesystem = infra.Filesystem(),
                     stdout: infra.STDOut = infra.STDOut()) -> None:
     """Start of execution."""
+    from omoide.migration_engine.operations.unite import persistent
     _abs = filesystem.absolute
     _join = filesystem.join
 
