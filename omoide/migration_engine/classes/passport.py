@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from omoide import commands
 from omoide import infra
 from omoide.constants import storage as storage_const
+from omoide.infra import walking
 
 __all__ = [
     'UniteTrace',
@@ -30,7 +31,7 @@ class BaseTrace(BaseModel):
 class TraceWithFingerprints(BaseTrace):
     """Trace that mainly focus on files.
     """
-    fingerprints: dict[str, infra.Fingerprint] = Field(default_factory=dict)
+    fingerprints: infra.Fingerprints = Field(default_factory=dict)
 
 
 class UniteTrace(TraceWithFingerprints):
@@ -83,21 +84,21 @@ class Passport(BaseModel):
     freeze: FreezeTrace = Field(default=FreezeTrace())
 
     @staticmethod
-    def already_processed(command: commands.FilesRelatedCommand,
-                          path: str, filesystem: infra.Filesystem,
-                          storage: dict[str, infra.Fingerprint]) -> bool:
+    def already_processed(bottom: walking.Bottom,
+                          path: str, storage: infra.Fingerprints) -> bool:
         """Return True if unite file is already processed."""
-        key = f'{command.branch}_{command.leaf}'
-        fingerprint = filesystem.get_fingerprint(path)
+        key = f'{bottom.branch}_{bottom.leaf}'
+        fingerprint = bottom.filesystem.get_fingerprint(path)
         return fingerprint == storage.get(key)
 
-    def register_unite(self, command: commands.FilesRelatedCommand,
-                       branch: str, leaf: str, path: str,
-                       filesystem: infra.Filesystem) -> None:
+    def register_unite(self, bottom: walking.Bottom, path: str
+                       ) -> infra.Fingerprint:
         """Save changes."""
-        self._register_action(self.unite, command)
-        key = f'{branch}_{leaf}'
-        self.unite.fingerprints[key] = filesystem.get_fingerprint(path)
+        self._register_action(self.unite, bottom)
+        key = f'{bottom.branch}_{bottom.leaf}'
+        fingerprint = bottom.filesystem.get_fingerprint(path)
+        self.unite.fingerprints[key] = fingerprint
+        return fingerprint
 
     def register_make_migrations(self, command: commands.FilesRelatedCommand,
                                  branch: str, leaf: str, path: str,
@@ -109,31 +110,46 @@ class Passport(BaseModel):
             = filesystem.get_fingerprint(path)
 
     def _register_action(self, component: BaseTrace,
-                         command: commands.FilesRelatedCommand) -> None:
+                         bottom: walking.Bottom) -> None:
         """Generic registration method."""
-        self.last_update = command.now
-        component.last_update = command.now
-        component.revision = command.revision
+        self.last_update = bottom.last_update
+        component.last_update = bottom.last_update
+        component.revision = bottom.revision
+
+    def save_to_file(self, bottom: walking.Bottom) -> str:
+        """Save Passport instance to file."""
+        path = bottom.filesystem.join(
+            bottom.root_folder,
+            storage_const.STORAGE_FOLDER_NAME,
+            bottom.branch,
+            bottom.leaf,
+            storage_const.PASSPORT_FILE_NAME,
+        )
+
+        bottom.filesystem.write_json(
+            bottom.filesystem.absolute(path),
+            self.dict(),
+        )
+        return path
 
 
-def load_from_file(root: str, branch: str, leaf: str,
-                   filesystem: infra.Filesystem) -> Passport:
+def load_from_file(bottom: walking.Bottom) -> Passport:
     """Load Passport instance from file."""
-    path = filesystem.join(root, storage_const.STORAGE_FOLDER_NAME,
-                           branch, leaf, storage_const.PASSPORT_FILE_NAME)
+    path = bottom.filesystem.join(
+        bottom.root_folder,
+        storage_const.STORAGE_FOLDER_NAME,
+        bottom.branch,
+        bottom.leaf,
+        storage_const.PASSPORT_FILE_NAME,
+    )
+
     try:
-        contents = filesystem.read_json(filesystem.absolute(path))
+        contents = bottom.filesystem.read_json(
+            bottom.filesystem.absolute(path)
+        )
         passport = Passport(**contents)
     except FileNotFoundError:
         passport = Passport()
 
     return passport
 
-
-def save_to_file(passport: Passport, root: str, branch: str, leaf: str,
-                 filesystem: infra.Filesystem) -> str:
-    """Save Passport instance to file."""
-    path = filesystem.join(root, storage_const.STORAGE_FOLDER_NAME,
-                           branch, leaf, storage_const.PASSPORT_FILE_NAME)
-    filesystem.write_json(filesystem.absolute(path), passport.dict())
-    return path

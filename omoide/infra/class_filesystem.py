@@ -16,6 +16,7 @@ from omoide.infra.class_stdout import STDOut
 __all__ = [
     'Filesystem',
     'Fingerprint',
+    'Fingerprints',
 ]
 
 
@@ -25,6 +26,9 @@ class Fingerprint(TypedDict):
     created: int
     modified: int
     size: int
+
+
+Fingerprints = dict[str, Fingerprint]
 
 
 class Filesystem:
