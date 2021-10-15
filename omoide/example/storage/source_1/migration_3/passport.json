@@ -15,7 +15,14 @@
     "make_migrations": {
         "last_update": "2021-08-20 00:00:00",
         "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "fingerprints": {}
+        "fingerprints": {
+            "source_1_migration_3": {
+                "md5": "35dba389cc6d077e0c347c3dbfcb4b1d",
+                "created": 1631299544,
+                "modified": 1634319984,
+                "size": 6841
+            }
+        }
     },
     "make_relocations": {
         "last_update": "",

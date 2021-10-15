@@ -4,7 +4,6 @@
 
 from pydantic import BaseModel, Field
 
-from omoide import commands
 from omoide import infra
 from omoide.constants import storage as storage_const
 from omoide.infra import walking
@@ -100,14 +99,14 @@ class Passport(BaseModel):
         self.unite.fingerprints[key] = fingerprint
         return fingerprint
 
-    def register_make_migrations(self, command: commands.FilesRelatedCommand,
-                                 branch: str, leaf: str, path: str,
-                                 filesystem: infra.Filesystem) -> None:
+    def register_make_migrations(self, bottom: walking.Bottom,
+                                 path: str) -> infra.Fingerprint:
         """Save changes."""
-        self._register_action(self.make_migrations, command)
-        key = f'{branch}_{leaf}'
-        self.make_migrations.fingerprints[key] \
-            = filesystem.get_fingerprint(path)
+        self._register_action(self.make_migrations, bottom)
+        key = f'{bottom.branch}_{bottom.leaf}'
+        fingerprint = bottom.filesystem.get_fingerprint(path)
+        self.make_migrations.fingerprints[key] = fingerprint
+        return fingerprint
 
     def _register_action(self, component: BaseTrace,
                          bottom: walking.Bottom) -> None:
@@ -152,4 +151,3 @@ def load_from_file(bottom: walking.Bottom) -> Passport:
         passport = Passport()
 
     return passport
-

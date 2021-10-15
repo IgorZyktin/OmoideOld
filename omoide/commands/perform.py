@@ -23,9 +23,10 @@ def perform_make_migrations(command: commands.MakeMigrationsCommand,
                             filesystem: infra.Filesystem,
                             stdout: infra.STDOut) -> None:
     """Perform unite command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations \
+        .make_migrations import implementation
     stdout.magenta('[MAKE MIGRATIONS] Creating migration files')
-    total = migration_operations.make_migrations.act(
+    total = implementation.run_make_migrations(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
