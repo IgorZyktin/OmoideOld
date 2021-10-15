@@ -4,70 +4,86 @@
 """
 from omoide import commands
 from omoide import infra
+from omoide.infra import walking
 from omoide.constants import media as media_const
 from omoide.constants import storage as storage_const
 from omoide.migration_engine import entities, classes
+from omoide import constants
+from omoide.migration_engine.classes import passport as passport_module
 
 
 # pylint: disable=too-many-locals
-def act(command: commands.MakeRelocationsCommand,
-        filesystem: infra.Filesystem,
-        stdout: infra.STDOut) -> int:
+def run_make_relocations(command: commands.MakeRelocationsCommand,
+                         filesystem: infra.Filesystem,
+                         stdout: infra.STDOut) -> int:
     """Make relocations."""
     renderer = classes.Renderer()
-    walk = infra.walk_sources_from_command(command, filesystem)
 
     total_new_relocations = 0
-    for branch, leaf, _ in walk:
-        storage_folder = filesystem.join(command.storage_folder, branch, leaf)
-        unit_file_path = filesystem.join(storage_folder,
-                                         storage_const.UNIT_FILE_NAME)
+    for top in walking.traverse_top(command, filesystem):
+        stdout.print(f'\t{top}')
 
-        if filesystem.not_exists(unit_file_path):
-            stdout.gray(f'\t[{branch}][{leaf}] Unit file does not exist')
-            continue
-
-        relocation_file_path = filesystem.join(
-            storage_folder, storage_const.RELOCATION_FILE_NAME)
-
-        if filesystem.exists(relocation_file_path) and not command.force:
-            stdout.cyan(f'\t[{branch}][{leaf}] Relocation file already exist')
-            continue
-
-        unit_dict = filesystem.read_json(unit_file_path)
-        unit = entities.Unit(**unit_dict)
-        relocation = classes.Relocation()
-
-        for meta in unit.metas:
-            _, _, theme, group, _ = meta.path_to_content.split('/')
-            key = f'{theme},{group}'
-
-            if key in relocation.groups:
-                relocation_group = relocation.groups[key]
-            else:
-                relocation_group = classes.OneGroup(
-                    folder_from=filesystem.join(
-                        command.sources_folder, branch, leaf, theme, group),
-                )
-                relocation.groups[key] = relocation_group
-
-            new_file = make_relocations_for_one_meta(
-                command=command,
-                meta=meta,
-                theme=theme,
-                group=group,
-                filesystem=filesystem,
-                renderer=renderer,
+        for bottom in walking.traverse_bottom(command, top):
+            unit_file_path = filesystem.join(
+                bottom.leaf_folder,
+                constants.UNIT_FILE_NAME,
             )
-            relocation_group.files[meta.uuid] = new_file
-            total_new_relocations += len(new_file.conversions)
 
-        save_relocation(
-            folder=storage_folder,
-            relocation=relocation,
-            filesystem=filesystem,
-        )
-        stdout.green(f'\t[{branch}][{leaf}] Created relocations')
+            if filesystem.not_exists(unit_file_path):
+                stdout.gray(f'\t\t{bottom} Unit file does not exist')
+                continue
+
+            passport = passport_module.load_from_file(bottom)
+
+            if passport.already_processed(
+                    bottom, unit_file_path,
+                    passport.make_relocations.fingerprints) \
+                    and not command.force:
+                stdout.cyan(f'\t\t[{bottom} Relocations already created')
+                continue
+
+            unit_dict = filesystem.read_json(unit_file_path)
+            unit = entities.Unit(**unit_dict)
+            relocation = classes.Relocation()
+
+            for meta in unit.metas:
+                _, _, theme, group, _ = meta.path_to_content.split('/')
+                key = f'{theme},{group}'
+
+                if key in relocation.groups:
+                    relocation_group = relocation.groups[key]
+                else:
+                    relocation_group = classes.OneGroup(
+                        folder_from=filesystem.join(
+                            command.sources_folder,
+                            bottom.branch,
+                            bottom.leaf,
+                            theme,
+                            group),
+                    )
+                    relocation.groups[key] = relocation_group
+
+                new_file = make_relocations_for_one_meta(
+                    command=command,
+                    meta=meta,
+                    theme=theme,
+                    group=group,
+                    filesystem=filesystem,
+                    renderer=renderer,
+                )
+                relocation_group.files[meta.uuid] = new_file
+                total_new_relocations += len(new_file.conversions)
+
+            save_relocation(
+                folder=filesystem.join(command.storage_folder,
+                                       bottom.branch,
+                                       bottom.leaf),
+                relocation=relocation,
+                filesystem=filesystem,
+            )
+            stdout.green(f'\t\t{bottom} Created relocations')
+            passport.register_make_relocations(bottom, unit_file_path)
+            passport.save_to_file(bottom)
 
     return total_new_relocations
 

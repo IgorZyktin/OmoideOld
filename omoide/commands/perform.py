@@ -38,9 +38,10 @@ def perform_make_relocations(command: commands.MakeRelocationsCommand,
                              filesystem: infra.Filesystem,
                              stdout: infra.STDOut) -> None:
     """Perform make_relocations command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations \
+        .make_relocations import implementation
     stdout.magenta('[MAKE RELOCATIONS] Creating relocation files')
-    total = migration_operations.make_relocations.act(
+    total = implementation.run_make_relocations(
         command=command,
         filesystem=filesystem,
         stdout=stdout,

@@ -13,8 +13,8 @@
         }
     },
     "make_migrations": {
-        "last_update": "2021-08-20 00:00:00",
-        "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "last_update": "2021-10-15 21:09:44",
+        "revision": "jr5noqah5ymbrx6elseq5of62lti84iw2x8fy7yq",
         "fingerprints": {
             "source_1_migration_3": {
                 "md5": "35dba389cc6d077e0c347c3dbfcb4b1d",
@@ -25,8 +25,16 @@
         }
     },
     "make_relocations": {
-        "last_update": "",
-        "revision": ""
+        "last_update": "2021-08-20 00:00:00",
+        "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "fingerprints": {
+            "source_1_migration_3": {
+                "md5": "35dba389cc6d077e0c347c3dbfcb4b1d",
+                "created": 1631299544,
+                "modified": 1634319984,
+                "size": 6841
+            }
+        }
     },
     "migrate": {
         "last_update": "",

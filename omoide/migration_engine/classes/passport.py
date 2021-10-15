@@ -43,7 +43,7 @@ class MakeMigrationsTrace(TraceWithFingerprints):
     """
 
 
-class MakeRelocationsTrace(BaseTrace):
+class MakeRelocationsTrace(TraceWithFingerprints):
     """MakeRelocations step metainfo.
     """
 
@@ -106,6 +106,15 @@ class Passport(BaseModel):
         key = f'{bottom.branch}_{bottom.leaf}'
         fingerprint = bottom.filesystem.get_fingerprint(path)
         self.make_migrations.fingerprints[key] = fingerprint
+        return fingerprint
+
+    def register_make_relocations(self, bottom: walking.Bottom,
+                                  path: str) -> infra.Fingerprint:
+        """Save changes."""
+        self._register_action(self.make_relocations, bottom)
+        key = f'{bottom.branch}_{bottom.leaf}'
+        fingerprint = bottom.filesystem.get_fingerprint(path)
+        self.make_relocations.fingerprints[key] = fingerprint
         return fingerprint
 
     def _register_action(self, component: BaseTrace,
