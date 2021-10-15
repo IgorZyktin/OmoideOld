@@ -9,9 +9,9 @@ def perform_unite(command: commands.UniteCommand,
                   filesystem: infra.Filesystem,
                   stdout: infra.STDOut) -> None:
     """Perform unite command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.unite import implementation
     stdout.magenta('[UNITE] Parsing source files and making unit files')
-    total = migration_operations.unite.act(
+    total = implementation.run_unite(
         command=command,
         filesystem=filesystem,
         stdout=stdout,

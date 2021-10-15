@@ -27,9 +27,9 @@ from omoide.migration_engine.operations.unite.class_uuid_master import (
 )
 
 
-def act(command: commands.UniteCommand,
-        filesystem: infra.Filesystem,
-        stdout: infra.STDOut) -> int:
+def run_unite(command: commands.UniteCommand,
+              filesystem: infra.Filesystem,
+              stdout: infra.STDOut) -> int:
     """Process source files.
     """
     router = Router()

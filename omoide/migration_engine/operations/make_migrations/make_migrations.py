@@ -8,8 +8,9 @@ from omoide import commands
 from omoide import constants
 from omoide import infra
 from omoide.migration_engine import classes
-from omoide.migration_engine.classes import passport
+from omoide.migration_engine.classes import passport as passport_module
 from omoide.migration_engine.operations.make_migrations import schema
+from omoide.infra import walking
 
 
 def act(command: commands.MakeMigrationsCommand,
