@@ -36,8 +36,9 @@ def assert_unique(field_name: str, collection: Collection[str]
                   ) -> Optional[NoReturn]:
     """Raise if items are not unique."""
     if len(collection) != len(set(collection)):
+        ordered = sorted(collection)
         raise ValueError(
-            f'Field {field_name} must have unique items, got {collection}'
+            f'Field {field_name} must have unique items, got {ordered}'
         )
     return None
 
@@ -65,48 +66,26 @@ def assert_equal(var1: str, var2: str) -> Optional[NoReturn]:
 
 
 # noinspection PyMethodParameters
-class UniqueTagsMixin:
-    """Mixin that checks uniqueness."""
-
-    # pylint: disable=no-self-use
-    @validator('tags')
-    def must_be_unique(cls, value):
-        """Raise if items are not unique."""
-        assert_unique('tags', value)
-        return value
-
-
-# noinspection PyMethodParameters
-class UniqueValuesMixin:
-    """Mixin that checks uniqueness."""
-
-    @validator('values')
-    def must_be_unique(cls, value):
-        """Raise if items are not unique."""
-        assert_unique('values', value)
-        return value
-
-
-# noinspection PyMethodParameters
-class UniqueFilenamesMixin:
-    """Mixin that checks uniqueness."""
-
-    @validator('filenames')
-    def must_be_unique(cls, value):
-        """Raise if items are not unique."""
-        assert_unique('filenames', value)
-        return value
-
-
-class Synonym(BaseModel, UniqueValuesMixin):
+class Synonym(BaseModel):
     """User defined Synonym."""
     uuid: str
     label: str
     values: List[str] = Field(default_factory=list)
 
+    @validator('values')
+    def must_be_unique_values(cls, value):
+        """Raise if items are not unique."""
+        assert_unique('values', value)
+        return value
+
+    @validator('values', each_item=True)
+    def to_lowercase(cls, value: str):
+        """Convert each tag to lowercase."""
+        return value.lower()
+
 
 # noinspection PyMethodParameters
-class Theme(BaseModel, UniqueTagsMixin):
+class Theme(BaseModel):
     """User defined Theme."""
     uuid: str
     route: str
@@ -119,9 +98,20 @@ class Theme(BaseModel, UniqueTagsMixin):
         assert_has_prefix('uuid', value, constants.PREFIX_THEME)
         return value
 
+    @validator('tags')
+    def must_be_unique_tags(cls, value):
+        """Raise if items are not unique."""
+        assert_unique('tags', value)
+        return value
+
+    @validator('tags', each_item=True)
+    def to_lowercase(cls, value: str):
+        """Convert each tag to lowercase."""
+        return value.lower()
+
 
 # noinspection PyMethodParameters
-class _BaseEntity(BaseModel, UniqueTagsMixin):
+class _BaseEntity(BaseModel):
     """Base class for Group and Meta."""
     registered_on: str = Field(default='')
     registered_by: str = Field(default='')
@@ -132,10 +122,28 @@ class _BaseEntity(BaseModel, UniqueTagsMixin):
     hierarchy: str = Field(default='')
     tags: List[str] = Field(default_factory=list)
 
+    @validator('tags')
+    def must_be_unique_tags(cls, value):
+        """Raise if items are not unique."""
+        assert_unique('tags', value)
+        return value
 
-class Extended(_BaseEntity, UniqueFilenamesMixin):
+    @validator('tags', each_item=True)
+    def to_lowercase(cls, value: str):
+        """Convert each tag to lowercase."""
+        return value.lower()
+
+
+# noinspection PyMethodParameters
+class Extended(_BaseEntity):
     """Additional fields for specific part of group."""
     filenames: List[str]
+
+    @validator('filenames')
+    def must_be_unique(cls, value):
+        """Raise if items are not unique."""
+        assert_unique('filenames', value)
+        return value
 
 
 # noinspection PyMethodParameters
@@ -161,7 +169,7 @@ class Group(_BaseEntity):
 
 
 # noinspection PyMethodParameters
-class Meta(_BaseEntity, UniqueFilenamesMixin):
+class Meta(_BaseEntity):
     """User defined Meta."""
     theme_uuid: str
     group_uuid: str
@@ -177,6 +185,12 @@ class Meta(_BaseEntity, UniqueFilenamesMixin):
     def must_be_group(cls, value):
         """Raise if UUID is incorrect."""
         assert_has_prefix('group_uuid', value, constants.PREFIX_GROUP)
+        return value
+
+    @validator('filenames')
+    def must_be_unique_filenames(cls, value):
+        """Raise if items are not unique."""
+        assert_unique('filenames', value)
         return value
 
 
