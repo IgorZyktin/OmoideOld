@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper type that tracks changes.
 """
-import hashlib
 
 from pydantic import BaseModel, Field
 
@@ -28,16 +27,20 @@ class BaseTrace(BaseModel):
     revision: str = ''
 
 
-class UniteTrace(BaseTrace):
+class TraceWithFingerprints(BaseTrace):
+    """Trace that mainly focus on files.
+    """
+    fingerprints: dict[str, infra.Fingerprint] = Field(default_factory=dict)
+
+
+class UniteTrace(TraceWithFingerprints):
     """Unite step metainfo.
     """
-    fingerprints: dict[str, dict] = Field(default_factory=dict)
 
 
-class MakeMigrationsTrace(BaseTrace):
+class MakeMigrationsTrace(TraceWithFingerprints):
     """MakeMigrations step metainfo.
     """
-    fingerprints: dict[str, dict] = Field(default_factory=dict)
 
 
 class MakeRelocationsTrace(BaseTrace):
@@ -69,40 +72,24 @@ class Passport(BaseModel):
     """Helper type that tracks changes.
     """
     last_update: str = ''
-    unite: UniteTrace = Field(
-        default=UniteTrace())
+    unite: UniteTrace = Field(default=UniteTrace())
     make_migrations: MakeMigrationsTrace = Field(
         default=MakeMigrationsTrace())
     make_relocations: MakeRelocationsTrace = Field(
         default=MakeRelocationsTrace())
-    migrate: MigrateTrace = Field(
-        default=MigrateTrace())
-    relocate: RelocateTrace = Field(
-        default=RelocateTrace())
-    sync: SyncTrace = Field(
-        default=SyncTrace())
-    freeze: FreezeTrace = Field(
-        default=FreezeTrace())
+    migrate: MigrateTrace = Field(default=MigrateTrace())
+    relocate: RelocateTrace = Field(default=RelocateTrace())
+    sync: SyncTrace = Field(default=SyncTrace())
+    freeze: FreezeTrace = Field(default=FreezeTrace())
 
     @staticmethod
-    def get_checksum(value: str) -> str:
-        """Calculate checksum."""
-        return hashlib.md5(value.encode('utf-8')).hexdigest()
-
-    def already_made_unite(self, command: commands.FilesRelatedCommand,
-                           path: str, filesystem: infra.Filesystem) -> bool:
+    def already_processed(command: commands.FilesRelatedCommand,
+                          path: str, filesystem: infra.Filesystem,
+                          storage: dict[str, infra.Fingerprint]) -> bool:
         """Return True if unite file is already processed."""
         key = f'{command.branch}_{command.leaf}'
         fingerprint = filesystem.get_fingerprint(path)
-        return fingerprint == self.unite.fingerprints.get(key)
-
-    def already_made_make_migrations(
-            self, command: commands.FilesRelatedCommand,
-            path: str, filesystem: infra.Filesystem) -> bool:
-        """Return True if make_migrations file is already processed."""
-        key = f'{command.branch}_{command.leaf}'
-        fingerprint = filesystem.get_fingerprint(path)
-        return fingerprint == self.make_migrations.fingerprints.get(key)
+        return fingerprint == storage.get(key)
 
     def register_unite(self, command: commands.FilesRelatedCommand,
                        branch: str, leaf: str, path: str,

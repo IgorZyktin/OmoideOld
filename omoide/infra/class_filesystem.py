@@ -7,7 +7,7 @@ import os
 import shutil
 import typing
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, TypedDict
 
 import ujson
 
@@ -15,7 +15,16 @@ from omoide.infra.class_stdout import STDOut
 
 __all__ = [
     'Filesystem',
+    'Fingerprint',
 ]
+
+
+class Fingerprint(TypedDict):
+    """Mark that makes file change visible."""
+    md5: str
+    created: int
+    modified: int
+    size: int
 
 
 class Filesystem:
@@ -153,7 +162,7 @@ class Filesystem:
         os.mkdir(target_path)
 
     @staticmethod
-    def get_fingerprint(path: str) -> dict:
+    def get_fingerprint(path: str) -> Fingerprint:
         """Get fingerprint of a file."""
         try:
             stat = os.stat(path)
@@ -163,18 +172,10 @@ class Filesystem:
                 while chunk := f.read(8192):
                     file_hash.update(chunk)
         except FileNotFoundError:
-            fingerprint = {
-                'md5': '',
-                'created': -1,
-                'modified': -1,
-                'size': -1,
-            }
+            fingerprint = Fingerprint(md5='', created=-1, modified=-1, size=-1)
         else:
-            fingerprint = {
-                'md5': str(file_hash.hexdigest()),
-                'created': int(stat.st_ctime),
-                'modified': int(stat.st_mtime),
-                'size': stat.st_size,
-            }
-
+            fingerprint = Fingerprint(md5=str(file_hash.hexdigest()),
+                                      created=int(stat.st_ctime),
+                                      modified=int(stat.st_mtime),
+                                      size=stat.st_size)
         return fingerprint

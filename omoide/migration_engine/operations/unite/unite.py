@@ -60,7 +60,8 @@ def act(command: commands.UniteCommand,
         passport_inst = passport.load_from_file(command.root_folder,
                                                 branch, leaf, filesystem)
 
-        if passport_inst.already_made_unite(command, unit_path, filesystem) \
+        if passport_inst.already_processed(command, source_path, filesystem,
+                                           passport_inst.unite.fingerprints) \
                 and not command.force:
             stdout.cyan(f'\t[{branch}][{leaf}] Unit file already processed')
             continue
@@ -80,7 +81,7 @@ def act(command: commands.UniteCommand,
         )
 
         passport_inst.register_unite(command, branch, leaf,
-                                     unit_path, filesystem)
+                                     source_path, filesystem)
         passport.save_to_file(passport_inst, command.root_folder,
                               branch, leaf, filesystem)
 

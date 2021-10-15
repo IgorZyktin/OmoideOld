@@ -4,17 +4,18 @@
         "last_update": "2021-08-20 00:00:00",
         "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         "fingerprints": {
-            "all_all": {
-                "md5": "35dba389cc6d077e0c347c3dbfcb4b1d",
-                "created": 1631299544,
-                "modified": 1633860476,
-                "size": 6841
+            "source_1_migration_3": {
+                "md5": "7809f705b61cfebf772d869b598ac46d",
+                "created": 1630850163,
+                "modified": 1630850163,
+                "size": 2147
             }
         }
     },
     "make_migrations": {
         "last_update": "2021-08-20 00:00:00",
-        "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        "revision": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "fingerprints": {}
     },
     "make_relocations": {
         "last_update": "",
