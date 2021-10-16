@@ -20,5 +20,6 @@ SAVE_PARAMETERS = {
         'quality': 80,
         'progressive': True,
         'optimize': True,
+        'subsampling': 0,
     }
 }
