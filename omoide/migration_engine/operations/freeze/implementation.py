@@ -3,10 +3,11 @@
 """Create static database.
 """
 import sys
+import time
 
 from sqlalchemy.orm import sessionmaker
 
-from omoide import commands
+from omoide import commands, utils
 from omoide import constants
 from omoide import infra
 from omoide.database import operations
@@ -18,6 +19,7 @@ def run_freeze(command: commands.FreezeCommand,
                filesystem: infra.Filesystem,
                stdout: infra.STDOut) -> None:
     """Create static database."""
+    start = time.monotonic()
     root_db_path = filesystem.join(filesystem.absolute(command.storage_folder),
                                    constants.ROOT_DB_FILE_NAME)
 
@@ -64,3 +66,7 @@ def run_freeze(command: commands.FreezeCommand,
 
     root_db.dispose()
     database.dispose()
+
+    duration = int(time.monotonic() - start)
+    as_text = utils.human_readable_time(duration)
+    stdout.yellow(f'Complete in {as_text}')
