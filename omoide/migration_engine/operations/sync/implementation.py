@@ -41,6 +41,8 @@ def run_sync(command: commands.SyncCommand,
     SessionRoot = sessionmaker(bind=root_db)  # pylint: disable=invalid-name
     session_root = SessionRoot()
 
+    # TODO - need to include also branches and root into passport
+
     total_migrations = 0
     for top in walking.traverse_top(command, filesystem):
         stdout.print(f'\t{top}')
@@ -73,9 +75,6 @@ def run_sync(command: commands.SyncCommand,
                 stdout.gray(f'\t\t{bottom} Nothing to migrate')
                 continue
 
-            if command.force:
-                filesystem.delete_file(leaf_db_path)
-
             passport = passport_module.load_from_file(bottom)
             if passport.already_processed(
                     bottom, leaf_db_path,
@@ -96,7 +95,7 @@ def run_sync(command: commands.SyncCommand,
         synchronize(session_from=session_branch, session_to=session_root)
 
         total_migrations += 1
-        stdout.green(f'\t{top} Synchronized')
+        stdout.green(f'\t\t\t{top.branch} Synchronized')
         branch_db.dispose()
         session_branch.close()
 
