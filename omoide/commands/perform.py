@@ -2,7 +2,23 @@
 
 """Command line command execution.
 """
+import time
+from contextlib import contextmanager
+
 from omoide import commands, infra
+from omoide import utils
+
+
+@contextmanager
+def chronograph(stdout: infra.STDOut) -> None:
+    """Calculate and print time of execution."""
+    start = time.monotonic()
+    try:
+        yield
+    finally:
+        duration = time.monotonic() - start
+        string = utils.human_readable_time(int(duration))
+        stdout.magenta(f'Operation took: {string}')
 
 
 def perform_unite(command: commands.UniteCommand,
@@ -11,12 +27,14 @@ def perform_unite(command: commands.UniteCommand,
     """Perform unite command."""
     from omoide.migration_engine.operations.unite import implementation
     stdout.magenta('[UNITE] Parsing source files and making unit files')
-    total = implementation.run_unite(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Total {total} unit files created')
+
+    with chronograph(stdout):
+        total = implementation.run_unite(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta(f'Total {total} unit files created')
 
 
 def perform_make_migrations(command: commands.MakeMigrationsCommand,
@@ -26,12 +44,14 @@ def perform_make_migrations(command: commands.MakeMigrationsCommand,
     from omoide.migration_engine.operations \
         .make_migrations import implementation
     stdout.magenta('[MAKE MIGRATIONS] Creating migration files')
-    total = implementation.run_make_migrations(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Total {total} migration operations created')
+
+    with chronograph(stdout):
+        total = implementation.run_make_migrations(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta(f'Total {total} migration operations created')
 
 
 def perform_make_relocations(command: commands.MakeRelocationsCommand,
@@ -41,12 +61,14 @@ def perform_make_relocations(command: commands.MakeRelocationsCommand,
     from omoide.migration_engine.operations \
         .make_relocations import implementation
     stdout.magenta('[MAKE RELOCATIONS] Creating relocation files')
-    total = implementation.run_make_relocations(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Total {total} relocation operations created')
+
+    with chronograph(stdout):
+        total = implementation.run_make_relocations(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta(f'Total {total} relocation operations created')
 
 
 def perform_migrate(command: commands.MigrateCommand,
@@ -55,12 +77,14 @@ def perform_migrate(command: commands.MigrateCommand,
     """Perform migration command."""
     from omoide.migration_engine.operations.migrate import implementation
     stdout.magenta('[MIGRATE] Applying migrations')
-    total = implementation.run_migrate(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Total {total} migration operations applied')
+
+    with chronograph(stdout):
+        total = implementation.run_migrate(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta(f'Total {total} migration operations applied')
 
 
 def perform_relocate(command: commands.RelocateCommand,
@@ -69,12 +93,14 @@ def perform_relocate(command: commands.RelocateCommand,
     """Perform relocation command."""
     from omoide.migration_engine.operations.relocate import implementation
     stdout.magenta('[RELOCATE] Applying relocations')
-    total = implementation.run_relocate(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Total {total} relocation operations applied')
+
+    with chronograph(stdout):
+        total = implementation.run_relocate(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta(f'Total {total} relocation operations applied')
 
 
 def perform_sync(command: commands.SyncCommand,
@@ -83,12 +109,14 @@ def perform_sync(command: commands.SyncCommand,
     """Perform sync command."""
     from omoide.migration_engine.operations.sync import implementation
     stdout.magenta('[SYNC] Synchronizing databases')
-    total = implementation.run_sync(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Total {total} databases synchronized')
+
+    with chronograph(stdout):
+        total = implementation.run_sync(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta(f'Total {total} databases synchronized')
 
 
 def perform_freeze(command: commands.FreezeCommand,
@@ -97,12 +125,14 @@ def perform_freeze(command: commands.FreezeCommand,
     """Perform freeze command."""
     from omoide.migration_engine.operations.freeze import implementation
     stdout.magenta('[FREEZE] Making static database')
-    implementation.run_freeze(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta('Successfully created static database')
+
+    with chronograph(stdout):
+        implementation.run_freeze(
+            command=command,
+            filesystem=filesystem,
+            stdout=stdout,
+        )
+        stdout.magenta('Successfully created static database')
 
 
 def perform_runserver(command: commands.RunserverCommand,
