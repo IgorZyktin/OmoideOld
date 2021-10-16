@@ -35,6 +35,7 @@ def make_search_response(maker: sessionmaker, web_query: WebQuery,
         placeholder = get_placeholder_for_search(session, active_themes)
 
     user_query = web_query.get('q')
+    user_query = aggressively_filter(user_query)
     current_page = int(web_query.get('page', '1'))
     search_query = query_builder.from_query(user_query)
 
@@ -224,6 +225,8 @@ def get_placeholder_for_search(session: Session,
 
 def extract_active_themes(raw_themes: str, graph: dict) -> Optional[Set[str]]:
     """Safely parse and extract theme uuids."""
+    raw_themes = aggressively_filter(raw_themes)
+
     if raw_themes != constants.ALL_THEMES:
         active_themes = set()
         candidates = [
@@ -275,3 +278,20 @@ def save_feedback(folder: str, name: str, feedback: str, path: str) -> None:
             file.write(text + '\n')
     except Exception as exc:
         print(f'Failed to save feedback because of: {exc}')
+
+
+def aggressively_filter(string: str) -> str:
+    """Drop all unwanted characters. Extremely strict filter.
+
+    >>> aggressively_filter('Dude, where is my car?!')
+    'Dude, where is my car'
+    """
+    if not string:
+        return ''
+
+    letters = list(string)
+    for i, letter in enumerate(letters):
+        if letter not in constants.ALLOWED_SYMBOLS:
+            letters[i] = ''
+
+    return ''.join(letters)

@@ -14,3 +14,12 @@ DEFAULT_STATIC_PATH = ('omoide', 'application', 'static')
 ITEMS_PER_PAGE = 100
 PAGES_IN_BLOCK = 10
 MAX_TEXT_INPUT_SIZE = 4096
+
+ALLOWED_SYMBOLS = frozenset(
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    'abcdefghijklmnopqrstuvwxyz'
+    '0123456789'
+    '+-| _,.'
+    'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+    'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+)
