@@ -114,7 +114,7 @@ def make_unit_in_leaf(command: commands.UniteCommand,
 
     if not command.dry_run:
         bottom.filesystem.ensure_folder_exists(unit_folder, stdout,
-                                               prefix='\t\t\t')
+                                               prefix='\t\t')
 
         unit_dict = unit.dict()
         unit_text = json.dumps(unit_dict)

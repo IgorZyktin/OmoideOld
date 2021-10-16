@@ -8,8 +8,8 @@ from typing import Collection
 from omoide import commands
 from omoide import constants
 from omoide import infra
-from omoide.migration_engine import classes
 from omoide.infra import walking
+from omoide.migration_engine import classes
 from omoide.migration_engine.classes import passport as passport_module
 
 
@@ -85,17 +85,23 @@ def relocate_single_group(bottom: walking.Bottom,
         f'\t\t{bottom} Converting {theme_route}/{group_route}'
     )
 
-    for file in with_progress(group.files.values(), stdout):
-        relocate_single_file(bottom, file, group.folder_from, renderer, stdout)
+    total_conversions = 0
+    for file in group.files.values():
+        for conversion in file.conversions:
+            bottom.filesystem.ensure_folder_exists(
+                conversion.folder_to, stdout, prefix='\t\t')
+            total_conversions += 1
 
-    return sum(len(file.conversions) for file in group.files.values())
+    for file in with_progress(group.files.values(), stdout, '\t\t'):
+        relocate_single_file(bottom, file, group.folder_from, renderer)
+
+    return total_conversions
 
 
 def relocate_single_file(bottom: walking.Bottom,
                          file: classes.OneFile,
                          folder_from: str,
-                         renderer: classes.Renderer,
-                         stdout: infra.STDOut, newline: bool = True) -> None:
+                         renderer: classes.Renderer) -> None:
     """Save one source file onto output files."""
     path_from = bottom.filesystem.join(folder_from, file.source_filename)
 
@@ -105,15 +111,6 @@ def relocate_single_file(bottom: walking.Bottom,
         )
 
     for conversion in file.conversions:
-        if newline:
-            prefix = '\n\t\t\t'
-        else:
-            prefix = '\t\t\t'
-
-        created = bottom.filesystem.ensure_folder_exists(
-            conversion.folder_to, stdout, prefix=prefix)
-        newline = not created
-
         path_to = bottom.filesystem.join(conversion.folder_to,
                                          conversion.target_filename)
 
@@ -124,7 +121,8 @@ def relocate_single_file(bottom: walking.Bottom,
                                    conversion.width, conversion.height)
 
 
-def with_progress(iterable: Collection, stdout: infra.STDOut):
+def with_progress(iterable: Collection, stdout: infra.STDOut,
+                  prefix: str = ''):
     """Iterate with progress bar."""
     sequence = list(iterable)
     total = len(sequence)
@@ -134,7 +132,7 @@ def with_progress(iterable: Collection, stdout: infra.STDOut):
         complete = math.ceil(bar_width * percent)
         left = bar_width - complete
         stdout.print('#' * complete + '_' * left + f' {percent:.1%}',
-                     prefix='\r\t', end='')
+                     prefix='\r' + prefix, end='')
         yield element
 
-    stdout.print('', prefix='\r', end='\n')
+    stdout.print('', prefix='\r', end='')
