@@ -273,11 +273,11 @@ def save_feedback(folder: str, name: str, feedback: str, path: str) -> None:
     text = json.dumps(payload, ensure_ascii=False)
     path = f'{folder}/feedback.txt'
 
-    try:
-        with open(path, mode='a', encoding='utf-8') as file:
+    with open(path, mode='a', encoding='utf-8') as file:
+        try:
             file.write(text + '\n')
-    except Exception as exc:
-        print(f'Failed to save feedback because of: {exc}')
+        except Exception as exc:
+            file.write(f'Failed to save feedback because of: {exc}\n')
 
 
 def aggressively_filter(string: str) -> str:
