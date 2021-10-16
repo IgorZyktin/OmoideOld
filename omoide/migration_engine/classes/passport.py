@@ -53,7 +53,7 @@ class MigrateTrace(TraceWithFingerprints):
     """
 
 
-class RelocateTrace(BaseTrace):
+class RelocateTrace(TraceWithFingerprints):
     """Relocate step metainfo.
     """
 
@@ -124,6 +124,24 @@ class Passport(BaseModel):
         key = f'{bottom.branch}_{bottom.leaf}'
         fingerprint = bottom.filesystem.get_fingerprint(path)
         self.migrate.fingerprints[key] = fingerprint
+        return fingerprint
+
+    def register_relocate(self, bottom: walking.Bottom,
+                          path: str) -> infra.Fingerprint:
+        """Save changes."""
+        self._register_action(self.migrate, bottom)
+        key = f'{bottom.branch}_{bottom.leaf}'
+        fingerprint = bottom.filesystem.get_fingerprint(path)
+        self.migrate.fingerprints[key] = fingerprint
+        return fingerprint
+
+    def register_sync(self, bottom: walking.Bottom,
+                      path: str) -> infra.Fingerprint:
+        """Save changes."""
+        self._register_action(self.sync, bottom)
+        key = f'{bottom.branch}_{bottom.leaf}'
+        fingerprint = bottom.filesystem.get_fingerprint(path)
+        self.sync.fingerprints[key] = fingerprint
         return fingerprint
 
     def _register_action(self, component: BaseTrace,

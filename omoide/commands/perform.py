@@ -67,9 +67,9 @@ def perform_relocate(command: commands.RelocateCommand,
                      filesystem: infra.Filesystem,
                      stdout: infra.STDOut) -> None:
     """Perform relocation command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.relocate import implementation
     stdout.magenta('[RELOCATE] Applying relocations')
-    total = migration_operations.relocate.act(
+    total = implementation.run_relocate(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
