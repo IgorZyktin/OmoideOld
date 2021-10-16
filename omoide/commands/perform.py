@@ -53,9 +53,9 @@ def perform_migrate(command: commands.MigrateCommand,
                     filesystem: infra.Filesystem,
                     stdout: infra.STDOut) -> None:
     """Perform migration command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.migrate import implementation
     stdout.magenta('[MIGRATE] Applying migrations')
-    total = migration_operations.migrate.act(
+    total = implementation.run_migrate(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
