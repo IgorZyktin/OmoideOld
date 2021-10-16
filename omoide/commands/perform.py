@@ -95,9 +95,9 @@ def perform_freeze(command: commands.FreezeCommand,
                    filesystem: infra.Filesystem,
                    stdout: infra.STDOut) -> None:
     """Perform freeze command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.freeze import implementation
     stdout.magenta('[FREEZE] Making static database')
-    migration_operations.freeze.act(
+    implementation.run_freeze(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
