@@ -81,9 +81,9 @@ def perform_sync(command: commands.SyncCommand,
                  filesystem: infra.Filesystem,
                  stdout: infra.STDOut) -> None:
     """Perform sync command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.sync import implementation
     stdout.magenta('[SYNC] Synchronizing databases')
-    total = migration_operations.sync.act(
+    total = implementation.run_sync(
         command=command,
         filesystem=filesystem,
         stdout=stdout,

@@ -58,7 +58,7 @@ class RelocateTrace(TraceWithFingerprints):
     """
 
 
-class SyncTrace(BaseTrace):
+class SyncTrace(TraceWithFingerprints):
     """Sync step metainfo.
     """
 
