@@ -4,15 +4,17 @@
 """
 import json
 import sys
-from typing import Optional, NoReturn, List, Dict
+from typing import Optional, NoReturn, Dict
 
 import pydantic
 
 from omoide import commands
 from omoide import constants
 from omoide import infra
+from omoide.infra import walking
 from omoide.migration_engine import classes
 from omoide.migration_engine import entities
+from omoide.migration_engine.classes import passport as passport_module
 from omoide.migration_engine.operations.unite import identity
 from omoide.migration_engine.operations.unite import preprocessing
 from omoide.migration_engine.operations.unite import raw_entities
@@ -25,9 +27,9 @@ from omoide.migration_engine.operations.unite.class_uuid_master import (
 )
 
 
-def act(command: commands.UniteCommand,
-        filesystem: infra.Filesystem,
-        stdout: infra.STDOut) -> int:
+def run_unite(command: commands.UniteCommand,
+              filesystem: infra.Filesystem,
+              stdout: infra.STDOut) -> int:
     """Process source files.
     """
     router = Router()
@@ -43,101 +45,104 @@ def act(command: commands.UniteCommand,
         filesystem=filesystem,
     )
 
-    walk = infra.walk_sources_from_command(command, filesystem)
-
     total_new_units = 0
-    for branch, leaf, leaf_folder in walk:
+    for top in walking.traverse_top(command, filesystem, 'sources_folder'):
+        stdout.print(f'\t{top}')
 
-        source_path = filesystem.join(leaf_folder, constants.SOURCE_FILE_NAME)
-        if filesystem.not_exists(source_path):
-            stdout.gray(f'\t[{branch}][{leaf}] Source file does not exist')
-            continue
+        for bottom in walking.traverse_bottom(command, top):
+            source_path = filesystem.join(bottom.leaf_folder,
+                                          constants.SOURCE_FILE_NAME)
+            if filesystem.not_exists(source_path):
+                stdout.gray(f'\t\t{bottom} Source file does not exist')
+                continue
 
-        unit_path = filesystem.join(command.storage_folder, branch, leaf,
-                                    constants.UNIT_FILE_NAME)
-        if filesystem.exists(unit_path) and not command.force:
-            stdout.cyan(f'\t[{branch}][{leaf}] Unit file already exist')
-            continue
+            passport = passport_module.load_from_file(bottom)
 
-        new_path = make_unit_in_leaf(command=command,
-                                     branch=branch,
-                                     leaf=leaf,
-                                     leaf_folder=leaf_folder,
-                                     router=router,
-                                     identity_master=identity_master,
-                                     uuid_master=uuid_master,
-                                     renderer=renderer,
-                                     filesystem=filesystem,
-                                     stdout=stdout)
+            if passport.already_processed(bottom, source_path,
+                                          passport.unite.fingerprints) \
+                    and not command.force:
+                stdout.cyan(f'\t\t{bottom} Unit file already processed')
+                continue
 
-        if new_path:
-            stdout.green(f'\t[{branch}][{leaf}] Created unit file')
-            total_new_units += 1
+            new_path = make_unit_in_leaf(
+                command=command,
+                bottom=bottom,
+                router=router,
+                identity_master=identity_master,
+                uuid_master=uuid_master,
+                renderer=renderer,
+                stdout=stdout,
+            )
+
+            passport.register_unite(bottom, source_path)
+            passport.save_to_file(bottom)
+
+            if new_path:
+                stdout.green(f'\t\t{bottom} Created unit file')
+                total_new_units += 1
 
     return total_new_units
 
 
 # pylint: disable=too-many-locals
-def make_unit_in_leaf(command: commands.UniteCommand, branch: str, leaf: str,
-                      leaf_folder: str, router: Router,
+def make_unit_in_leaf(command: commands.UniteCommand,
+                      bottom: walking.Bottom,
+                      router: Router,
                       identity_master: IdentityMaster,
                       uuid_master: UUIDMaster,
                       renderer: classes.Renderer,
-                      filesystem: infra.Filesystem,
                       stdout: infra.STDOut) -> Optional[str]:
     """Create single unit file."""
-    uuids = load_cached_uuids(filesystem, command.storage_folder, branch, leaf)
+    uuids = load_cached_uuids(bottom, command.storage_folder)
     identity_master.add_files_cache(uuids)
 
-    unit = make_unit(branch=branch,
-                     leaf=leaf,
-                     leaf_folder=leaf_folder,
+    unit = make_unit(bottom=bottom,
                      router=router,
                      identity_master=identity_master,
                      uuid_master=uuid_master,
-                     filesystem=filesystem,
                      renderer=renderer,
                      stdout=stdout)
 
     cache = {
-        'variables': identity_master.extract_variables(branch, leaf),
+        'variables': identity_master.extract_variables(bottom),
         'uuids': identity_master.extract_files_cache(),
     }
 
-    unit_folder = filesystem.join(command.storage_folder, branch, leaf)
-    unit_path = filesystem.join(unit_folder, constants.UNIT_FILE_NAME)
+    unit_folder = bottom.filesystem.join(command.storage_folder,
+                                         bottom.branch, bottom.leaf)
+    unit_path = bottom.filesystem.join(unit_folder, constants.UNIT_FILE_NAME)
 
     if not command.dry_run:
-        filesystem.ensure_folder_exists(unit_folder, stdout)
+        bottom.filesystem.ensure_folder_exists(unit_folder, stdout,
+                                               prefix='\t\t\t')
 
         unit_dict = unit.dict()
         unit_text = json.dumps(unit_dict)
         assert_no_variables(unit_text, stdout)
-        filesystem.write_json(unit_path, unit_dict)
+        bottom.filesystem.write_json(unit_path, unit_dict)
 
-        cache_path = filesystem.join(unit_folder, constants.CACHE_FILE_NAME)
-        filesystem.write_json(cache_path, cache)
+        cache_path = bottom.filesystem.join(unit_folder,
+                                            constants.CACHE_FILE_NAME)
+        bottom.filesystem.write_json(cache_path, cache)
         return unit_path
 
     return None
 
 
-def make_unit(branch: str,
-              leaf: str,
-              leaf_folder: str,
+def make_unit(bottom: walking.Bottom,
               router: Router,
               identity_master: IdentityMaster,
               uuid_master: UUIDMaster,
-              filesystem: infra.Filesystem,
               renderer: classes.Renderer,
               stdout: infra.STDOut) -> entities.Unit:
     """Combine all updates in big JSON file."""
-    source_path = filesystem.join(leaf_folder, constants.SOURCE_FILE_NAME)
-    source_raw_text = filesystem.read_file(source_path)
+    source_path = bottom.filesystem.join(bottom.leaf_folder,
+                                         constants.SOURCE_FILE_NAME)
+    source_raw_text = bottom.filesystem.read_file(source_path)
     source_text = preprocessing.preprocess_source(
         text=source_raw_text,
-        branch=branch,
-        leaf=leaf,
+        branch=bottom.branch,
+        leaf=bottom.leaf,
         identity_master=identity_master,
         uuid_master=uuid_master,
     )
@@ -146,12 +151,11 @@ def make_unit(branch: str,
 
     unit = entities.Unit()
     preprocessing.do_themes(source, unit, router)
-    preprocessing.do_groups(source, unit, router, identity_master,
-                            uuid_master, filesystem, leaf_folder, renderer)
+    preprocessing.do_groups(source, bottom, unit, router, identity_master,
+                            uuid_master, renderer)
     preprocessing.do_synonyms(source, unit)
-    preprocessing.do_no_group_metas(source, unit, router, identity_master,
-                                    uuid_master, filesystem, leaf_folder,
-                                    renderer)
+    preprocessing.do_no_group_metas(source, bottom, unit, router,
+                                    identity_master, uuid_master, renderer)
 
     return unit
 
@@ -205,14 +209,18 @@ def assert_no_variables(unit_text: str,
     return None
 
 
-def load_cached_uuids(filesystem: infra.Filesystem, storage_folder: str,
-                      branch: str, leaf: str) -> Dict[str, Dict[str, str]]:
+def load_cached_uuids(bottom: walking.Bottom,
+                      storage_folder: str) -> Dict[str, Dict[str, str]]:
     """Load uuids cache for current target."""
-    path = filesystem.join(storage_folder, branch, leaf,
-                           constants.CACHE_FILE_NAME)
+    path = bottom.filesystem.join(
+        storage_folder,
+        bottom.branch,
+        bottom.leaf,
+        constants.CACHE_FILE_NAME,
+    )
 
-    if filesystem.exists(path):
-        uuids = filesystem.read_json(path).get('uuids', {})
+    if bottom.filesystem.exists(path):
+        uuids = bottom.filesystem.read_json(path).get('uuids', {})
     else:
         uuids = {}
 

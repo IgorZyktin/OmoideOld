@@ -72,9 +72,13 @@ def run_using_files(command: commands.FilesRelatedCommand,
 
     if command.now:
         persistent.set_now(command.now)
+    else:
+        command.now = persistent.get_now()
 
     if command.revision:
         persistent.set_revision(command.revision)
+    else:
+        command.revision = persistent.get_revision()
 
     target_func = get_target_func(command)
     target_func(command, filesystem, stdout)

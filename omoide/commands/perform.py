@@ -9,9 +9,9 @@ def perform_unite(command: commands.UniteCommand,
                   filesystem: infra.Filesystem,
                   stdout: infra.STDOut) -> None:
     """Perform unite command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.unite import implementation
     stdout.magenta('[UNITE] Parsing source files and making unit files')
-    total = migration_operations.unite.act(
+    total = implementation.run_unite(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
@@ -23,9 +23,10 @@ def perform_make_migrations(command: commands.MakeMigrationsCommand,
                             filesystem: infra.Filesystem,
                             stdout: infra.STDOut) -> None:
     """Perform unite command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations \
+        .make_migrations import implementation
     stdout.magenta('[MAKE MIGRATIONS] Creating migration files')
-    total = migration_operations.make_migrations.act(
+    total = implementation.run_make_migrations(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
@@ -37,9 +38,10 @@ def perform_make_relocations(command: commands.MakeRelocationsCommand,
                              filesystem: infra.Filesystem,
                              stdout: infra.STDOut) -> None:
     """Perform make_relocations command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations \
+        .make_relocations import implementation
     stdout.magenta('[MAKE RELOCATIONS] Creating relocation files')
-    total = migration_operations.make_relocations.act(
+    total = implementation.run_make_relocations(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
@@ -51,9 +53,9 @@ def perform_migrate(command: commands.MigrateCommand,
                     filesystem: infra.Filesystem,
                     stdout: infra.STDOut) -> None:
     """Perform migration command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.migrate import implementation
     stdout.magenta('[MIGRATE] Applying migrations')
-    total = migration_operations.migrate.act(
+    total = implementation.run_migrate(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
@@ -65,9 +67,9 @@ def perform_relocate(command: commands.RelocateCommand,
                      filesystem: infra.Filesystem,
                      stdout: infra.STDOut) -> None:
     """Perform relocation command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.relocate import implementation
     stdout.magenta('[RELOCATE] Applying relocations')
-    total = migration_operations.relocate.act(
+    total = implementation.run_relocate(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
@@ -79,9 +81,9 @@ def perform_sync(command: commands.SyncCommand,
                  filesystem: infra.Filesystem,
                  stdout: infra.STDOut) -> None:
     """Perform sync command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.sync import implementation
     stdout.magenta('[SYNC] Synchronizing databases')
-    total = migration_operations.sync.act(
+    total = implementation.run_sync(
         command=command,
         filesystem=filesystem,
         stdout=stdout,
@@ -93,9 +95,9 @@ def perform_freeze(command: commands.FreezeCommand,
                    filesystem: infra.Filesystem,
                    stdout: infra.STDOut) -> None:
     """Perform freeze command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.freeze import implementation
     stdout.magenta('[FREEZE] Making static database')
-    migration_operations.freeze.act(
+    implementation.run_freeze(
         command=command,
         filesystem=filesystem,
         stdout=stdout,

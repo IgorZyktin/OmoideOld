@@ -6,16 +6,16 @@ import re
 from typing import Union, List, Type, Tuple, Dict, cast
 
 from omoide import constants
-from omoide import infra
+from omoide.infra import walking
 from omoide.migration_engine import classes, entities
 from omoide.migration_engine.operations.unite import persistent, raw_entities
+from omoide.migration_engine.operations.unite import uuid_filling
 from omoide.migration_engine.operations.unite \
     .class_identity_master import IdentityMaster
 from omoide.migration_engine.operations.unite \
     .class_router import Router
 from omoide.migration_engine.operations.unite \
     .class_uuid_master import UUIDMaster
-from omoide.migration_engine.operations.unite import uuid_filling
 
 CastTypes = Union[
     entities.TagTheme,
@@ -114,12 +114,11 @@ def do_themes(source: raw_entities.Source,
 
 
 def do_groups(source: raw_entities.Source,
+              bottom: walking.Bottom,
               unit: entities.Unit,
               router: Router,
               identity_master: IdentityMaster,
               uuid_master: UUIDMaster,
-              filesystem: infra.Filesystem,
-              leaf_folder: str,
               renderer: classes.Renderer) -> None:
     """Construct transient entities from ephemeral ones."""
     for ep_group in source.groups:
@@ -142,11 +141,10 @@ def do_groups(source: raw_entities.Source,
         if ep_group.route != constants.NO_GROUP:
             preprocess_group_meta_pack(
                 unit,
-                leaf_folder,
+                bottom,
                 ep_group,
                 identity_master,
                 uuid_master,
-                filesystem,
                 renderer,
                 router
             )
@@ -171,37 +169,37 @@ def do_synonyms(source: raw_entities.Source, unit: entities.Unit) -> None:
 
 
 def do_no_group_metas(source: raw_entities.Source,
+                      bottom: walking.Bottom,
                       unit: entities.Unit,
                       router: Router,
                       identity_master: IdentityMaster,
                       uuid_master: UUIDMaster,
-                      filesystem: infra.Filesystem,
-                      leaf_folder: str,
                       renderer: classes.Renderer) -> None:
     """Construct transient entities from ephemeral ones."""
     for meta_pack in source.metas:
-        preprocess_no_group_meta_pack(unit, leaf_folder, meta_pack,
+        preprocess_no_group_meta_pack(unit, bottom, meta_pack,
                                       router, identity_master, uuid_master,
-                                      filesystem, renderer)
+                                      renderer)
 
 
 # pylint: disable=too-many-locals
 def preprocess_group_meta_pack(unit: entities.Unit,
-                               leaf_folder: str,
+                               bottom: walking.Bottom,
                                group: raw_entities.Group,
                                identity_master: IdentityMaster,
                                uuid_master: UUIDMaster,
-                               filesystem: infra.Filesystem,
                                renderer: classes.Renderer,
                                router: Router) -> None:
     """Construct transient entities from ephemeral ones."""
     theme_route = router.get_route(group.theme_uuid)
 
-    full_path = filesystem.join(leaf_folder, theme_route, group.route)
+    full_path = bottom.filesystem.join(bottom.leaf_folder,
+                                       theme_route,
+                                       group.route)
 
     filenames = []
-    for filename in filesystem.list_files(full_path):
-        name, extension = filesystem.split_extension(filename)
+    for filename in bottom.filesystem.list_files(full_path):
+        name, extension = bottom.filesystem.split_extension(filename)
         if not renderer.is_known_media(extension):
             continue
 
@@ -211,8 +209,8 @@ def preprocess_group_meta_pack(unit: entities.Unit,
                                     identity_master, uuid_master)
 
     for i, filename in enumerate(filenames, start=1):
-        name, ext = filesystem.split_extension(filename)
-        file_path = filesystem.join(full_path, f'{name}.{ext}')
+        name, ext = bottom.filesystem.split_extension(filename)
+        file_path = bottom.filesystem.join(full_path, f'{name}.{ext}')
         media_info = renderer.analyze(file_path, ext)
         uuid = uuids[group.uuid][filename]
 
@@ -265,28 +263,27 @@ def preprocess_group_meta_pack(unit: entities.Unit,
 
 # pylint: disable=too-many-locals
 def preprocess_no_group_meta_pack(unit: entities.Unit,
-                                  leaf_folder: str,
+                                  bottom: walking.Bottom,
                                   ep_meta: raw_entities.Meta,
                                   router: Router,
                                   identity_master: IdentityMaster,
                                   uuid_master: UUIDMaster,
-                                  filesystem: infra.Filesystem,
                                   renderer: classes.Renderer) -> None:
     """Construct transient entities from ephemeral ones."""
     theme_route = router.get_route(ep_meta.theme_uuid)
     group_route = router.get_route(ep_meta.group_uuid)
 
-    full_path = filesystem.join(leaf_folder,
-                                theme_route,
-                                group_route)
+    full_path = bottom.filesystem.join(bottom.leaf_folder,
+                                       theme_route,
+                                       group_route)
 
     uuids = generate_group_of_uuids(ep_meta.group_uuid,
                                     list(ep_meta.filenames),
                                     identity_master, uuid_master)
 
     for filename in ep_meta.filenames:
-        name, ext = filesystem.split_extension(filename)
-        file_path = filesystem.join(full_path, filename)
+        name, ext = bottom.filesystem.split_extension(filename)
+        file_path = bottom.filesystem.join(full_path, filename)
         media_info = renderer.analyze(file_path, ext)
         uuid = uuids[ep_meta.group_uuid][filename]
 

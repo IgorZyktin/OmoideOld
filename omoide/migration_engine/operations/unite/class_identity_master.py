@@ -5,6 +5,7 @@ from functools import partial
 from typing import Dict, Set, Tuple
 
 from omoide import constants
+from omoide.infra import walking
 from omoide.migration_engine.operations \
     .unite.class_uuid_master import UUIDMaster
 
@@ -58,13 +59,13 @@ class IdentityMaster:
         """Get value by given name."""
         return self._variables_cache[variable_name]
 
-    def extract_variables(self, branch: str,
-                          leaf: str) -> Dict[str, Dict[str, str]]:
+    def extract_variables(self, bottom: walking.Bottom
+                          ) -> Dict[str, Dict[str, str]]:
         """Serialize to a dictionary.
 
         Note that we're avoiding adding static data here.
         """
-        selector = partial(self.select_by_branch, branch, leaf)
+        selector = partial(self.select_by_branch, bottom.branch, bottom.leaf)
         return {
             'themes': selector(constants.PREFIX_THEME, self._by_namespace),
             'synonyms': selector(constants.PREFIX_SYNONYM, self._by_namespace),

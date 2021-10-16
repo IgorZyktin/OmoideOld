@@ -10,6 +10,8 @@ from PIL import Image
 
 from omoide import constants
 
+Image.MAX_IMAGE_PIXELS = None
+
 # from typing import TypedDict, Optional, Callable # FIXME
 
 __all__ = [

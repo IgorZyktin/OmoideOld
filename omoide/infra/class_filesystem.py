@@ -2,11 +2,12 @@
 
 """Abstraction of filesystem.
 """
+import hashlib
 import os
 import shutil
 import typing
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, TypedDict
 
 import ujson
 
@@ -14,7 +15,20 @@ from omoide.infra.class_stdout import STDOut
 
 __all__ = [
     'Filesystem',
+    'Fingerprint',
+    'Fingerprints',
 ]
+
+
+class Fingerprint(TypedDict):
+    """Mark that makes file change visible."""
+    md5: str
+    created: int
+    modified: int
+    size: int
+
+
+Fingerprints = dict[str, Fingerprint]
 
 
 class Filesystem:
@@ -150,3 +164,22 @@ class Filesystem:
     def create_directory(target_path: str) -> None:
         """Create directory."""
         os.mkdir(target_path)
+
+    @staticmethod
+    def get_fingerprint(path: str) -> Fingerprint:
+        """Get fingerprint of a file."""
+        try:
+            stat = os.stat(path)
+
+            with open(path, 'rb') as f:
+                file_hash = hashlib.md5()
+                while chunk := f.read(8192):
+                    file_hash.update(chunk)
+        except FileNotFoundError:
+            fingerprint = Fingerprint(md5='', created=-1, modified=-1, size=-1)
+        else:
+            fingerprint = Fingerprint(md5=str(file_hash.hexdigest()),
+                                      created=int(stat.st_ctime),
+                                      modified=int(stat.st_mtime),
+                                      size=stat.st_size)
+        return fingerprint

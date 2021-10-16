@@ -19,6 +19,7 @@ UNIT_FILE_NAME = 'unit.json'
 CACHE_FILE_NAME = 'cache.json'
 MIGRATION_FILE_NAME = 'migration.sql'
 RELOCATION_FILE_NAME = 'relocation.json'
+PASSPORT_FILE_NAME = 'passport.json'
 
 ROOT_DB_FILE_NAME = 'root.db'
 BRANCH_DB_FILE_NAME = 'branch.db'
