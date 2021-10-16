@@ -5,6 +5,7 @@ from collections import defaultdict
 from typing import Optional, Dict, Type, Union, Any, Set
 
 import ujson
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from omoide import search_engine, constants
@@ -38,6 +39,15 @@ def get_index(session: Session) -> search_engine.Index:
     )
 
     return index
+
+
+def get_newest_groups(session: Session) -> tuple[str, list[models.Group]]:
+    """Get list of groups added on the last update."""
+    maximum = session.query(func.max(models.Group.registered_on)).scalar()
+    groups = session.query(models.Group).where(
+        models.Group.registered_on == maximum
+    ).order_by(models.Group.theme_uuid, models.Group.label).all()
+    return maximum, groups
 
 
 def get_statistic(session: Session,

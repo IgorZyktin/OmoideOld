@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="limited-width">
+
+        <h3>{{ newest|length }} groups added {{ last_update }}</h3>
+        <div class="content-block">
+            <ul>
+                {% for group in newest %}
+                    <li>
+                        <a href="{{ url_for('search') + web_query.replace(q=group.uuid)|string|safe }}">{{ group.theme.label }}: {{ group.label }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+{% endblock %}

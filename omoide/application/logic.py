@@ -183,6 +183,19 @@ def make_tags_response(maker: sessionmaker,
     return context
 
 
+def make_newest_response(session: Session,
+                         web_query: WebQuery) -> Dict[str, Any]:
+    """Create context for newest request."""
+    last_update, groups = app_database.get_newest_groups(session)
+    context = {
+        'web_query': web_query,
+        'user_query': web_query.get('q'),
+        'newest': groups,
+        'last_update': last_update,
+    }
+    return context
+
+
 def get_note_for_search(total: int, duration: float) -> str:
     """Return description of search duration."""
     total = utils.sep_digits(total)

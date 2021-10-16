@@ -75,6 +75,9 @@
            title="Send feedback">Send feedback</a>
     {% endif %}
 
+    <a href="{{ url_for('newest') + web_query|string|safe }}"
+       title="Show list of groups added on the last update">Newest</a>
+
     <a href="{{ url_for('show_help') + web_query|string|safe }}"
        title="Additional info on site usage">Help</a>
 

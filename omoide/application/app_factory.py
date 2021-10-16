@@ -95,6 +95,14 @@ def create_app(command: commands.RunserverCommand,
         context = logic.make_tags_response(Session, web_query)
         return flask.render_template('tags.html', **context)
 
+    @app.route('/newest')
+    def newest():
+        """Show list of groups added on the last update."""
+        web_query = WebQuery.from_request(flask.request.args)
+        with omoide.database.operations.session_scope(Session) as session:
+            context = logic.make_newest_response(session, web_query)
+            return flask.render_template('newest.html', **context)
+
     @app.route('/feedback', methods=['GET', 'POST'])
     def feedback():
         """Show feedback form."""
