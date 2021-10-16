@@ -115,7 +115,6 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
     return classes.OneFile(
         uuid=meta.uuid,
         source_filename=source_filename,
-        target_filename=get_last_segment(meta.path_to_content),
         conversions=[
             classes.OneConversion(
                 width=meta.width,
@@ -124,6 +123,7 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
                     command.content_folder,
                     storage_const.MEDIA_CONTENT_FOLDER_NAME, theme, group),
                 operation_type='copy',
+                target_filename=get_last_segment(meta.path_to_content),
             ),
             classes.OneConversion(
                 width=preview_width,
@@ -132,7 +132,7 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
                     command.content_folder,
                     storage_const.MEDIA_PREVIEW_FOLDER_NAME, theme, group),
                 operation_type='scale',
-
+                target_filename=get_last_segment(meta.path_to_preview),
             ),
             classes.OneConversion(
                 width=thumbnail_width,
@@ -141,6 +141,7 @@ def make_relocations_for_one_meta(command: commands.MakeRelocationsCommand,
                     command.content_folder,
                     storage_const.MEDIA_THUMBNAILS_FOLDER_NAME, theme, group),
                 operation_type='scale',
+                target_filename=get_last_segment(meta.path_to_thumbnail),
             )
         ]
     )

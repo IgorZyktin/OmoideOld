@@ -115,7 +115,7 @@ def relocate_single_file(bottom: walking.Bottom,
         newline = not created
 
         path_to = bottom.filesystem.join(conversion.folder_to,
-                                         file.target_filename)
+                                         conversion.target_filename)
 
         if conversion.operation_type == 'copy':
             bottom.filesystem.copy_file(path_from, path_to)

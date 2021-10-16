@@ -19,13 +19,13 @@ class OneConversion(BaseModel):
     height: int
     folder_to: str
     operation_type: str
+    target_filename: str
 
 
 class OneFile(BaseModel):
     """Helper type for each output file relocation/conversion."""
     uuid: str
     source_filename: str
-    target_filename: str
     conversions: List[OneConversion] = Field(default_factory=list)
 
 
