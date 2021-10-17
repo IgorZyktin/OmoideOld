@@ -20,7 +20,11 @@ def main() -> None:
         if not os.path.exists(folder):
             print('created', folder)
             os.mkdir(folder)
-        print(filename)
+
+        target_path = os.path.join(folder, f'{original_name}_{number}')
+        if os.path.exists(target_path):
+            raise FileExistsError(target_path)
+
         os.rename(
             os.path.join(TARGET_FOLDER, filename),
             os.path.join(folder, f'{original_name}_{number}')
