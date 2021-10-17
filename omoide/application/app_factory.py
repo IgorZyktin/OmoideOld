@@ -101,7 +101,7 @@ def create_app(command: commands.RunserverCommand,
         web_query = WebQuery.from_request(flask.request.args)
         with omoide.database.operations.session_scope(Session) as session:
             context = logic.make_newest_response(session, web_query)
-            return flask.render_template('newest.html', **context)
+        return flask.render_template('newest.html', **context)
 
     @app.route('/feedback', methods=['GET', 'POST'])
     def feedback():

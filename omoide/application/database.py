@@ -41,13 +41,34 @@ def get_index(session: Session) -> search_engine.Index:
     return index
 
 
-def get_newest_groups(session: Session) -> tuple[str, list[models.Group]]:
-    """Get list of groups added on the last update."""
+def get_newest_groups(session: Session) -> tuple[str, list[dict]]:
+    """Get list of groups added on the last update.
+
+    Example of as_dicts:
+    [
+        {
+            'theme_label': 'Farm theme',
+            'label': 'Farm',
+            'uuid': 'g_ec0e0354-e8f6-4b07-95d0-46f0f8a6ed22'
+        }
+    ]
+    """
     maximum = session.query(func.max(models.Group.registered_on)).scalar()
-    groups = session.query(models.Group).where(
-        models.Group.registered_on == maximum
-    ).order_by(models.Group.theme_uuid, models.Group.label).all()
-    return maximum, groups
+
+    groups = session.query(models.Theme.label,
+                           models.Group.label,
+                           models.Group.uuid) \
+        .where(models.Group.registered_on == maximum) \
+        .join(models.Theme, models.Theme.uuid == models.Group.theme_uuid) \
+        .order_by(models.Theme.label, models.Group.label)
+
+    as_dicts = [
+        dict(zip(['theme_label', 'label', 'uuid'],
+                 section))
+        for section in groups
+    ]
+
+    return maximum, as_dicts
 
 
 def get_statistic(session: Session,

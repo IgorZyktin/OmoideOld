@@ -8,7 +8,7 @@
             <ul>
                 {% for group in newest %}
                     <li>
-                        <a href="{{ url_for('search') + web_query.replace(q=group.uuid)|string|safe }}">{{ group.theme.label }}: {{ group.label }}</a>
+                        <a href="{{ url_for('search') + web_query.replace(q=group.uuid)|string|safe }}">{{ group.theme_label }}: {{ group.label }}</a>
                     </li>
                 {% endfor %}
             </ul>
