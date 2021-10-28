@@ -115,14 +115,12 @@ def apply_paths(command, filesystem: infra.Filesystem, **required) -> None:
             filesystem.join(root, constants.SOURCES_FOLDER_NAME)
         )
 
-    # TODO - remove in next releases
-    if hasattr(command, 'content_folder'):
+    if 'content_folder' in required:
         command.content_folder = filesystem.absolute(
             filesystem.join(root, constants.CONTENT_FOLDER_NAME)
         )
 
-    # TODO - remove in next releases
-    if hasattr(command, 'database_folder'):
+    if 'database_folder' in required:
         command.database_folder = filesystem.absolute(
             filesystem.join(root, constants.DATABASE_FOLDER_NAME)
         )
@@ -166,7 +164,7 @@ def cli():
 @click.option('--port',
               default=index_constants.PORT,
               help='Port to run index server on')
-@click.option('--root',
+@click.option('--root-folder',
               default=constants.DEFAULT_ROOT_FOLDER,
               help='Path to the main data containing folder')
 def cmd_run_index(**kwargs) -> None:
@@ -175,9 +173,7 @@ def cmd_run_index(**kwargs) -> None:
     filesystem = infra.Filesystem()
     stdout = infra.STDOut()
 
-    # FIXME - update argument name in next commit
-    apply_paths(command, filesystem)
-
+    apply_paths(command, filesystem, database_folder=True)
     perform.perform_run_index(command, filesystem, stdout)
 
 

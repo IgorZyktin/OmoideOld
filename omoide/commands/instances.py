@@ -121,6 +121,6 @@ class RunIndexCommand(BaseCommand):
     """Start index server."""
     host: str = ''
     port: int = 0
-    root: str = ''
+    root_folder: str = ''
     database_folder: str = '.'
     name: str = 'run_index'
