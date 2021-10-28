@@ -104,25 +104,39 @@ def run_using_server(command: commands.RunserverCommand,
     perform.perform_runserver(command, filesystem, stdout)
 
 
+def apply_absolute(command, filesystem: infra.Filesystem, stdout: infra.STDOut,
+                   folder_name: str, must_exist: bool = False) -> None:
+    """Alter command inplace and make paths absolute."""
+    path = getattr(command, folder_name, '')
+    path = path.strip('"').strip("'").strip()
+
+    if must_exist and (not path or filesystem.not_exists(path)):
+        stdout.red(f'Path does not exist: {folder_name}')
+        sys.exit(1)
+
+    path = path or '.'
+    path = filesystem.absolute(path)
+    setattr(command, folder_name, path)
+
+
 def apply_paths(command, filesystem: infra.Filesystem, **required) -> None:
     """Alter command inplace and fill sources related paths."""
-    root = command.root_folder.strip('"').strip("'").strip() or '.'
-    root = filesystem.absolute(root)
-    command.root_folder = root
-
     if 'sources_folder' in required:
         command.sources_folder = filesystem.absolute(
-            filesystem.join(root, constants.SOURCES_FOLDER_NAME)
+            filesystem.join(command.root_folder,
+                            constants.SOURCES_FOLDER_NAME)
         )
 
     if 'content_folder' in required:
         command.content_folder = filesystem.absolute(
-            filesystem.join(root, constants.CONTENT_FOLDER_NAME)
+            filesystem.join(command.root_folder,
+                            constants.CONTENT_FOLDER_NAME)
         )
 
     if 'database_folder' in required:
         command.database_folder = filesystem.absolute(
-            filesystem.join(root, constants.DATABASE_FOLDER_NAME)
+            filesystem.join(command.root_folder,
+                            constants.DATABASE_FOLDER_NAME)
         )
 
 
@@ -173,6 +187,7 @@ def cmd_run_index(**kwargs) -> None:
     filesystem = infra.Filesystem()
     stdout = infra.STDOut()
 
+    apply_absolute(command, filesystem, stdout, 'root_folder', must_exist=True)
     apply_paths(command, filesystem, database_folder=True)
     perform.perform_run_index(command, filesystem, stdout)
 
@@ -211,9 +226,40 @@ def cmd_show_tree(**kwargs) -> None:
     filesystem = infra.Filesystem()
     stdout = infra.STDOut()
 
+    apply_absolute(command, filesystem, stdout, 'root_folder', must_exist=True)
     apply_paths(command, filesystem, sources_folder=True)
     assert_sources_folder_exists(command, filesystem, stdout)
     perform.perform_show_tree(command, filesystem, stdout)
+
+
+@cli.command(name='rsync',
+             help='Synchronize content folders for two given roots')
+@click.option('--root-folder',
+              required=True,
+              help='Path to the source root folder')
+@click.option('--root-folder-to',
+              required=True,
+              help='Path to the target root folder')
+def cmd_rsync(**kwargs) -> None:
+    """Command that updates replicas."""
+    command = commands.RSyncCommand(**kwargs)
+    filesystem = infra.Filesystem()
+    stdout = infra.STDOut()
+
+    apply_absolute(command, filesystem, stdout, 'root_folder',
+                   must_exist=True)
+    apply_absolute(command, filesystem, stdout, 'root_folder_to',
+                   must_exist=True)
+
+    command.content_folder = filesystem.absolute(
+        filesystem.join(command.root_folder,
+                        constants.CONTENT_FOLDER_NAME)
+    )
+    command.content_folder_to = filesystem.absolute(
+        filesystem.join(command.root_folder_to,
+                        constants.CONTENT_FOLDER_NAME)
+    )
+    perform.perform_rsync(command, filesystem, stdout)
 
 
 @cli.command(name='example',

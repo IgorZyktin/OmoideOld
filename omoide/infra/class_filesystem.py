@@ -183,3 +183,22 @@ class Filesystem:
                                       modified=int(stat.st_mtime),
                                       size=stat.st_size)
         return fingerprint
+
+    @staticmethod
+    def extract_addition(base_folder: str,
+                         target_folder: str) -> list[str]:
+        """Extract additional subfolders from paths."""
+        origin = base_folder.split(os.sep)
+        target = target_folder.split(os.sep)
+
+        addition = []
+
+        for element in reversed(target):
+            if origin and origin[-1] != element:
+                addition.append(element)
+            else:
+                break
+
+        addition.reverse()
+
+        return addition

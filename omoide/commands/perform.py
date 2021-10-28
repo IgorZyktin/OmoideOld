@@ -159,6 +159,19 @@ def perform_show_tree(command: commands.ShowTreeCommand,
                                  stdout=stdout)
 
 
+def perform_rsync(command: commands.RSyncCommand,
+                  filesystem: infra.Filesystem,
+                  stdout: infra.STDOut) -> None:
+    """Perform command."""
+    from omoide.migration_engine.operations.rsync import implementation
+    stdout.magenta('[RSYNC] Synchronizing replica')
+    with chronograph(stdout):
+        total = implementation.run_rsync(command=command,
+                                         filesystem=filesystem,
+                                         stdout=stdout)
+        stdout.magenta(f'Successfully synchronized {total} files')
+
+
 def perform_run_index(command: commands.RunIndexCommand,
                       filesystem: infra.Filesystem,
                       stdout: infra.STDOut) -> None:
