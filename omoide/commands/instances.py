@@ -15,6 +15,7 @@ __all__ = [
     'SyncCommand',
     'FreezeCommand',
     'ShowTreeCommand',
+    'RSyncCommand',
     'Traversable',
     'RunserverCommand',
     'RunIndexCommand',
@@ -96,8 +97,18 @@ class ShowTreeCommand(BaseCommand, DummyMixin):
     name: str = 'show_tree'
 
 
+@dataclass
+class RSyncCommand(BaseCommand, DummyMixin):
+    """Synchronize two content folders."""
+    root_folder: str = ''
+    root_folder_to: str = ''
+    content_folder: str = ''
+    content_folder_to: str = ''
+    name: str = 'rsync'
+
+
 # Command that can be used in walking
-Traversable = FilesRelatedCommand | ShowTreeCommand
+Traversable = FilesRelatedCommand | ShowTreeCommand | RSyncCommand
 
 
 @dataclass

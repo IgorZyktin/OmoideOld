@@ -2,12 +2,16 @@
 
 """Abstraction of printing.
 """
+import math
+from typing import Collection
+
 from colorama import init, Fore
 
 init()
 
 __all__ = [
     'STDOut',
+    'with_progress',
 ]
 
 
@@ -61,3 +65,19 @@ class STDOut:
         """Print with prefix (usually color)."""
         kwargs['end'] = kwargs.get('end', f'{Fore.RESET}\n')
         return print(prefix + text, *args, **kwargs)
+
+
+def with_progress(iterable: Collection, stdout: STDOut, prefix: str = ''):
+    """Iterate with progress bar."""
+    sequence = list(iterable)
+    total = len(sequence)
+    bar_width = 65
+    for i, element in enumerate(sequence, start=1):
+        percent = i / total
+        complete = math.ceil(bar_width * percent)
+        left = bar_width - complete
+        stdout.print('#' * complete + '_' * left + f' {percent:.1%}',
+                     prefix='\r' + prefix, end='')
+        yield element
+
+    stdout.print('', prefix='\r', end='')

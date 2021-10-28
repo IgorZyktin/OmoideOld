@@ -2,8 +2,6 @@
 
 """Relocate.
 """
-import math
-from typing import Collection
 
 from omoide import commands
 from omoide import constants
@@ -92,7 +90,7 @@ def relocate_single_group(bottom: walking.Bottom,
                 conversion.folder_to, stdout, prefix='\t\t')
             total_conversions += 1
 
-    for file in with_progress(group.files.values(), stdout, '\t\t'):
+    for file in infra.with_progress(group.files.values(), stdout, '\t\t'):
         relocate_single_file(bottom, file, group.folder_from, renderer)
 
     return total_conversions
@@ -119,20 +117,3 @@ def relocate_single_file(bottom: walking.Bottom,
         else:
             renderer.save_new_size(path_from, path_to,
                                    conversion.width, conversion.height)
-
-
-def with_progress(iterable: Collection, stdout: infra.STDOut,
-                  prefix: str = ''):
-    """Iterate with progress bar."""
-    sequence = list(iterable)
-    total = len(sequence)
-    bar_width = 65
-    for i, element in enumerate(sequence, start=1):
-        percent = i / total
-        complete = math.ceil(bar_width * percent)
-        left = bar_width - complete
-        stdout.print('#' * complete + '_' * left + f' {percent:.1%}',
-                     prefix='\r' + prefix, end='')
-        yield element
-
-    stdout.print('', prefix='\r', end='')
