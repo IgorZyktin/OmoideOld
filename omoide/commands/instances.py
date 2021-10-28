@@ -15,6 +15,7 @@ __all__ = [
     'SyncCommand',
     'FreezeCommand',
     'ShowTreeCommand',
+    'Traversable',
     'RunserverCommand',
     'RunIndexCommand',
 ]
@@ -25,20 +26,24 @@ class BaseCommand:
     """Base class for all commands."""
 
 
-@dataclass
-class FilesRelatedCommand(BaseCommand):
-    """Works mainly with files."""
+class DummyMixin:
+    """Simple mixin that add empty or default values."""
     now: str = ''
     revision: str = ''
+    branch: str = 'all'
+    leaf: str = 'all'
+    force: bool = False
+    dry_run: bool = False
+
+
+@dataclass
+class FilesRelatedCommand(BaseCommand, DummyMixin):
+    """Works mainly with files."""
     root_folder: str = ''
     sources_folder: str = ''
     storage_folder: str = ''
     content_folder: str = ''
     database_folder: str = ''
-    branch: str = 'all'
-    leaf: str = 'all'
-    force: bool = False
-    dry_run: bool = False
 
 
 @dataclass
@@ -84,9 +89,15 @@ class FreezeCommand(FilesRelatedCommand):
 
 
 @dataclass
-class ShowTreeCommand(FilesRelatedCommand):
+class ShowTreeCommand(BaseCommand, DummyMixin):
     """Display folder tree."""
+    root_folder: str = ''
+    sources_folder: str = ''
     name: str = 'show_tree'
+
+
+# Command that can be used in walking
+Traversable = FilesRelatedCommand | ShowTreeCommand
 
 
 @dataclass
@@ -110,6 +121,6 @@ class RunIndexCommand(BaseCommand):
     """Start index server."""
     host: str = ''
     port: int = 0
-    root: str = ''
+    root_folder: str = ''
     database_folder: str = '.'
     name: str = 'run_index'
