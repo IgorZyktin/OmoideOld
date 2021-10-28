@@ -68,10 +68,12 @@ class Top:
     filesystem: Filesystem
     revision: str
     last_update: str
+    width: int
 
     def __str__(self) -> str:
         """Format as report header."""
-        return f'[{self.position}][{self.branch}]'
+        contents = self.branch.ljust(self.width)
+        return f'[{self.position}][{contents}]'
 
 
 @dataclass
@@ -91,10 +93,12 @@ class Bottom:
     filesystem: Filesystem
     revision: str
     last_update: str
+    width: int
 
     def __str__(self) -> str:
         """Format as report header."""
-        return f'[{self.position}][{self.leaf}]'
+        contents = self.leaf.ljust(self.width)
+        return f'[{self.position}][{contents}]'
 
 
 def format_position(number: int, total: int) -> str:
@@ -109,9 +113,10 @@ def format_position(number: int, total: int) -> str:
     return f'{left} of {right}'
 
 
-def traverse_top(command: instances.FilesRelatedCommand,
+def traverse_top(command: instances.Traversable,
                  filesystem: Filesystem,
-                 folder_kind: str = 'storage_folder'
+                 folder_kind: str = 'storage_folder',
+                 use_maximum_width: bool = False,
                  ) -> Generator[Top, None, None]:
     """Traverse top level of folders."""
     folder = getattr(command, folder_kind)
@@ -121,6 +126,7 @@ def traverse_top(command: instances.FilesRelatedCommand,
         if command.branch in ('all', branch)
     ]
     total = len(branches)
+    longest = max(len(branch) for branch in branches)
 
     for i, branch_name in enumerate(branches, start=1):
         yield Top(
@@ -133,11 +139,14 @@ def traverse_top(command: instances.FilesRelatedCommand,
             filesystem=filesystem,
             revision=command.revision,
             last_update=command.now,
+            width=longest if use_maximum_width else len(branch_name),
         )
 
 
-def traverse_bottom(command: instances.FilesRelatedCommand,
-                    top: Top) -> Generator[Bottom, None, None]:
+def traverse_bottom(command: instances.Traversable,
+                    top: Top,
+                    use_maximum_width: bool = True,
+                    ) -> Generator[Bottom, None, None]:
     """Traverse bottom level of folders."""
     leaves = [
         leaf
@@ -145,6 +154,7 @@ def traverse_bottom(command: instances.FilesRelatedCommand,
         if command.leaf in ('all', leaf)
     ]
     total = len(leaves)
+    longest = max(len(leaf) for leaf in leaves)
 
     for i, leaf_name in enumerate(leaves, start=1):
         yield Bottom(
@@ -159,4 +169,5 @@ def traverse_bottom(command: instances.FilesRelatedCommand,
             filesystem=top.filesystem,
             revision=top.revision,
             last_update=top.last_update,
+            width=longest if use_maximum_width else len(leaf_name),
         )

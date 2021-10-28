@@ -66,7 +66,7 @@ def run_using_files(command: commands.FilesRelatedCommand,
     command.database_folder = _abs(_join(command.root_folder,
                                          constants.DATABASE_FOLDER_NAME))
 
-    assert_sources_folder_exist(command, filesystem, stdout)
+    assert_sources_folder_exists(command, filesystem, stdout)
     filesystem.ensure_folder_exists(command.storage_folder, stdout)
     filesystem.ensure_folder_exists(command.content_folder, stdout)
 
@@ -104,25 +104,33 @@ def run_using_server(command: commands.RunserverCommand,
     perform.perform_runserver(command, filesystem, stdout)
 
 
-def _apply_source_paths(command, filesystem: infra.Filesystem) -> None:
+def apply_paths(command, filesystem: infra.Filesystem, **required) -> None:
     """Alter command inplace and fill sources related paths."""
-    root = command.root.strip('"').strip("'") or '.'
+    root = command.root_folder.strip('"').strip("'").strip() or '.'
     root = filesystem.absolute(root)
+    command.root_folder = root
 
+    if 'sources_folder' in required:
+        command.sources_folder = filesystem.absolute(
+            filesystem.join(root, constants.SOURCES_FOLDER_NAME)
+        )
+
+    # TODO - remove in next releases
     if hasattr(command, 'content_folder'):
         command.content_folder = filesystem.absolute(
             filesystem.join(root, constants.CONTENT_FOLDER_NAME)
         )
 
+    # TODO - remove in next releases
     if hasattr(command, 'database_folder'):
         command.database_folder = filesystem.absolute(
             filesystem.join(root, constants.DATABASE_FOLDER_NAME)
         )
 
 
-def assert_sources_folder_exist(command: commands.FilesRelatedCommand,
-                                filesystem: infra.Filesystem,
-                                stdout: infra.STDOut) -> None:
+def assert_sources_folder_exists(command,
+                                 filesystem: infra.Filesystem,
+                                 stdout: infra.STDOut) -> None:
     """Stop execution if source folder does not exist."""
     if filesystem.not_exists(command.sources_folder):
         stdout.red(f'Sources folder does not exist: {command.sources_folder}')
@@ -166,7 +174,9 @@ def cmd_run_index(**kwargs) -> None:
     command = commands.RunIndexCommand(**kwargs)
     filesystem = infra.Filesystem()
     stdout = infra.STDOut()
-    _apply_source_paths(command, filesystem)
+
+    # FIXME - update argument name in next commit
+    apply_paths(command, filesystem)
 
     perform.perform_run_index(command, filesystem, stdout)
 
@@ -192,6 +202,22 @@ def cmd_runserver(**kwargs) -> None:
     """Command that starts web server."""
     command = commands.RunserverCommand(**kwargs)
     run_using_server(command)
+
+
+@cli.command(name='show_tree',
+             help='Display folder structure of the sources folder')
+@click.option('--root-folder',
+              default=constants.DEFAULT_ROOT_FOLDER,
+              help='Path to the main data containing folder')
+def cmd_show_tree(**kwargs) -> None:
+    """Command that displays sources."""
+    command = commands.ShowTreeCommand(**kwargs)
+    filesystem = infra.Filesystem()
+    stdout = infra.STDOut()
+
+    apply_paths(command, filesystem, sources_folder=True)
+    assert_sources_folder_exists(command, filesystem, stdout)
+    perform.perform_show_tree(command, filesystem, stdout)
 
 
 @cli.command(name='example',
@@ -258,9 +284,6 @@ _FILE_RELATED_COMMANDS = [
     ('freeze',
      'Construct production ready db from local ones',
      commands.FreezeCommand),
-    ('show_tree',
-     'Display folder structure of source folder',
-     commands.ShowTreeCommand),
 ]
 
 _FILE_RELATED_DECORATORS = [

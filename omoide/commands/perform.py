@@ -152,14 +152,11 @@ def perform_show_tree(command: commands.ShowTreeCommand,
                       filesystem: infra.Filesystem,
                       stdout: infra.STDOut) -> None:
     """Perform command."""
-    from omoide.migration_engine import operations as migration_operations
+    from omoide.migration_engine.operations.show_tree import implementation
     stdout.magenta('[SHOW_TREE] Displaying folder tree')
-    total = migration_operations.show_tree.act(
-        command=command,
-        filesystem=filesystem,
-        stdout=stdout,
-    )
-    stdout.magenta(f'Got {total} subfolders')
+    implementation.run_show_tree(command=command,
+                                 filesystem=filesystem,
+                                 stdout=stdout)
 
 
 def perform_run_index(command: commands.RunIndexCommand,
