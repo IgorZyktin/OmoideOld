@@ -64,7 +64,7 @@ class STDOut:
     def extended_print(cls, prefix: str, text: str, *args, **kwargs) -> None:
         """Print with prefix (usually color)."""
         kwargs['end'] = kwargs.get('end', f'{Fore.RESET}\n')
-        return print(prefix + text, *args, **kwargs)
+        return print(prefix + text, *args, **kwargs, flush=True)
 
 
 def with_progress(iterable: Collection, stdout: STDOut, prefix: str = ''):

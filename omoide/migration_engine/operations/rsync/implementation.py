@@ -15,10 +15,8 @@ def run_rsync(command: commands.RSyncCommand,
     stdout.magenta(f'From: {command.content_folder}')
     stdout.magenta(f'  To: {command.content_folder_to}')
 
-    filesystem.ensure_folder_exists(command.content_folder, stdout,
-                                    prefix='\t')
-    filesystem.ensure_folder_exists(command.content_folder_to, stdout,
-                                    prefix='\t')
+    filesystem.ensure_folder_exists(command.content_folder, stdout)
+    filesystem.ensure_folder_exists(command.content_folder_to, stdout)
 
     top_folders = (
         storage_constants.MEDIA_CONTENT_FOLDER_NAME,
@@ -29,12 +27,12 @@ def run_rsync(command: commands.RSyncCommand,
     total = 0
     for each in top_folders:
         path = filesystem.join(command.content_folder, each)
+        setattr(command, each, path)
+        stdout.yellow(f'Synchronizing {each}')
+
         path_to = filesystem.join(command.content_folder_to, each)
         filesystem.ensure_folder_exists(path, stdout, prefix='\t')
         filesystem.ensure_folder_exists(path_to, stdout, prefix='\t')
-
-        setattr(command, each, path)
-        stdout.yellow(f'Synchronizing {each}')
 
         for top in walking.traverse_top(command, filesystem, each):
             stdout.green(f'\t{top}')
