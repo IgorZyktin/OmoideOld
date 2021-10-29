@@ -248,8 +248,7 @@ def cmd_rsync(**kwargs) -> None:
 
     apply_absolute(command, filesystem, stdout, 'root_folder',
                    must_exist=True)
-    apply_absolute(command, filesystem, stdout, 'root_folder_to',
-                   must_exist=True)
+    apply_absolute(command, filesystem, stdout, 'root_folder_to')
 
     command.content_folder = filesystem.absolute(
         filesystem.join(command.root_folder,
