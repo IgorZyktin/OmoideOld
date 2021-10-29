@@ -71,7 +71,12 @@ def rsync_one_folder(bottom: walking.Bottom, stdout: infra.STDOut,
     for filename in infra.with_progress(filenames, stdout, prefix='\t'):
         full_path_from = bottom.filesystem.join(path_from, filename)
         full_path_to = bottom.filesystem.join(path_to, filename)
-        bottom.filesystem.copy_file(full_path_from, full_path_to)
+        full_path_to_tmp = full_path_to + '_tmp'
+
+        # hope it will guarantee some sort of atomicity
+        bottom.filesystem.copy_file(full_path_from, full_path_to_tmp)
+        bottom.filesystem.rename_file(full_path_to_tmp, full_path_to)
+
         copies_made += 1
 
     return copies_made

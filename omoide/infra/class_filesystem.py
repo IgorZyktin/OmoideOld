@@ -160,6 +160,11 @@ class Filesystem:
         """Delete file."""
         os.remove(target_path)
 
+    @classmethod
+    def rename_file(cls, old_name: str, new_name: str) -> None:
+        """Rename file."""
+        cls.move_file(old_name, new_name)
+
     @staticmethod
     def create_directory(target_path: str) -> None:
         """Create directory."""
