@@ -5,12 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon"
-          href="{{ url_for('static', filename='favicon.ico') }}">
+          href="{{ url_for('static', path='favicon.ico') }}">
     <link type="text/css"
-          href="{{ url_for('static', filename='styles.css') }}"
+          href="{{ url_for('static', path='styles.css') }}"
           rel="stylesheet">
     <script type="text/javascript"
-            src="{{ url_for('static', filename='code.js') }}"></script>
+            src="{{ url_for('static', path='code.js') }}"></script>
     {% block head %}{% endblock %}
     <title>{{ title }}</title>
 </head>
@@ -44,10 +44,10 @@
 
             <a id="tagsButton"
                title="Display all available tags"
-               href="{{ url_for('tags') + web_query|string|safe }}"
+               href="{{ url_for('show_tags') + web_query|string|safe }}"
                class="button">Tags</a>
 
-            <a href="{{ url_for('navigation') + web_query|string|safe }}"
+            <a href="{{ url_for('show_navigation') + web_query|string|safe }}"
                title="Display and navigate on all available themes"
                class="button">Navigation</a>
 
@@ -71,11 +71,11 @@
 
 <div class="flex_hr">
     {% if not on_feedback_page %}
-        <a href="{{ url_for('feedback') + web_query|string|safe }}"
+        <a href="{{ url_for('show_feedback') + web_query|string|safe }}"
            title="Send feedback">Send feedback</a>
     {% endif %}
 
-    <a href="{{ url_for('newest') + web_query|string|safe }}"
+    <a href="{{ url_for('show_newest') + web_query|string|safe }}"
        title="Show list of groups added on the last update">Newest</a>
 
     <a href="{{ url_for('show_help') + web_query|string|safe }}"

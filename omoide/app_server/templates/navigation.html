@@ -45,7 +45,7 @@
 
                             <a href="{{ url_for('search') + web_query.replace(q=theme_uuid)|string }}">{{ theme.label }}</a>
 
-                            <img src="{{ url_for('static', filename='expand-arrow.svg') }}"
+                            <img src="{{ url_for('static', path='expand-arrow.svg') }}"
                                  id="fold_{{ theme_uuid }}"
                                  class="nav-icon"
                                  onclick="switchThemeFolding('{{ theme_uuid }}')"

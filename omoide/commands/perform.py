@@ -181,3 +181,14 @@ def perform_run_index(command: commands.RunIndexCommand,
     implementation.run_index(command=command,
                              filesystem=filesystem,
                              stdout=stdout)
+
+
+def perform_run_app(command: commands.RunAppCommand,
+                    filesystem: infra.Filesystem,
+                    stdout: infra.STDOut) -> None:
+    """Perform command."""
+    from omoide.app_server import implementation
+    stdout.magenta('[RUN_APP] Starting web application')
+    implementation.run_app(command=command,
+                           filesystem=filesystem,
+                           stdout=stdout)

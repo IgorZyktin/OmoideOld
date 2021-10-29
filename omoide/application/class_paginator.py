@@ -11,13 +11,17 @@ class Paginator:
     """
 
     def __init__(self, sequence: Sequence, current_page: int,
-                 items_per_page: int, pages_in_block: int) -> None:
+                 items_per_page: int, pages_in_block: int,
+                 total_items: int = -1) -> None:
         """Initialize instance."""
         assert items_per_page
         self._sequence = sequence
         self._pages_in_block = pages_in_block
 
-        self.total_items = len(sequence)
+        if total_items == -1:
+            total_items = len(sequence)
+
+        self.total_items = total_items
         self.items_per_page = items_per_page
         self.num_pages = math.ceil(self.total_items / self.items_per_page)
 
