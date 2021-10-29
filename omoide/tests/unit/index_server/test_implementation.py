@@ -14,7 +14,7 @@ def test_index_server_implementation():
     command = commands.RunIndexCommand(
         host='test.com',
         port=9999,
-        root='/root',
+        root_folder='/root',
         database_folder='/root/db',
     )
     filesystem = infra.Filesystem()

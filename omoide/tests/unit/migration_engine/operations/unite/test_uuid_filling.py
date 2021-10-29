@@ -4,8 +4,13 @@
 """
 import pytest
 
-from omoide.migration_engine.operations.unite import UUIDMaster, IdentityMaster
 from omoide.migration_engine.operations.unite import preprocessing
+from omoide.migration_engine.operations.unite.class_identity_master import (
+    IdentityMaster
+)
+from omoide.migration_engine.operations.unite.class_uuid_master import (
+    UUIDMaster
+)
 
 UUID_FILLING_FILENAMES = [
     'file1.txt',

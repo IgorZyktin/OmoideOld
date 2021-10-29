@@ -28,11 +28,11 @@ def test_stdout_colored(method_name, color_name):
             setattr(fake_fore, color_name, f'<{method_name}>')
             method('something')
             fake_print.assert_called_once_with(
-                f'<{method_name}>something', end='<reset>\n')
+                f'<{method_name}>something', end='<reset>\n', flush=True)
 
 
 def test_stdout_not_colored():
     stdout = infra.STDOut()
     with mock.patch('omoide.infra.class_stdout.print') as fake_print:
         stdout.print('something')
-        fake_print.assert_called_once_with('something', end='\n')
+        fake_print.assert_called_once_with('something', end='\n', flush=True)

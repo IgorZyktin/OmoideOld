@@ -6,6 +6,7 @@ from unittest import mock
 import pytest
 
 from omoide import infra
+from omoide.infra.walking import walk
 
 
 @pytest.fixture()
@@ -25,8 +26,8 @@ def test_walk(filesystem):
         for path in (path_1, path_2, path_3, path_4, path_5):
             filesystem.ensure_folder_exists(path, fake_stdout)
 
-        gen = infra.walk(tmp_dir, filesystem,
-                         branch='source_2', leaf='migration_3')
+        gen = walk(tmp_dir, filesystem,
+                   branch='source_2', leaf='migration_3')
 
         assert list(gen) == [('source_2',
                               'migration_3',
