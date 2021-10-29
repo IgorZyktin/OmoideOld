@@ -11,13 +11,13 @@ MESSAGE_RELOADING = ('New content is loading right now and '
                      'will be available in a few minutes')
 
 SELECT_INDEX_METAS = """
-SELECT meta_uuid, number, path_to_thumbnail 
+SELECT meta_uuid, number, path_to_thumbnail
 FROM index_metas
 ORDER BY number;
 """
 
 SELECT_INDEX_TAGS = """
-SELECT tag, uuid 
+SELECT tag, uuid
 FROM index_tags
 ORDER BY id;
 """
