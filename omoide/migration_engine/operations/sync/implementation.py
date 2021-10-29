@@ -41,8 +41,6 @@ def run_sync(command: commands.SyncCommand,
     SessionRoot = sessionmaker(bind=root_db)  # pylint: disable=invalid-name
     session_root = SessionRoot()
 
-    # TODO - need to include also branches and root into passport
-
     total_migrations = 0
     for top in walking.traverse_top(command, filesystem):
         stdout.print(f'\t{top}')
@@ -65,6 +63,7 @@ def run_sync(command: commands.SyncCommand,
 
         session_branch = sessionmaker(bind=branch_db)()
 
+        made_changes = False
         for bottom in walking.traverse_bottom(command, top):
 
             leaf_folder = filesystem.join(branch_folder, bottom.leaf)
@@ -91,11 +90,13 @@ def run_sync(command: commands.SyncCommand,
 
             passport.register_sync(bottom, leaf_db_path)
             passport.save_to_file(bottom)
+            made_changes = True
 
-        synchronize(session_from=session_branch, session_to=session_root)
+        if made_changes:
+            synchronize(session_from=session_branch, session_to=session_root)
+            total_migrations += 1
+            stdout.green(f'\t\t\t{top.branch} Synchronized')
 
-        total_migrations += 1
-        stdout.green(f'\t\t\t{top.branch} Synchronized')
         branch_db.dispose()
         session_branch.close()
 
