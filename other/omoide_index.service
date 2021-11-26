@@ -3,9 +3,9 @@ Description=Omoide index server
 After=network.target
 
 [Service]
-User=pi
-WorkingDirectory=/home/pi/Omoide
-ExecStart=/home/pi/Omoide/run_index.sh
+User=omoide
+WorkingDirectory=/home/omoide/Omoide
+ExecStart=/home/omoide/Omoide/run_index.sh
 CPUAccounting=true
 MemoryAccounting=true
 
