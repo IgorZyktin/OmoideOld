@@ -17,7 +17,7 @@ from omoide import search_engine
 from omoide import utils
 from omoide.app_server.class_web_query import WebQuery
 from omoide.application import database as app_database
-from omoide.application.class_paginator import Paginator
+from omoide.application.class_paginator import Paginator, Paginator2
 from omoide.database import models
 from omoide.index_server import constants as index_constants
 
@@ -77,7 +77,7 @@ async def make_search_response(session: AsyncSession,
                 body = await response.text()
                 response = parse_index_response(body)
 
-    paginator = Paginator(
+    paginator = Paginator2(
         sequence=response.items,
         current_page=response.page,
         items_per_page=constants.ITEMS_PER_PAGE,
