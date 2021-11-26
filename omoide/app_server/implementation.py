@@ -59,9 +59,11 @@ def run_app(command: commands.RunAppCommand,
     app.mount('/static',
               StaticFiles(directory=command.static_folder),
               name='static')
-    app.mount('/content',
-              StaticFiles(directory=command.content_folder),
-              name='content')
+
+    if command.static:
+        app.mount('/content',
+                  StaticFiles(directory=command.content_folder),
+                  name='content')
 
     uvicorn.run(
         app,
