@@ -4,87 +4,107 @@
 import datetime
 import json
 import time
+from dataclasses import dataclass
 from typing import Dict, Any, Callable, Optional, Set, List, Tuple
 
+import aiohttp
 import ujson
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from omoide import constants
 from omoide import search_engine
 from omoide import utils
+from omoide.app_server.class_web_query import WebQuery
 from omoide.application import database as app_database
 from omoide.application.class_paginator import Paginator
-from omoide.application.class_web_query import WebQuery
-from omoide.database import operations, models
-from omoide.search_engine import find
+from omoide.database import models
+from omoide.index_server import constants as index_constants
 
 _GRAPH_CACHE: Optional[Dict[str, Any]] = None
+INDEX_URL = f'http://{index_constants.HOST}:{index_constants.PORT}/search'
+
+
+@dataclass
+class IndexItem:
+    uuid: str
+    path: str
+    number: int
+
+
+@dataclass
+class IndexResponse:
+    items: list[IndexItem]
+    report: list[str]
+    time: float
+    page: int
+    total_pages: int
+    total_items: int
+    announce: str
 
 
 # pylint: disable=too-many-locals
-def make_search_response(maker: sessionmaker, web_query: WebQuery,
-                         query_builder: search_engine.QueryBuilder,
-                         index: search_engine.Index) -> Dict[str, Any]:
+async def make_search_response(session: AsyncSession,
+                               web_query: WebQuery,
+                               query_builder: search_engine.QueryBuilder
+                               ) -> Dict[str, Any]:
     """Create context for search request."""
     start = time.perf_counter()
 
-    with operations.session_scope(maker) as session:
-        graph = app_database.get_graph(session)
-        unsafe_themes = web_query.get('active_themes', constants.ALL_THEMES)
-        active_themes = extract_active_themes(unsafe_themes, graph)
-        placeholder = get_placeholder_for_search(session, active_themes)
-
+    graph = await app_database.get_graph(session)
+    unsafe_themes = web_query.get('active_themes', constants.ALL_THEMES)
+    active_themes = extract_active_themes(unsafe_themes, graph)
+    placeholder = await get_placeholder_for_search(session, active_themes)
     user_query = web_query.get('q')
     user_query = aggressively_filter(user_query)
     current_page = int(web_query.get('page', '1'))
     search_query = query_builder.from_query(user_query)
 
     if not active_themes and active_themes is not None:
-        uuids = []
-        search_report = ['No themes to search on.']
+        response = IndexResponse([], ['No themes to search on.'],
+                                 0.0, 0, 0, 0, '')
     else:
-        if search_query:
-            uuids, search_report = find.specific_records(
-                query=search_query,
-                index=index,
-                active_themes=active_themes or set(),
-            )
-        else:
-            uuids, search_report = find.random_records(
-                index=index,
-                active_themes=active_themes,
-                amount=constants.ITEMS_PER_PAGE,
-            )
+        async with aiohttp.ClientSession(conn_timeout=1.0) as session:
+            payload = {
+                'and_': list(search_query.and_),
+                'or_': list(search_query.or_),
+                'not_': list(search_query.not_),
+                'page': current_page,
+                'items_per_page': constants.ITEMS_PER_PAGE,
+                'themes': active_themes,
+            }
+            async with session.get(INDEX_URL, json=payload) as response:
+                body = await response.text()
+                response = parse_index_response(body)
 
     paginator = Paginator(
-        sequence=uuids,
-        current_page=current_page,
+        sequence=response.items,
+        current_page=response.page,
         items_per_page=constants.ITEMS_PER_PAGE,
         pages_in_block=constants.PAGES_IN_BLOCK,
+        total_items=response.total_items,
     )
 
     duration = time.perf_counter() - start
     note = get_note_for_search(len(paginator), duration)
 
     context = {
-        'web_query': web_query,
-        'user_query': web_query.get('q'),
         'search_query': search_query,
         'paginator': paginator,
-        'search_report': search_report,
+        'search_report': response.report,
         'note': note,
+        'announce': response.announce,
         'placeholder': placeholder,
     }
     return context
 
 
-def make_navigation_response(maker: sessionmaker, web_query: WebQuery,
-                             ) -> Dict[str, Any]:
+async def make_navigation_response(session: AsyncSession,
+                                   web_query: WebQuery) -> Dict[str, Any]:
     """Create context for navigation request (GET)."""
-    with operations.session_scope(maker) as session:
-        graph = app_database.get_graph(session)
-        unsafe_themes = web_query.get('active_themes', constants.ALL_THEMES)
-        active_themes = extract_active_themes(unsafe_themes, graph)
+    graph = await app_database.get_graph(session)
+    unsafe_themes = web_query.get('active_themes', constants.ALL_THEMES)
+    active_themes = extract_active_themes(unsafe_themes, graph)
 
     if active_themes is None:
         visibility = {x: True for x in graph}
@@ -92,53 +112,57 @@ def make_navigation_response(maker: sessionmaker, web_query: WebQuery,
     else:
         visibility = {x: (x in active_themes) for x in graph}
 
-    context = {
-        'web_query': web_query,
-        'user_query': web_query.get('q'),
+    return {
         'graph': graph,
         'visibility': visibility,
         'visibility_json': ujson.dumps(visibility),
     }
-    return context
 
 
-def make_preview_response(maker: sessionmaker,
-                          web_query: WebQuery,
-                          uuid: str,
-                          abort_callback: Callable) -> Dict[str, Any]:
+async def make_preview_response(session: AsyncSession,
+                                web_query: WebQuery,
+                                uuid: str,
+                                abort_callback: Callable) -> Dict[str, Any]:
     """Create context for preview request."""
-    with operations.session_scope(maker) as session:
-        meta = app_database.get_meta(session, uuid) or abort_callback()
-        uuids = _get_group_uuids(meta)
-        _next, _previous, paginator = _build_paginator(uuids, meta.uuid)
+    meta = await app_database.get_meta(session, uuid)
+    group = await app_database.get_group(session, meta.group_uuid)
 
-        all_tags = {
-            *[x.value for x in meta.group.theme.tags],
-            *[x.value for x in meta.group.tags],
-            *[x.value for x in meta.tags],
-        }
-        session.expunge_all()
+    if not meta or not group:
+        return abort_callback()
 
-    context = {
+    theme = await app_database.get_theme(session, group.theme_uuid)
+
+    if not theme:
+        return abort_callback()
+
+    uuids = await _get_group_uuids(session, group)
+    _next, _previous, paginator = _build_paginator(uuids, meta.uuid)
+
+    all_tags = await app_database.get_all_tags(session, theme.uuid,
+                                               group.uuid, meta.uuid)
+    session.expunge_all()
+
+    response = {
         'uuid': meta.uuid,
-        'web_query': web_query,
-        'user_query': web_query.get('q'),
         'folded': web_query.get('folded') == 'yes',
         'paginator': paginator,
         'next': _next,
         'previous': _previous,
         'meta': meta,
+        'group': group,
+        'theme': theme,
         'tags': sorted(all_tags),
     }
-    return context
+    return response
 
 
-def _get_group_uuids(meta: models.Meta) -> List[str]:
+async def _get_group_uuids(session: AsyncSession,
+                           group: models.Group) -> List[str]:
     """Gather all uuids in this group."""
-    if meta.group.route == constants.NO_GROUP:
+    if group.route == constants.NO_GROUP:
         return []
 
-    return [x.uuid for x in meta.group.metas]
+    return await app_database.get_group_metas_uuids(session, group.uuid)
 
 
 def _build_paginator(group_uuids: List[str], current_uuid: str) \
@@ -167,34 +191,27 @@ def _build_paginator(group_uuids: List[str], current_uuid: str) \
     return _next, _previous, paginator
 
 
-def make_tags_response(maker: sessionmaker,
-                       web_query: WebQuery) -> Dict[str, Any]:
+async def make_tags_response(session: AsyncSession,
+                             web_query: WebQuery) -> Dict[str, Any]:
     """Create context for tags request."""
-    with operations.session_scope(maker) as session:
-        graph = app_database.get_graph(session)
-        unsafe_themes = web_query.get('active_themes', constants.ALL_THEMES)
-        active_themes = extract_active_themes(unsafe_themes, graph)
-        statistic = app_database.get_statistic(session, active_themes)
+    graph = await app_database.get_graph(session)
+    unsafe_themes = web_query.get('active_themes', constants.ALL_THEMES)
+    active_themes = extract_active_themes(unsafe_themes, graph)
+    statistic = await app_database.get_statistic(session, active_themes)
 
-    context = {
-        'web_query': web_query,
-        'user_query': web_query.get('q'),
+    response = {
         'statistic': statistic,
     }
-    return context
+    return response
 
 
-def make_newest_response(session: Session,
-                         web_query: WebQuery) -> Dict[str, Any]:
+async def make_newest_response(session: Session) -> dict[str, Any]:
     """Create context for newest request."""
-    last_update, groups = app_database.get_newest_groups(session)
-    context = {
-        'web_query': web_query,
-        'user_query': web_query.get('q'),
-        'newest': groups,
+    last_update, groups = await app_database.get_newest_groups(session)
+    return {
         'last_update': last_update,
+        'newest': groups,
     }
-    return context
 
 
 def get_note_for_search(total: int, duration: float) -> str:
@@ -205,15 +222,15 @@ def get_note_for_search(total: int, duration: float) -> str:
     return note
 
 
-def get_placeholder_for_search(session: Session,
-                               active_themes: Optional[Set[str]]) -> str:
+async def get_placeholder_for_search(session: AsyncSession,
+                                     active_themes: Optional[Set[str]]) -> str:
     """Return placeholder for search input."""
     if active_themes is None:
         return ''
 
     if len(active_themes) == 1:
         current_theme = list(active_themes)[0]
-        theme_name = app_database.get_theme_name(session, current_theme)
+        theme_name = await app_database.get_theme_name(session, current_theme)
         placeholder = 'Searching on {}'.format(repr(theme_name))
     elif len(active_themes) > 1:
         placeholder = 'Searching on {}-x themes'.format(len(active_themes))
@@ -295,3 +312,19 @@ def aggressively_filter(string: str) -> str:
             letters[i] = ''
 
     return ''.join(letters)
+
+
+def parse_index_response(body: str) -> IndexResponse:
+    """Convert index response into objects."""
+    payload = ujson.loads(body)
+    items = [IndexItem(**x) for x in payload.get('items', [])]
+
+    return IndexResponse(
+        items=items,
+        report=payload.get('report', []),
+        time=payload.get('time', -1.0),
+        page=payload.get('page', -1),
+        total_pages=payload.get('total_pages', -1),
+        total_items=payload.get('total_items', -1),
+        announce=payload.get('announce', ''),
+    )

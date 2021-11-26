@@ -4,6 +4,7 @@
 from functools import partial
 
 import flask
+from omoide.application.class_web_query import WebQuery
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
@@ -13,7 +14,6 @@ from omoide import commands, utils
 from omoide import search_engine
 from omoide.application import constants
 from omoide.application import database, logic
-from omoide.application.class_web_query import WebQuery
 
 
 # pylint: disable=too-many-locals
@@ -44,21 +44,21 @@ def create_app(command: commands.RunserverCommand,
             'search_report': [],
         }
 
-    @app.errorhandler(404)
-    def page_not_found(exc):
-        """Return not found page."""
-        # TODO
-        assert exc
-        context = {
-        }
-        return flask.render_template('404.html', **context), 404
+    # @app.errorhandler(404)
+    # def page_not_found(exc):
+    #     """Return not found page."""
+    #     TODO
+        # assert exc
+        # context = {
+        # }
+        # return flask.render_template('404.html', **context), 404
 
-    @app.route('/navigation')
-    def navigation():
-        """Show selection fields for realm/theme."""
-        web_query = WebQuery.from_request(flask.request.args)
-        context = logic.make_navigation_response(Session, web_query)
-        return flask.render_template('navigation.html', **context)
+    # @app.route('/navigation')
+    # def navigation():
+    #     """Show selection fields for realm/theme."""
+    #     web_query = WebQuery.from_request(flask.request.args)
+    #     context = logic.make_navigation_response(Session, web_query)
+    #     return flask.render_template('navigation.html', **context)
 
     @app.route('/')
     @app.route('/search', methods=['GET', 'POST'])
@@ -77,77 +77,77 @@ def create_app(command: commands.RunserverCommand,
 
         return flask.render_template('index.html', **context)
 
-    @app.route('/preview/<uuid>')
-    def preview(uuid: str):
-        """Show description for a single record."""
-        not_found = partial(flask.abort, 404)
-        web_query = WebQuery.from_request(flask.request.args)
-        context = logic.make_preview_response(maker=Session,
-                                              web_query=web_query,
-                                              uuid=uuid,
-                                              abort_callback=not_found)
-        return flask.render_template('preview.html', **context)
+    # @app.route('/preview/<uuid>')
+    # def preview(uuid: str):
+    #     """Show description for a single record."""
+    #     not_found = partial(flask.abort, 404)
+    #     web_query = WebQuery.from_request(flask.request.args)
+    #     context = logic.make_preview_response(maker=Session,
+    #                                           web_query=web_query,
+    #                                           uuid=uuid,
+    #                                           abort_callback=not_found)
+    #     return flask.render_template('preview.html', **context)
 
-    @app.route('/tags')
-    def tags():
-        """Show available tags."""
-        web_query = WebQuery.from_request(flask.request.args)
-        context = logic.make_tags_response(Session, web_query)
-        return flask.render_template('tags.html', **context)
+    # @app.route('/tags')
+    # def tags():
+    #     """Show available tags."""
+    #     web_query = WebQuery.from_request(flask.request.args)
+    #     context = logic.make_tags_response(Session, web_query)
+    #     return flask.render_template('tags.html', **context)
 
-    @app.route('/newest')
-    def newest():
-        """Show list of groups added on the last update."""
-        web_query = WebQuery.from_request(flask.request.args)
-        with omoide.database.operations.session_scope(Session) as session:
-            context = logic.make_newest_response(session, web_query)
-        return flask.render_template('newest.html', **context)
+    # @app.route('/newest')
+    # def newest():
+    #     """Show list of groups added on the last update."""
+    #     web_query = WebQuery.from_request(flask.request.args)
+    #     with omoide.database.operations.session_scope(Session) as session:
+    #         context = logic.make_newest_response(session, web_query)
+    #     return flask.render_template('newest.html', **context)
 
-    @app.route('/feedback', methods=['GET', 'POST'])
-    def feedback():
-        """Show feedback form."""
-        greet = False
-        web_query = WebQuery.from_request(flask.request.args)
-        user_query = web_query.get('q')
+    # @app.route('/feedback', methods=['GET', 'POST'])
+    # def feedback():
+    #     """Show feedback form."""
+    #     greet = False
+    #     web_query = WebQuery.from_request(flask.request.args)
+    #     user_query = web_query.get('q')
+    #
+    #     if flask.request.method == 'POST':
+    #         name = flask.request.form.get('name', '')
+    #         _feedback = flask.request.form.get('feedback', '')
+    #         _path = flask.request.form.get('path', '')
+    #         logic.save_feedback(command.database_folder, name,
+    #                             _feedback, _path)
+    #         greet = True
+    #
+    #     context = {
+    #         'on_feedback_page': True,
+    #         'greet': greet,
+    #         'web_query': web_query,
+    #         'user_query': user_query,
+    #     }
+    #     return flask.render_template('feedback.html', **context)
 
-        if flask.request.method == 'POST':
-            name = flask.request.form.get('name', '')
-            _feedback = flask.request.form.get('feedback', '')
-            _path = flask.request.form.get('path', '')
-            logic.save_feedback(command.database_folder, name,
-                                _feedback, _path)
-            greet = True
+    # @app.route('/help')
+    # def show_help():
+    #     """Show help page."""
+    #     web_query = WebQuery.from_request(flask.request.args)
+    #     user_query = web_query.get('q')
+    #
+    #     context = {
+    #         'web_query': web_query,
+    #         'user_query': user_query,
+    #     }
+    #     return flask.render_template('help.html', **context)
 
-        context = {
-            'on_feedback_page': True,
-            'greet': greet,
-            'web_query': web_query,
-            'user_query': user_query,
-        }
-        return flask.render_template('feedback.html', **context)
-
-    @app.route('/help')
-    def show_help():
-        """Show help page."""
-        web_query = WebQuery.from_request(flask.request.args)
-        user_query = web_query.get('q')
-
-        context = {
-            'web_query': web_query,
-            'user_query': user_query,
-        }
-        return flask.render_template('help.html', **context)
-
-    if command.static:
-        @app.route('/content/<path:filename>')
-        def serve_content(filename: str):
-            """Serve files from main storage.
-
-            Contents of the main storage are served through this function.
-            It's not about static css or js files. Not supposed to be used
-            in production.
-            """
-            return flask.send_from_directory(command.content_folder,
-                                             filename, conditional=True)
+    # if command.static:
+    #     @app.route('/content/<path:filename>')
+    #     def serve_content(filename: str):
+    #         """Serve files from main storage.
+    #
+    #         Contents of the main storage are served through this function.
+    #         It's not about static css or js files. Not supposed to be used
+    #         in production.
+    #         """
+    #         return flask.send_from_directory(command.content_folder,
+    #                                          filename, conditional=True)
 
     return app

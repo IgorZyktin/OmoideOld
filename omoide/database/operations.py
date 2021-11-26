@@ -6,6 +6,7 @@ from contextlib import contextmanager
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from omoide import infra
@@ -17,6 +18,7 @@ __all__ = [
     'create_scheme',
     'restore_database_from_scratch',
     'synchronize',
+    'create_async_read_only_database',
 ]
 
 
@@ -56,6 +58,17 @@ def create_read_only_database(folder: str, filename: str,
                            connect_args={'check_same_thread': False},
                            echo=echo,
                            future=True)
+    return engine
+
+
+def create_async_read_only_database(folder: str, filename: str,
+                                    filesystem: infra.Filesystem,
+                                    echo: bool) -> Engine:
+    """Create database file."""
+    path = filesystem.absolute(filesystem.join(folder, filename))
+    engine = create_async_engine(f'sqlite+aiosqlite:///{path}?uri=true',
+                                 echo=echo,
+                                 future=True)
     return engine
 
 

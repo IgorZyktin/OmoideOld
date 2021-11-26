@@ -20,6 +20,10 @@ fastapi = "^0.68.1"
 uvicorn = "^0.15.0"
 Pympler = "^0.9"
 psutil = "^5.8.0"
+aiofiles = "^0.7.0"
+python-multipart = "^0.0.5"
+aiosqlite = "^0.17.0"
+aiohttp = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

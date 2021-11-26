@@ -46,6 +46,8 @@ import click
 from omoide import commands, infra
 from omoide import constants
 from omoide.commands import perform
+from omoide.constants import server as server_constants
+from omoide.constants import storage as storage_constants
 from omoide.index_server import constants as index_constants
 
 
@@ -140,6 +142,30 @@ def apply_paths(command, filesystem: infra.Filesystem, **required) -> None:
         )
 
 
+def apply_server_paths(command,
+                       filesystem: infra.Filesystem,
+                       stdout: infra.STDOut) -> None:
+    """Add paths to the static and template folders."""
+    cwd = filesystem.absolute('.')
+    command.templates_folder = filesystem.absolute(
+        filesystem.join(cwd, *server_constants.DEFAULT_TEMPLATES_PATH)
+    )
+    if filesystem.not_exists(command.templates_folder):
+        stdout.red(
+            f'Templates folder does not exist: {command.templates_folder}'
+        )
+        sys.exit(1)
+
+    command.static_folder = filesystem.absolute(
+        filesystem.join(cwd, *server_constants.DEFAULT_STATIC_PATH)
+    )
+    if filesystem.not_exists(command.static_folder):
+        stdout.red(
+            f'Static folder does not exist: {command.static_folder}'
+        )
+        sys.exit(1)
+
+
 def assert_sources_folder_exists(command,
                                  filesystem: infra.Filesystem,
                                  stdout: infra.STDOut) -> None:
@@ -179,7 +205,7 @@ def cli():
               default=index_constants.PORT,
               help='Port to run index server on')
 @click.option('--root-folder',
-              default=constants.DEFAULT_ROOT_FOLDER,
+              default=storage_constants.DEFAULT_ROOT_FOLDER,
               help='Path to the main data containing folder')
 def cmd_run_index(**kwargs) -> None:
     """Command that starts web server."""
@@ -190,6 +216,39 @@ def cmd_run_index(**kwargs) -> None:
     apply_absolute(command, filesystem, stdout, 'root_folder', must_exist=True)
     apply_paths(command, filesystem, database_folder=True)
     perform.perform_run_index(command, filesystem, stdout)
+
+
+@cli.command(name='run_app',
+             help='Run user facing web application')
+@click.option('--host',
+              default=server_constants.DEFAULT_SERVER_HOST,
+              help='Host to run web server on')
+@click.option('--port',
+              default=server_constants.DEFAULT_SERVER_PORT,
+              help='Port to run web server on')
+@click.option('--debug/--no-debug',
+              default=False,
+              help='Run in debug mode')
+@click.option('--reload/--no-reload',
+              default=False,
+              help='Realtime reload for application code')
+@click.option('--static/--no-static',
+              default=False,
+              help='Serve static from web app (use only for development)')
+@click.option('--root-folder',
+              default=storage_constants.DEFAULT_ROOT_FOLDER,
+              help='Path to the main data containing folder')
+def cmd_run_app(**kwargs) -> None:
+    """Command that starts web application."""
+    command = commands.RunAppCommand(**kwargs)
+    filesystem = infra.Filesystem()
+    stdout = infra.STDOut()
+
+    apply_absolute(command, filesystem, stdout, 'root_folder', must_exist=True)
+    apply_paths(command, filesystem, database_folder=True, content_folder=True)
+    apply_server_paths(command, filesystem, stdout)
+
+    perform.perform_run_app(command, filesystem, stdout)
 
 
 @cli.command(name='runserver',

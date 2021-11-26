@@ -35,6 +35,6 @@ def run_index(command: commands.RunIndexCommand,
 
     uvicorn.run(
         app,
-        host=command.host or constants.HOST,
-        port=command.port or constants.PORT,
+        host=command.host,
+        port=command.port,
     )

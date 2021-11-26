@@ -6,31 +6,31 @@
     {{ super() }}
     <h3>
         <a class="as-link"
-           href="{{ url_for('search') + web_query.replace(q=meta.group.uuid)|string }}">{{ meta.group.theme.label }}: {{ meta.group.label }}</a>
+           href="{{ url_for('search') + web_query.replace(q=group.uuid)|string }}">{{ theme.label }}: {{ group.label }}</a>
     </h3>
 {% endblock %}
 
 {% block body %}
     {% if folded %}
-        <a href="{{ url_for('preview', uuid=uuid) + web_query.replace(folded='no')|string|safe }}"
+        <a href="{{ url_for('show_preview', uuid=uuid) + web_query.replace(folded='no')|string|safe }}"
            class="fold-button">
-            <img src="{{ url_for('static', filename='expand-arrow.svg') }}"
+            <img src="{{ url_for('static', path='expand-arrow.svg') }}"
                  title="Show header panel" alt="Header visibility switch"/>
         </a>
     {% else %}
-        <a href="{{ url_for('preview', uuid=uuid) + web_query.replace(folded='yes')|string|safe }}"
+        <a href="{{ url_for('show_preview', uuid=uuid) + web_query.replace(folded='yes')|string|safe }}"
            class="fold-button">
-            <img src="{{ url_for('static', filename='collapse-arrow.svg') }}"
+            <img src="{{ url_for('static', path='collapse-arrow.svg') }}"
                  title="Hide header panel" alt="Header visibility switch"/>
         </a>
     {% endif %}
 
-    {{ preview_pagination(paginator, web_query, next, previous) }}
+    {{ preview_pagination(request, paginator, web_query, next, previous) }}
 
     <div class="preview-center">
 
         {% if previous %}
-            <a href="{{ url_for('preview', uuid=previous) + web_query|string|safe }}"
+            <a href="{{ url_for('show_preview', uuid=previous) + web_query|string|safe }}"
                class="preview-swipe">
                 <span class="arrow">&lt;&lt;</span>
                 <span class="label">Previous</span>
@@ -45,7 +45,7 @@
         </a>
 
         {% if next %}
-            <a href="{{ url_for('preview', uuid=next) + web_query|string|safe }}"
+            <a href="{{ url_for('show_preview', uuid=next) + web_query|string|safe }}"
                class="preview-swipe">
                 <span class="arrow">&gt;&gt;</span>
                 <span class="label">Next</span>
@@ -55,7 +55,7 @@
         {% endif %}
     </div>
 
-    {{ preview_pagination(paginator, web_query, next, previous) }}
+    {{ preview_pagination(request, paginator, web_query, next, previous) }}
 
     <div class="preview-content limited-width">
         <table class="preview-table">

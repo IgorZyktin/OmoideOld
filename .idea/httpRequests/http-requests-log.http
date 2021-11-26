@@ -3,6 +3,25 @@ Content-Type: application/json
 
 {
     "and_": [
+    ],
+    "or_": [
+    ],
+    "not_": [
+    ],
+    "page": 1,
+    "items_per_page": 10,
+    "themes": null
+}
+
+<> 2021-10-29T154600.200.json
+
+###
+
+GET http://localhost:9000/search
+Content-Type: application/json
+
+{
+    "and_": [
 
     ],
     "or_": [
@@ -767,25 +786,6 @@ GET http://localhost:9000/status
 Accept: application/json
 
 <> 2021-10-05T232832.200.json
-
-###
-
-GET http://localhost:9000
-Content-Type: application/json
-
-{
-    "and_": [
-    ],
-    "or_": [
-    ],
-    "not_": [
-    ],
-    "page": 1,
-    "items_per_page": 10,
-    "themes": null
-}
-
-<> 2021-10-05T232812.200.json
 
 ###
 

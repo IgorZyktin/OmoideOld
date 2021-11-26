@@ -19,6 +19,7 @@ __all__ = [
     'Traversable',
     'RunserverCommand',
     'RunIndexCommand',
+    'RunAppCommand',
 ]
 
 
@@ -135,3 +136,19 @@ class RunIndexCommand(BaseCommand):
     root_folder: str = ''
     database_folder: str = '.'
     name: str = 'run_index'
+
+
+@dataclass
+class RunAppCommand(BaseCommand):
+    """Start web application."""
+    host: str = ''
+    port: int = 0
+    reload: bool = False
+    debug: bool = False
+    static: bool = False
+    root_folder: str = ''
+    content_folder: str = ''
+    database_folder: str = ''
+    templates_folder: str = ''
+    static_folder: str = ''
+    name: str = 'run_app'

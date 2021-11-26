@@ -46,13 +46,13 @@
 {% endmacro %}
 
 
-{% macro preview_pagination(paginator, web_query, next, previous) %}
+{% macro preview_pagination(request, paginator, web_query, next, previous) %}
     {% if paginator.num_pages > 1 %}
         <div class="pages">
             {% if not paginator.is_fitting %}
                 {% if paginator.has_previous %}
                     <a class="active-page page-separate"
-                       href="{{ url_for('preview', uuid=previous) + web_query|string }}">Previous</a>
+                       href="{{ request.url_for('show_preview', uuid=previous) + web_query|string }}">Previous</a>
                 {% else %}
                     <a class="page-separate">Previous</a>
                 {% endif %}
@@ -71,10 +71,10 @@
                 {% if page.is_dummy %}
                     <a class="inactive-page {{ corner_style }}">...</a>
                 {% elif page.is_current %}
-                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string|safe }}"
+                    <a href="{{ request.url_for('show_preview', uuid=page.value) + web_query|string|safe }}"
                        class="active-page{{ corner_style }}">{{ page.number }}</a>
                 {% else %}
-                    <a href="{{ url_for('preview', uuid=page.value) + web_query|string|safe }}"
+                    <a href="{{ request.url_for('show_preview', uuid=page.value) + web_query|string|safe }}"
                        class="{{ corner_style }}">{{ page.number }}</a>
                 {% endif %}
             {% endfor %}
@@ -83,7 +83,7 @@
                 <span>&nbsp;</span>
                 {% if paginator.has_next %}
                     <a class="active-page page-separate"
-                       href="{{ url_for('preview', uuid=next) + web_query|string|safe }}">Next</a>
+                       href="{{ request.url_for('show_preview', uuid=next) + web_query|string|safe }}">Next</a>
                 {% else %}
                     <a class="page-separate">Next</a>
                 {% endif %}

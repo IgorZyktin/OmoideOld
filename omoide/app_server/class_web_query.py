@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Handler for browser queries (not user search).
+"""Handler for browser queries (raw version of user search).
 """
 
-from typing import Dict
+from typing import Dict, Mapping
 
 __all__ = [
     'WebQuery',
@@ -11,7 +11,7 @@ __all__ = [
 
 
 class WebQuery:
-    """Handler for browser queries (not user search).
+    """Handler for browser queries (raw version of user search).
     """
 
     def __init__(self, kwargs: Dict[str, str]) -> None:
@@ -37,7 +37,7 @@ class WebQuery:
         self.kwargs[key] = value
 
     @classmethod
-    def from_request(cls, request_args: dict, **kwargs: str) -> 'WebQuery':
+    def from_request(cls, request_args: Mapping, **kwargs: str) -> 'WebQuery':
         """Build query from original request."""
         # avoiding multikey parameter passing
         request_args = dict(request_args)
