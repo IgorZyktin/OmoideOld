@@ -56,13 +56,12 @@ def run_app(command: commands.RunAppCommand,
     singleton.session = AsyncScopedSession
     singleton.query_builder = search_engine.QueryBuilder(search_engine.Query)
 
-    if command.static:
-        app.mount('/static',
-                  StaticFiles(directory=command.static_folder),
-                  name='static')
-        app.mount('/content',
-                  StaticFiles(directory=command.content_folder),
-                  name='content')
+    app.mount('/static',
+              StaticFiles(directory=command.static_folder),
+              name='static')
+    app.mount('/content',
+              StaticFiles(directory=command.content_folder),
+              name='content')
 
     uvicorn.run(
         app,
