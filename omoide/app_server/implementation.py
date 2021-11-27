@@ -42,6 +42,15 @@ def run_app(command: commands.RunAppCommand,
     AsyncScopedSession = async_scoped_session(async_session_factory,
                                               scopefunc=current_task)
 
+    injection_path = filesystem.join(command.root_folder,
+                                     'injection',
+                                     'injection.txt')
+
+    try:
+        injection = filesystem.read_file(injection_path)
+    except FileNotFoundError:
+        injection = ''
+
     singleton = Singleton()
     singleton.filesystem = filesystem
     singleton.stdout = stdout
@@ -55,6 +64,7 @@ def run_app(command: commands.RunAppCommand,
     )
     singleton.session = AsyncScopedSession
     singleton.query_builder = search_engine.QueryBuilder(search_engine.Query)
+    singleton.injection = injection
 
     app.mount('/static',
               StaticFiles(directory=command.static_folder),

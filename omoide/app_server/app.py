@@ -52,6 +52,7 @@ async def search(
         'request': request,
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'injection': state.injection,
         **response,
     }
     return state.templates.TemplateResponse('index.html', context)
@@ -78,6 +79,7 @@ async def show_preview(
         'web_query': web_query,
         'user_query': web_query.get('q'),
         'byte_count_to_text': utils.byte_count_to_text,
+        'injection': state.injection,
         **response,
     }
     return state.templates.TemplateResponse('preview.html', context)
@@ -100,6 +102,7 @@ async def show_tags(
         'user_query': web_query.get('q'),
         'byte_count_to_text': utils.byte_count_to_text,
         'sep_digits': utils.sep_digits,
+        'injection': state.injection,
         **response,
     }
     return state.templates.TemplateResponse('tags.html', context)
@@ -120,6 +123,7 @@ async def show_newest(
         'request': request,
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'injection': state.injection,
         **response,
     }
     return state.templates.TemplateResponse('newest.html', context)
@@ -140,6 +144,7 @@ async def show_navigation(
         'request': request,
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'injection': state.injection,
         **response,
     }
     return state.templates.TemplateResponse('navigation.html', context)
@@ -174,6 +179,7 @@ async def show_feedback(
         'user_query': web_query.get('q'),
         'on_feedback_page': True,
         'greet': greet,
+        'injection': state.injection,
     }
     return state.templates.TemplateResponse('feedback.html', context)
 
@@ -190,6 +196,7 @@ async def show_help(
         'request': request,
         'web_query': web_query,
         'user_query': web_query.get('q'),
+        'injection': state.injection,
     }
     return state.templates.TemplateResponse('help.html', context)
 
